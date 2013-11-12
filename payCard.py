@@ -1,7 +1,9 @@
+import player.py
+
 def payCard(player,resourceCard):
     """ Takes a player and they lose a resource card
 
-    Input: Player object and a resourceCard String
+    Input: Player object and a Resource Card String
 
 
     """

@@ -1,3 +1,5 @@
+import player.py
+
 def calc_points(player):
 	"""Calculates the number of points for the player
 
@@ -8,7 +10,7 @@ def calc_points(player):
 
     points = 0
     for i in range(0,len(player.structure_list)):
-        if (player.structure_list[i]).iscity :
+        if (player.structure_list[i]).isCity():
             points += 2
         else:
             points += 1
