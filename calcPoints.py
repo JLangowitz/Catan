@@ -1,6 +1,6 @@
-import player.py
+import player
 
-def calc_points(player):
+def calcPoints(player):
 	"""Calculates the number of points for the player
 
     innput: Player obj
@@ -21,3 +21,6 @@ def calc_points(player):
         points +=2
     points += player.bonuses['devPoints']
     return points
+
+if __name__ == '__main__':
+    return calcPoints()

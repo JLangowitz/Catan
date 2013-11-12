@@ -1,6 +1,6 @@
 import random
 
-def roll_dice():
+def rollDice():
     """Returns the result of rolling two rolled dice
 
 
@@ -9,5 +9,4 @@ def roll_dice():
     return random.randint(1,6)+random.randint(1,6)
 
 if __name__ == '__main__':
-    return roll_dice()
-
+    return rollDice()

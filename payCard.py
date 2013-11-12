@@ -1,4 +1,4 @@
-import player.py
+import player
 
 def payCard(player,resourceCard):
     """ Takes a player and they lose a resource card

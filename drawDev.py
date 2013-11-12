@@ -1,5 +1,5 @@
 import random
-import player.py
+import player
 
 devCards = {"soldier":19,"devPoints":5,"yearOfPlenty":2,"monopoly":2,"roadBuilding":2}
 
