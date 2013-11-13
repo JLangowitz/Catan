@@ -1,5 +1,6 @@
 import player
 
+
 def takeCard(player,resourceCard):
     """ Takes a player and gives them a resource card
 
@@ -9,5 +10,6 @@ def takeCard(player,resourceCard):
     """
     player.hand[resourceCard] += 1
 
+
 if __name__ == '__main__':
-    return takeCard()
+    main()

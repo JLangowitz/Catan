@@ -9,7 +9,8 @@ def payCard(player,resourceCard):
     """
     if player.hand[resourceCard] > 0:
     	player.hand[resourceCard] = player.hand[resourceCard] -1
-    else
+    else:
         print "player has insufficient cards"
+
 if __name__ == '__main__':
-    return takeCard()
+    main()
