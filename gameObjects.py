@@ -1,4 +1,3 @@
-
 class Board(object):
     """Contains Board and all tile and vertex position
 
@@ -23,7 +22,7 @@ class Hexes(object):
         self.resource=resource
         self.rollNumber=rollNumber
         self.robber=robber
-class Structure(object):
+class Building(object):
     """Represents every structure on the board
 
 

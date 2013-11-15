@@ -28,12 +28,22 @@ Longest Road? Largest Army?
 
     def tally_points(self):
         bonusPoints = 0
+        buildPoints = 0
+        devPoints = 0 
         for bonus in self.bonuses.keys():
             if self.bonuses[bonus]:
                 bonusPoints += 2 
 
         #buildPoints = ??????
-        points = bonusPoints
+        for building in self.buildings:
+            if building.ifCity:
+                buildPoints += 2
+            else:
+                buildPoints += 1
+
+        
+
+        points = bonusPoints + buildPoints
 
 def main():
     n = raw_input("Number of Players (max 4)? ")
