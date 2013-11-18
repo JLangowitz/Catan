@@ -1,7 +1,9 @@
-import random
-import player
+from random import *
+from player import *
 
-devCards = {"soldier":19,"devPoints":5,"yearOfPlenty":2,"monopoly":2,"roadBuilding":2}
+
+
+devCards = {"Soldier":19,"Victory Point":5,"Year Of Plenty":2,"Monopoly":2,"Road Building":2}
 
 def drawDev(player):
     """Gives a player a random devolpment card 
@@ -19,8 +21,26 @@ def drawDev(player):
         player.devcards[a] = 1
     else:
         player.devcards[a] += 1
-    if a == "devPoints"
+    if a == "Victory Point"
         player.points += 1
 
 if __name__ == '__main__':
     return drawDev()
+
+def playYearOfPlenty(player,resource1,resource2):
+    takeCard(player,resource1)
+    takeCard(player,resource2)
+
+def playMonopoly(player1,playerslist,resource):
+    for player in playerslist:
+        n = player.hand[resource]
+        for i in range (n-1):
+            trade[player1,"None",player2,resource]
+
+def playSoldier(player):
+    moveRobber(player)
+    player.soldiers += 1
+
+def playRoadBuilding(player):
+    buildRoad(player)
+    buildRoad(player)
