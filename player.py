@@ -45,6 +45,66 @@ Longest Road? Largest Army?
 
         points = bonusPoints + buildPoints
 
+def takeCard(player,resourceCard):
+    """ Takes a player and gives them a resource card
+
+    Input: Player object and a resourceCard String
+
+
+    """
+    player.hand[resourceCard] += 1
+
+def payCard(player,resourceCard):
+    """ Takes a player and they lose a resource card
+
+    Input: Player object and a Resource Card String
+
+
+    """
+    if player.hand[resourceCard] > 0:
+        player.hand[resourceCard] = player.hand[resourceCard] -1
+    else:
+        print "player has insufficient cards"
+def trade(player1,resources1, player2, resources2):
+    """ Commits a trade between two players. May be able to 
+    trade something for nothing 
+
+    input: 2 player objects and two list of strings saying what
+    each player is offering 
+
+    """
+    if resources1 != "None"
+        for i in range(len(resources1)):
+            payCard(player1,resources1[i])
+            takeCard(player2,resources1[i])
+    if resources2 != "None"
+        for i in range(len(resources2)):
+            payCard(player2,resources2[i])
+            takeCard(player1,resources2[i])
+
+
+def calcPoints(player):
+    """Calculates the number of points for the player
+
+    innput: Player obj
+
+    returns: int points
+    """
+
+    points = 0
+    for i in range(0,len(player.structure_list)):
+        if (player.structure_list[i]).isCity():
+            points += 2
+        else:
+            points += 1
+
+    if player.bonuses['longestRoad']:
+        points +=2
+    if player.bonuses['largestArmy']:
+        points +=2
+    points += player.bonuses['devPoints']
+    return points
+    
 def main():
     n = raw_input("Number of Players (max 4)? ")
     n = int(n)
