@@ -1,4 +1,4 @@
-import player
+from player import player
 from payCard import payCard
 from takeCard import takeCard
 
@@ -11,10 +11,12 @@ def trade(player1,resources1, player2, resources2):
     each player is offering 
 
     """
-    for i in range(len(resources1)):
-        payCard(player1,resources1[i])
-        takeCard(player2,resources1[i])
-    for i in range(len(resources2)):
-        payCard(player2,resources2[i])
-        takeCard(player1,resources2[i])
+    if resources1 != "None"
+        for i in range(len(resources1)):
+            payCard(player1,resources1[i])
+            takeCard(player2,resources1[i])
+    if resources2 != "None"
+        for i in range(len(resources2)):
+            payCard(player2,resources2[i])
+            takeCard(player1,resources2[i])
 

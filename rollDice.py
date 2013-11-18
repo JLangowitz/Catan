@@ -1,8 +1,8 @@
-import random
+from random import *
 from player import player
 from payCard import payCard
 
-def rollDice(player1,player2,player3 = None, player4 = None):
+def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, player6 = None):
     """Returns the result of rolling two rolled dice and
     gives resources appropriately to each player
 
@@ -17,7 +17,10 @@ def rollDice(player1,player2,player3 = None, player4 = None):
         giveResources(player3,d)
     if player4 != None:
         giveResources(player4,d)    
-
+    if player5 != None:
+        giveResources(player5,d)
+    if player6 != None:
+        giveResources(player6,d)    
     return d
 
 def giveResources(player1,d):

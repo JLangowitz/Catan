@@ -1,5 +1,4 @@
-import player
-
+from player import player
 
 def takeCard(player,resourceCard):
     """ Takes a player and gives them a resource card

@@ -1,4 +1,4 @@
-import player
+from player import player
 
 def calcPoints(player):
 	"""Calculates the number of points for the player
