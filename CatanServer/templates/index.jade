@@ -1,7 +1,9 @@
 extends layout
 
-block scripts
-
 block content
     div
-        h1 Hello World
+        h1(id='test') Hello World
+
+        
+block scripts
+    script(src="{{url_for('static', filename='test.js')}}")

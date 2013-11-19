@@ -21,8 +21,6 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
-@app.route('/cut/<filename>', methods=['GET','POST'])
-
 @app.route('/')
 def homepage():
     return render_template('index.jade', title='Catan')
