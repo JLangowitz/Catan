@@ -1,3 +1,5 @@
+import math
+import Random
 class Board(object):
     """Contains Board and all tile and vertex position
 
@@ -43,23 +45,17 @@ def setup(numPlayers):
     if numPlayers<3 or numPlayers>5:
         return 'Too many or too few players specified'
     if 2<numPlayers<5:
-        resources={}
-        resources['wood']=4
-        resources['wheat']=4
-        resources['Sheep']=4
-        resources['brick']=3
-        resources['ore']=3
-        resources['desert']=1
+        resources={'lumber':4,'grain':4,'sheep':4,'brick':3,'ore':3,'desert':1}
+        numHexesInCenter=5
         ports=[]
-
-
-
     if 4<numPlayers<7:
-        resources={}
-        resources['wood']=6
-        resources['wheat']=6
-        resources['Sheep']=6
-        resources['brick']=5
-        resources['ore']=5
-        resources['desert']=2
+        resources={'lumber':6,'grain':6,'sheep':6,'brick':5,'ore':5,'desert'2}
+        numHexesInCenter=6
         ports=[]
+    boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
+    for i in range(-boardRadius,boardRadius+2)
+        hexesInColumn=numHexes - math.abs(i)
+
+        
+        for range(-(hexesInColumn-1),(hexesInColumn+1),2)
+
