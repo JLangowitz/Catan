@@ -13,7 +13,7 @@ class Player:
         self.soldiers = 0
         self.devcards = {}
         #self.hist is a dic mapping dice roll to cards a person goes        
-        self.hist{2:[],3:[],4:[],5:[],6:[],8:[],9:[],10:[],11:[],12[]}
+        self.hist{2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12{}}
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -26,45 +26,31 @@ Longest Road? Largest Army?
 %d soldiers
 """ % (self.name,self.points,'{LongestRoad} {LargestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
-    def tally_points(self):
-        bonusPoints = 0
-        buildPoints = 0
-        devPoints = 0 
-        for bonus in self.bonuses.keys():
-            if self.bonuses[bonus]:
-                bonusPoints += 2 
-
-        #buildPoints = ??????
+    def buildHist(self):
         for building in self.buildings:
-            if building.ifCity:
-                buildPoints += 2
-            else:
-                buildPoints += 1
+            resource = building.resProv
 
-        
-
-        points = bonusPoints + buildPoints
-
-    def takeCard(player,resourceCard):
+    def takeCard(self,resourceCard):
         """ Takes a player and gives them a resource card
 
         Input: Player object and a resourceCard String
 
 
         """
-        player.hand[resourceCard] += 1
+        self.hand[resourceCard] += 1
 
-    def payCard(player,resourceCard):
+    def payCard(self,resourceCard):
         """ Takes a player and they lose a resource card
 
         Input: Player object and a Resource Card String
 
 
         """
-        if player.hand[resourceCard] > 0:
-            player.hand[resourceCard] = player.hand[resourceCard] -1
+        if self.hand[resourceCard] > 0:
+            self.hand[resourceCard] = self.hand[resourceCard] -1
         else:
             print "player has insufficient cards"
+
     def trade(player1,resources1, player2, resources2):
         """ Commits a trade between two players. May be able to 
         trade something for nothing 
