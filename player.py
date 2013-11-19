@@ -105,6 +105,31 @@ Longest Road? Largest Army?
         points += player.bonuses['devPoints']
         return points
     
+    def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, player6 = None):
+    """Returns the result of rolling two rolled dice and
+    gives resources appropriately to each player
+
+    input: All of the player objects
+
+    return: int
+    """
+    d = random.randint(1,6)+random.randint(1,6)
+    giveResources(player1,d)
+    giveResources(player2,d)
+    if player3 != None:
+        giveResources(player3,d)
+    if player4 != None:
+        giveResources(player4,d)    
+    if player5 != None:
+        giveResources(player5,d)
+    if player6 != None:
+        giveResources(player6,d)    
+    return d
+
+def giveResources(player1,d):
+    for i in range(len(player1.hist[d])):
+        takeCard((player1.hist[d])[i]) 
+
 def main():
     n = raw_input("Number of Players (max 4)? ")
     n = int(n)
