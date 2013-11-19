@@ -1,5 +1,5 @@
 import math
-import Random
+import random
 class Board(object):
     """Contains Board and all tile and vertex position
 
@@ -14,7 +14,7 @@ class Vertex(object):
     attributes: structures, str port status, list Buildable(who can build here) 
     adj hexes(list of hex objects)
     """
-class Hexes(object):
+class Hex(object):
     """Represents each Hexes on the board
 
 
@@ -49,13 +49,25 @@ def setup(numPlayers):
         numHexesInCenter=5
         ports=[]
     if 4<numPlayers<7:
-        resources={'lumber':6,'grain':6,'sheep':6,'brick':5,'ore':5,'desert'2}
+        resources={'lumber':6,'grain':6,'sheep':6,'brick':5,'ore':5,'desert':2}
         numHexesInCenter=6
         ports=[]
+    hexes=[]
     boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
-    for i in range(-boardRadius,boardRadius+2)
-        hexesInColumn=numHexes - math.abs(i)
+    for i in range(-boardRadius,boardRadius+1):
+        hexesInColumn=int(numHexesInCenter - math.fabs(i))
+        for j in range(-(hexesInColumn-1),(hexesInColumn+1),2):
+            r=[]
+            for key in resources:
+                r.extend([key]*resources[key])
+            hexResource=random.choice(r)
+            resources[hexResource]=resources.get(hexResource)-1
+            h=Hex((i/2.0,j/2.0),hexResource)
+            hexes.append(h)
+    board=Board()
+    board.hexes=hexes
+    return board
 
-        
-        for range(-(hexesInColumn-1),(hexesInColumn+1),2)
-
+b=setup(4)
+for h in b.hexes:
+    print h.coordinates,h.resource
