@@ -10,6 +10,7 @@ class Vertex(object):
 
 
     attributes: structures, str port status, list Buildable(who can build here) 
+    adj hexes(list of hex objects)
     """
 class Hexes(object):
     """Represents each Hexes on the board
@@ -17,17 +18,24 @@ class Hexes(object):
 
     attributes: str resource type, int roll number, boolean robber status
     """
+
     def __init__(self,coordinates=(0,0),resource='',rollNumber=0,robber=False):
         self.coordinates=coordinates
         self.resource=resource
         self.rollNumber=rollNumber
         self.robber=robber
+
 class Building(object):
     """Represents every structure on the board
 
 
-    attributes: player class, boolean, ifCity, vertex
+    attributes: player class, boolean, ifCity, vertex, resources provided
     """
+
+    def __init__(self, vertex, player):
+        self.vertex = vertex
+        self.player = player
+        self.ifCity = False
 
 
 def setup(numPlayers):
