@@ -87,7 +87,7 @@ def setup(numPlayers):
     board=Board(hexes)
     return board
     
-
-b=setup(4)
-for h in b.hexes:
-    print h.coordinates,h.resource,h.rollNumber,h.robber
+if __name__ == '__main__':
+    b=setup(4)
+    for h in b.hexes:
+        print h.coordinates,h.resource,h.rollNumber,h.robber
