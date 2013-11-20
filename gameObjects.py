@@ -82,7 +82,6 @@ def setup(numPlayers):
             for vi in range(-1,1):
                 for vj in range(-1,1):
                     if vertices[((i+vi/2.0),(j+vj/2.0))]:
-                        vertices.get((i+vi/2.0),(j+vj/2.0)).hexes.append(h)
                     else:
                         v=vertex(((i+vi/2.0),(j+vj/2.0)),)
     board=Board(hexes)
