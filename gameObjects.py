@@ -6,6 +6,9 @@ class Board(object):
 
     attributes: subclass hexes, subclass verticies, 
     """
+    def __init__(self,hexes=[],vertices=[]):
+        self.hexes=hexes
+        self.vertices=vertices
 class Vertex(object):
     """Represents each Vertex on the board
 
@@ -47,27 +50,45 @@ def setup(numPlayers):
     if 2<numPlayers<5:
         resources={'lumber':4,'grain':4,'sheep':4,'brick':3,'ore':3,'desert':1}
         numHexesInCenter=5
+        rollNumbers=[5,2,6,8,10,9,3,3,11,4,8,4,6,5,10,11,12,9]
         ports=[]
     if 4<numPlayers<7:
         resources={'lumber':6,'grain':6,'sheep':6,'brick':5,'ore':5,'desert':2}
         numHexesInCenter=6
+        rollNumbers=[5,2,6,8,10,9,3,3,11,4,8,4,6,5,10,11,12,9,0,0,0,0,0,0,0,0,0,0,0]
         ports=[]
     hexes=[]
+    vertices={}
+    rollNumberCounter=0
     boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
     for i in range(-boardRadius,boardRadius+1):
         hexesInColumn=int(numHexesInCenter - math.fabs(i))
         for j in range(-(hexesInColumn-1),(hexesInColumn+1),2):
             r=[]
+            robberStatus=False
             for key in resources:
                 r.extend([key]*resources[key])
             hexResource=random.choice(r)
             resources[hexResource]=resources.get(hexResource)-1
-            h=Hex((i/2.0,j/2.0),hexResource)
+            if hexResource=='desert':
+                rollNumber=0
+                robberStatus=True
+
+            else:
+                rollNumber=rollNumbers[rollNumberCounter]
+                rollNumberCounter=rollNumberCounter+1
+            h=Hex((i/2.0,j/2.0),hexResource,rollNumber,robberStatus)
             hexes.append(h)
-    board=Board()
-    board.hexes=hexes
+            for vi in range(-1,1):
+                for vj in range(-1,1):
+                    if vertices[((i+vi/2.0),(j+vj/2.0))]:
+                        vertices.get((i+vi/2.0),(j+vj/2.0)).hexes.append(h)
+                    else:
+                        v=vertex(((i+vi/2.0),(j+vj/2.0)),)
+    board=Board(hexes)
     return board
+    
 
 b=setup(4)
 for h in b.hexes:
-    print h.coordinates,h.resource
+    print h.coordinates,h.resource,h.rollNumber,h.robber
