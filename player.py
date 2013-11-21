@@ -88,8 +88,10 @@ Largest Army? %s
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
+        if vertex.building != None:
+            return False
         for point in vertex.neighbors:
-            if point.building == None:
+            if point.building != None:
                 return False
         for resource in settlementResources:
             if player.hand[resource] < settlementResources[resource]:
@@ -182,6 +184,7 @@ def trade(player1,resources1, player2, resources2):
     player1.takeCards(resources2)
 
 #    def build(self,)
+
 
 def main():
     pass 
