@@ -8,7 +8,7 @@ def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, play
     input: All of the player objects
 
     return: int
-    """
+    """   
     d = randint(1,6)+randint(1,6)
     player1.takeCards(player1.hist[d])
     player2.takeCards(player1.hist[d])
