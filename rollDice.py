@@ -1,5 +1,5 @@
 from random import *
-from player import player
+from player import *
 from payCard import payCard
 
 def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, player6 = None):
@@ -10,22 +10,24 @@ def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, play
 
     return: int
     """
-    d = random.randint(1,6)+random.randint(1,6)
-    giveResources(player1,d)
-    giveResources(player2,d)
+    d = randint(1,6)+randint(1,6)
+    player1.giveResources(d)
+    player2.giveResources(d)
     if player3 != None:
-        giveResources(player3,d)
+        player3.giveResources(d)
     if player4 != None:
-        giveResources(player4,d)    
+        player4.giveResources(d)    
     if player5 != None:
-        giveResources(player5,d)
+        player5.giveResources(d)
     if player6 != None:
-        giveResources(player6,d)    
+        player6.giveResources(d)    
     return d
 
-def giveResources(player1,d):
-    for i in range(len(player1.hist[d])):
-        takeCard((player1.hist[d])[i]) 
+def main():
+    player1 = Player()
+    player2 = Player()
+    print rollDice(player1,player2)
+
 
 if __name__ == '__main__':
     main()
