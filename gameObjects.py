@@ -9,12 +9,12 @@ class Board(object):
     def __init__(self,hexes=[],vertices={}):
         self.hexes=hexes
         self.vertices=vertices
-    def __printHexes__(self):
-        for hex in self.hexes:
-            print hex.coordinates, hex.resource, hex.rollNumber,hex.robberStatus
-    def __printVertices__(self):
-        for key in vertices:
-            print vertices[key].coordinates, vertices[key].getResources()
+    def printHexes(self):
+        for h in self.hexes:
+            print h.coordinates, h.resource, h.rollNumber,h.robber
+    def printVertices(self):
+        for key in self.vertices:
+            print self.vertices[key].coordinates, self.vertices[key].getResources()
 class Vertex(object):
     """Represents each Vertex on the board
 
@@ -27,14 +27,14 @@ class Vertex(object):
         self.coordinates=coordinates
         self.hexes=[h]
         self.building=None
-    def __build__(self,building):
+    def build(self,building):
         self.building=building
-    def __addHex__(self,h):
+    def addHex(self,h):
         self.hexes.append(h)
-    def __getResources__(self):
+    def getResources(self):
         resources=[]
-        for hex in self.hexes:
-            resources.append(hex.resource)
+        for h in self.hexes:
+            resources.append(h.resource)
         return resources
 class Hex(object):
     """Represents each Hexes on the board
@@ -49,7 +49,7 @@ class Hex(object):
         self.rollNumber=rollNumber
         self.robber=robber
         self.vertices=[]
-    def __addVertex__(self,vertex):
+    def addVertex(self,vertex):
         self.vertices.append(vertex)
 
 class Building(object):
@@ -84,8 +84,8 @@ def setup(numPlayers):
 
     rollNumberCounter=0
     boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
-    for i in range(-boardRadius,boardRadius+1):
-        hexesInColumn=int(numHexesInCenter - math.fabs(i))
+    for i in range(-2*boardRadius,2*(boardRadius+1),2):
+        hexesInColumn=int(numHexesInCenter - math.fabs(i/2.0))
         for j in range(-(hexesInColumn-1),(hexesInColumn+1),2):
             r=[]
             robberStatus=False
@@ -101,14 +101,16 @@ def setup(numPlayers):
                 rollNumber=rollNumbers[rollNumberCounter]
                 rollNumberCounter=rollNumberCounter+1
             h=Hex((i/2.0,j/2.0),hexResource,rollNumber,robberStatus)
-            for vi in range(i-1,i+1,2):
-                for vj in range(j-1,j+1):
+            for vi in range(i-1,i+2,2):
+                for vj in range(j-1,j+2):
+                    print (vi/2.0,vj/2.0)
                     if (vi/2.0,vj/2.0) in vertices:
                         vertices[(vi/2.0,vj/2.0)].addHex(h)
                         h.addVertex(vertices[(vi/2.0,vj/2.0)])
                     else:
                         vertex=Vertex((vi/2.0,vj/2.0),h)
                         vertices[vi/2.0,vj/2.0]=vertex
+                        # print (vi/2.0,vj/2.0) in vertices
                         h.addVertex(vertex)
             hexes.append(h)
 
@@ -116,7 +118,7 @@ def setup(numPlayers):
     return board
 
 b=setup(4)
-b.printHexes()
-b.printVertices()
 
+b.printVertices()
+b.printHexes()
 
