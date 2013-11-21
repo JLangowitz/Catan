@@ -23,7 +23,7 @@ def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, play
     return d
 
 def main():
-
+    pass
 
 
 if __name__ == '__main__':

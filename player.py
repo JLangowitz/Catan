@@ -14,7 +14,7 @@ class Player:
         self.devcards = {}
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
-        self.hist = {2:{},3:{},4:{"sheep":1},5:{"sheep":2},6:{"sheep":2},8:{"sheep":3},9:{},10:{},11:{},12:{}}
+        self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -99,13 +99,7 @@ def trade(player1,resources1, player2, resources2):
 #    def build(self,)
 
 def main():
-    player1 = Player()
-    player2 = Player()
-    player1.takeCards({"sheep":3})
-    player2.takeCards({"ore":3})
-    trade(player1,{"lumber":30},player2,{"ore":1})
-    print player1.hand
-    print player2.hand
+    pass
 
 if __name__ == '__main__':
     main()
