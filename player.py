@@ -7,123 +7,99 @@ class Player:
     def __init__(self):
         self.name = raw_input("Player Name? ")
         self.points = 0
-        self.bonuses = {'LongestRoad':False, 'LargestArmy': False}
+        self.bonuses = {'longestRoad':False, 'largestArmy': False}
         self.hand = {'ore':0,'lumber':0,'brick':0,'sheep':0,'grain':0}
         self.buildings = []
         self.soldiers = 0
         self.devcards = {}
+        self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
-        self.hist{2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12{}}
+        self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
 
     def __str__(self):
         if len(self.buildings) == 0:
             buildings = "No Buildings"
-        return """%s has:
-%d points
-Longest Road? Largest Army?
-%s
-%s 
+        return """%s has: \n %d points
+Longest Road? %s 
+Largest Army? %s 
 %d soldiers
-""" % (self.name,self.points,'{LongestRoad} {LargestArmy}'.format(**self.bonuses),buildings,self.soldiers)
+""" % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
-    def buildHist(self):
+    def buildHist(self): # not done
         for building in self.buildings:
             resource = building.resProv
 
-    def takeCard(self,resourceCard):
-        """ Takes a player and gives them a resource card
+    def takeCards(self, d):
+        """ Takes a player and gives them resource cards
 
-        Input: Player object and a resourceCard String
-
-
+        Input: Player object and a dictionary of resource String mapped to number of resources
         """
-        self.hand[resourceCard] += 1
+        for resource in d:
+            self.hand[resource] =  (self.hand[resource]) + (d[resource])
+      
 
-    def payCard(self,resourceCard):
-        """ Takes a player and they lose a resource card
+    def payCards(self,d):
+        """ Takes a player and removes the dictionary of resource cards 
+        from the players hand
 
         Input: Player object and a Resource Card String
-
-
         """
-        if self.hand[resourceCard] > 0:
-            self.hand[resourceCard] = self.hand[resourceCard] -1
-        else:
-            print "player has insufficient cards"
-
-    def trade(player1,resources1, player2, resources2):
-        """ Commits a trade between two players. May be able to 
-        trade something for nothing 
-
-        input: 2 player objects and two list of strings saying what
-        each player is offering 
-
-        """
-        if resources1 != "None"
-            for i in range(len(resources1)):
-                payCard(player1,resources1[i])
-                takeCard(player2,resources1[i])
-        if resources2 != "None"
-            for i in range(len(resources2)):
-                payCard(player2,resources2[i])
-                takeCard(player1,resources2[i])
+        for resource in d:
+            if self.hand[resource] < d[resource]:
+                print "player has insufficient cards" 
+                return None           
+        for resource in d:         
+            self.hand[resource] =  self.hand[resource] - d[resource]
+        
 
 
-    def calcPoints(player):
+    def calcPoints(self):
         """Calculates the number of points for the player
 
-        innput: Player obj
+        Input: Player obj
 
-        returns: int points
+        Returns: int points
         """
 
         points = 0
-        for i in range(0,len(player.structure_list)):
-            if (player.structure_list[i]).isCity():
+        for i in range(0,len(self.buildings)):
+            if (self.buildings[i]).isCity():
                 points += 2
             else:
                 points += 1
 
-        if player.bonuses['longestRoad']:
+        if self.bonuses['longestRoad']:
             points +=2
-        if player.bonuses['largestArmy']:
+        if self.bonuses['largestArmy']:
             points +=2
-        points += player.bonuses['devPoints']
+        points += self.bonuses['devPoints']
+        self.points = points
         return points
-    
-    def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, player6 = None):
-    """Returns the result of rolling two rolled dice and
-    gives resources appropriately to each player
 
-    input: All of the player objects
+def trade(player1,resources1, player2, resources2):
+    """ Commits a trade between two players. May be able to 
+    trade something for nothing 
 
-    return: int
+    Input: 2 player objects and two list of strings saying what
+    each player is offering 
     """
-    d = random.randint(1,6)+random.randint(1,6)
-    giveResources(player1,d)
-    giveResources(player2,d)
-    if player3 != None:
-        giveResources(player3,d)
-    if player4 != None:
-        giveResources(player4,d)    
-    if player5 != None:
-        giveResources(player5,d)
-    if player6 != None:
-        giveResources(player6,d)    
-    return d
+    for resources in resources1:
+        if player1.hand[resources] < resources1[resources]:
+            print "Player 1 has insufficient resources"
+            return None
+    for resources in resources2:
+        if player2.hand[resources2] < resources2[resources]:
+            print "Player 2 has insufficient resources"
+            return None
+    player1.payCards(resources1)
+    player2.takeCards(resources1)
+    player2.payCards(resources2)
+    player1.takeCards(resources2)
 
-def giveResources(player1,d):
-    for i in range(len(player1.hist[d])):
-        takeCard((player1.hist[d])[i]) 
+#    def build(self,)
 
 def main():
-    n = raw_input("Number of Players (max 4)? ")
-    n = int(n)
-    while n <= 0 or n > 4:
-        n = raw_input("Try again ")
-        n = int(n)
-    player1 = Player()
-    print player1
+    pass
 
 if __name__ == '__main__':
     main()
