@@ -114,17 +114,9 @@ def setup(numPlayers):
 
     board=Board(hexes,vertices)
     return board
-    
-<<<<<<< HEAD
 
 b=setup(4)
 b.printHexes()
 b.printVertices()
 
 
-=======
-if __name__ == '__main__':
-    b=setup(4)
-    for h in b.hexes:
-        print h.coordinates,h.resource,h.rollNumber,h.robber
->>>>>>> 73fae36fd9d6a49c5cf3e5609955a0a259a74482
