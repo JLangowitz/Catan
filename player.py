@@ -1,3 +1,5 @@
+from gameObjects import *
+
 class Player:
     """Represents a player in catan
 
@@ -76,12 +78,62 @@ Largest Army? %s
         self.points = points
         return points
 
+    def checkSettlement(self,vertex):
+        settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
+        for point in vertex.neighbors:
+            if point.building == None:
+                return False
+        for resource in settlementResources:
+            if player.hand[resource] < settlementResources[resource]:
+                return False
+        return True
+
+    def buildSettlement(self,vertex):
+        settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
+        if checkSettlement(self,vertex) == True:
+            self.payCards(settlementResources)
+            building1 = Building(self, vertex)
+            vertex.building = building1
+            self.buildings.append[building1]
+            self.buildHist
+            self.calcPoints
+        else:
+            return "You must construct additional pylons"
+
+    def checkCity(self,vertex):
+        cityResources = {"ore":3,"grain":2}
+        for resource in cityResources:
+            if player.hand[resource] < cityResources[resource]:
+                return False
+        if vertex.building == None:
+            return False
+        if building.player != self:
+            return False
+        return True
+
+
+    def buildCity(self,vertex,building1):
+        cityResources = {"ore":3,"grain":2}
+        if checkCity(self,vertex)==True:
+        self.payCards(cityResources)
+            for building in self.buildings:
+                if building == building1:
+                    buiding1.isCity = True
+                    vertex.isCity = True 
+                    self.buildHist
+                    self.calcPoints    
+        else:
+            return "You must construct additional pylons"
+
+        
+
+
 def trade(player1,resources1, player2, resources2):
     """ Commits a trade between two players. May be able to 
     trade something for nothing 
 
     Input: 2 player objects and two dictionary of resources saying what
-    each player is offering 
+    each player is offering
     """
     for resources in resources1:
         if player1.hand[resources] < resources1[resources]:
