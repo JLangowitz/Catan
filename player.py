@@ -29,38 +29,29 @@ Largest Army? %s
         for building in self.buildings:
             resource = building.resProv
 
-    def takeCard(self,resourceCard):
-        """ Takes a player and gives them a resource card
+    def takeCards(self, d):
+        """ Takes a player and gives them resource cards
 
-        Input: Player object and a resourceCard String
+        Input: Player object and a dictionary of resource String mapped to number of resources
         """
-        self.hand[resourceCard] += 1
+        for resource in d:
+            self.hand[resource] =  (self.hand[resource]) + (d[resource])
+      
 
-    def payCard(self,resourceCard):
-        """ Takes a player and they lose a resource card
+    def payCards(self,d):
+        """ Takes a player and removes the dictionary of resource cards 
+        from the players hand
 
         Input: Player object and a Resource Card String
         """
-        if self.hand[resourceCard] > 0:
-            self.hand[resourceCard] = self.hand[resourceCard] -1
-        else:
-            print "player has insufficient cards"
+        for resource in d:
+            if self.hand[resource] < d[resource]:
+                print "player has insufficient cards" 
+                return None           
+        for resource in d:         
+            self.hand[resource] =  self.hand[resource] - d[resource]
+        
 
-    def trade(player1,resources1, player2, resources2):
-        """ Commits a trade between two players. May be able to 
-        trade something for nothing 
-
-        Input: 2 player objects and two list of strings saying what
-        each player is offering 
-        """
-        if resources1 != "None":
-            for i in range(len(resources1)):
-                payCard(player1,resources1[i])
-                takeCard(player2,resources1[i])
-        if resources2 != "None":
-            for i in range(len(resources2)):
-                payCard(player2,resources2[i])
-                takeCard(player1,resources2[i])
 
     def calcPoints(self):
         """Calculates the number of points for the player
@@ -85,16 +76,30 @@ Largest Army? %s
         self.points = points
         return points
 
-    def giveResources(self,d):
-        for i in range(len(self.hist[d])):
-            takeCard((self.hist[d])[i]) 
+def trade(player1,resources1, player2, resources2):
+    """ Commits a trade between two players. May be able to 
+    trade something for nothing 
+
+    Input: 2 player objects and two list of strings saying what
+    each player is offering 
+    """
+    for resources in resources1:
+        if player1.hand[resources] < resources1[resources]:
+            print "Player 1 has insufficient resources"
+            return None
+    for resources in resources2:
+        if player2.hand[resources2] < resources2[resources]:
+            print "Player 2 has insufficient resources"
+            return None
+    player1.payCards(resources1)
+    player2.takeCards(resources1)
+    player2.payCards(resources2)
+    player1.takeCards(resources2)
 
 #    def build(self,)
 
 def main():
-    
-    player1 = Player()
-    
+    pass
 
 if __name__ == '__main__':
     main()

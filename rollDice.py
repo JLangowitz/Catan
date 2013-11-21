@@ -1,6 +1,5 @@
 from random import *
 from player import *
-from payCard import payCard
 
 def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, player6 = None):
     """Returns the result of rolling two rolled dice and
@@ -11,22 +10,20 @@ def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, play
     return: int
     """
     d = randint(1,6)+randint(1,6)
-    player1.giveResources(d)
-    player2.giveResources(d)
+    player1.takeCards(player1.hist[d])
+    player2.takeCards(player1.hist[d])
     if player3 != None:
-        player3.giveResources(d)
+        player3.takeCards(player1.hist[d])
     if player4 != None:
-        player4.giveResources(d)    
+        player4.takeCards(player1.hist[d])    
     if player5 != None:
-        player5.giveResources(d)
+        player5.takeCards(player1.hist[d])
     if player6 != None:
-        player6.giveResources(d)    
+        player6.takeCardsp(player1.hist[d])    
     return d
 
 def main():
-    player1 = Player()
-    player2 = Player()
-    print rollDice(player1,player2)
+    pass
 
 
 if __name__ == '__main__':
