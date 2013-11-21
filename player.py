@@ -80,7 +80,7 @@ def trade(player1,resources1, player2, resources2):
     """ Commits a trade between two players. May be able to 
     trade something for nothing 
 
-    Input: 2 player objects and two list of strings saying what
+    Input: 2 player objects and two dictionary of resources saying what
     each player is offering 
     """
     for resources in resources1:
@@ -99,7 +99,7 @@ def trade(player1,resources1, player2, resources2):
 #    def build(self,)
 
 def main():
-    pass
+    pass 
 
 if __name__ == '__main__':
     main()
