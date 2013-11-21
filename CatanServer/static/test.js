@@ -7,7 +7,12 @@ $(document).ready(function(){
     var NUM_HEXES_IN_CENTER=5;
     
     //stage instance
-    var stage = new PIXI.Stage(0xffffff);
+    var interactive = true;
+    var stage = new PIXI.Stage(0xffffff, interactive);
+
+    stage.click=stage.tap=function(){
+        console.log('click')
+    }
 
     //renderer instance
     var renderer = PIXI.autoDetectRenderer(WIDTH,HEIGHT);
@@ -19,11 +24,11 @@ $(document).ready(function(){
     drawBoard(WIDTH, HEIGHT, NUM_HEXES_IN_CENTER, HEX_RADIUS);
     // drawHexagon(WIDTH/2,HEIGHT/2,HEX_RADIUS,0xff0000);
 
-    function drawBoard(width, height, numHexes, hexRadius){
-        var boardRadius = (numHexes-numHexes%2)/2;
+    function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
+        var boardRadius = (numHexesInCenterColumn-numHexesInCenterColumn%2)/2;
         var vert = hexRadius*Math.sqrt(3)/2;
         for (var i = -boardRadius; i <= boardRadius; i++) {
-            var hexesInColumn=numHexes - Math.abs(i);
+            var hexesInColumn=numHexesInCenterColumn - Math.abs(i);
             console.log(hexesInColumn);
             for(var j=-(hexesInColumn-1)/2;j<=(hexesInColumn-1)/2;j++){
                 console.log(i,j);
@@ -44,6 +49,15 @@ $(document).ready(function(){
         //draw a hexagon
         graphics.lineStyle(5, 0x000000);
         graphics.beginFill(color);
+        // var hexagon= new PIXI.Polygon(
+        //     x+radius,y,
+        //     x+radius/2, y+vert,
+        //     x-radius/2, y+vert,
+        //     x-radius,y,
+        //     x-radius/2,y-vert,
+        //     x+radius/2,y-vert);
+        // console.log(hexagon)
+        // graphics.addChild(hexagon);
         graphics.moveTo(x+radius,y);
         graphics.lineTo(x+radius/2,y+vert);
         graphics.lineTo(x-radius/2,y+vert);
@@ -52,6 +66,20 @@ $(document).ready(function(){
         graphics.lineTo(x+radius/2,y-vert);
         graphics.lineTo(x+radius,y);
         graphics.endFill();
+        graphics.setInteractive(true);
+        // set the mousedown and touchstart callback..
+        graphics.mousedown = graphics.touchstart = function(data){
+            console.log('mousedown');
+            this.isdown = true;
+            this.alpha = 0;
+        }
+        
+        // set the mouseup and touchend callback..
+        graphics.mouseup = graphics.touchend = function(data){
+            this.isdown = false;
+            console.log('mouseup');
+        }
+        console.log(graphics);
         stage.addChild(graphics);
     }
 
