@@ -79,6 +79,14 @@ Largest Army? %s
         return points
 
     def checkSettlement(self,vertex):
+        """Checks if you can build a settlement at that location
+
+        input: player object and vertex object
+
+        Return: Boolean 
+
+        """
+
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         for point in vertex.neighbors:
             if point.building == None:
@@ -89,6 +97,15 @@ Largest Army? %s
         return True
 
     def buildSettlement(self,vertex):
+        """Checks to see if you can build and builds a settlement 
+        at the location
+
+        input: player object and vertex object
+
+        return:string
+
+        """
+
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if checkSettlement(self,vertex) == True:
             self.payCards(settlementResources)
@@ -101,6 +118,13 @@ Largest Army? %s
             return "You must construct additional pylons"
 
     def checkCity(self,vertex):
+        """Checks if you can build a City at that location
+
+        input: player object and vertex object
+
+        Return: Boolean 
+
+        """
         cityResources = {"ore":3,"grain":2}
         for resource in cityResources:
             if player.hand[resource] < cityResources[resource]:
@@ -113,6 +137,15 @@ Largest Army? %s
 
 
     def buildCity(self,vertex,building1):
+        """Checks to see if you can build a city and changes 
+        settlement to city
+
+        input: player object and vertex object and building object
+
+        return:string
+
+        """
+
         cityResources = {"ore":3,"grain":2}
         if checkCity(self,vertex)==True:
         self.payCards(cityResources)
