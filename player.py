@@ -14,7 +14,7 @@ class Player:
         self.devcards = {}
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
-        self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
+        self.hist = {2:{},3:{},4:{"sheep":1},5:{"sheep":2},6:{"sheep":2},8:{"sheep":3},9:{},10:{},11:{},12:{}}
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -35,10 +35,10 @@ Largest Army? %s
         Input: Player object and a dictionary of resource String mapped to number of resources
         """
         for resource in d:
-            self.hand[resource] =  self.hand[resource] + d[resource]
+            self.hand[resource] =  (self.hand[resource]) + (d[resource])
       
 
-    def payCards(self,resourceCard):
+    def payCards(self,d):
         """ Takes a player and removes the dictionary of resource cards 
         from the players hand
 
@@ -46,23 +46,12 @@ Largest Army? %s
         """
         for resource in d:
             if self.hand[resource] < d[resource]:
-                return "player has insufficient cards"            
-        for resource in d         
+                print "player has insufficient cards" 
+                return None           
+        for resource in d:         
             self.hand[resource] =  self.hand[resource] - d[resource]
         
 
-
-    def trade(player1,resources1, player2, resources2):
-        """ Commits a trade between two players. May be able to 
-        trade something for nothing 
-
-        Input: 2 player objects and two list of strings saying what
-        each player is offering 
-        """
-        payCards(player1,resources1)
-        takeCards(player2,resources1)
-        payCards(player2,resources2)
-        takeCards(player1,resources2)
 
     def calcPoints(self):
         """Calculates the number of points for the player
@@ -87,14 +76,36 @@ Largest Army? %s
         self.points = points
         return points
 
+def trade(player1,resources1, player2, resources2):
+    """ Commits a trade between two players. May be able to 
+    trade something for nothing 
 
+    Input: 2 player objects and two list of strings saying what
+    each player is offering 
+    """
+    for resources in resources1:
+        if player1.hand[resources] < resources1[resources]:
+            print "Player 1 has insufficient resources"
+            return None
+    for resources in resources2:
+        if player2.hand[resources2] < resources2[resources]:
+            print "Player 2 has insufficient resources"
+            return None
+    player1.payCards(resources1)
+    player2.takeCards(resources1)
+    player2.payCards(resources2)
+    player1.takeCards(resources2)
 
 #    def build(self,)
 
 def main():
-    
     player1 = Player()
-    
+    player2 = Player()
+    player1.takeCards({"sheep":3})
+    player2.takeCards({"ore":3})
+    trade(player1,{"lumber":30},player2,{"ore":1})
+    print player1.hand
+    print player2.hand
 
 if __name__ == '__main__':
     main()
