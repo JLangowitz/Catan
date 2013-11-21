@@ -23,14 +23,32 @@ class Vertex(object):
     attributes: structures, str port status, list Buildable(who can build here) 
     adj hexes(list of hex objects)
     """
-    def __init__(self,coordinates=(0,0),h=None):
+    def __init__(self,coordinates=(0,0),h=None,neighbors=None):
         self.coordinates=coordinates
-        self.hexes=[h]
+        self.hexes=h
         self.building=None
+        self.neighbors=neighbors
+    
     def build(self,building):
         self.building=building
+
     def addHex(self,h):
         self.hexes.append(h)
+    
+    def addNeighbors(self,vertices):
+        x,y=self.coordinates
+        # silly math to figure out whether 3rd vertex is left or right
+        leftFacing= (math.floor(x)%2+int(2*y)%2)%2
+        direc={0:1,1:-1}
+        neighborCoordinates=[(x,y-.5),(x,y+.5),(x+direc[leftFacing],y)]
+        print neighborCoordinates
+        for point in neighborCoordinates:
+            if point in vertices:
+                if self.neighbors:
+                    self.neighbors.append(vertices[point])
+                else:
+                    self.neighbors=[vertices[point]]
+    
     def getResources(self):
         resources=[]
         for h in self.hexes:
@@ -108,17 +126,21 @@ def setup(numPlayers):
                         vertices[(vi/2.0,vj/2.0)].addHex(h)
                         h.addVertex(vertices[(vi/2.0,vj/2.0)])
                     else:
-                        vertex=Vertex((vi/2.0,vj/2.0),h)
+                        vertex=Vertex((vi/2.0,vj/2.0),[h])
                         vertices[vi/2.0,vj/2.0]=vertex
                         # print (vi/2.0,vj/2.0) in vertices
                         h.addVertex(vertex)
             hexes.append(h)
 
     board=Board(hexes,vertices)
+    for vertex in board.vertices.values():
+        vertex.addNeighbors(board.vertices)
     return board
 
 b=setup(4)
 
 b.printVertices()
 b.printHexes()
-
+# b.vertices[2.5,0.0].addNeighbors(b.vertices)
+for v in b.vertices.values():
+    print v.coordinates,[vertex.coordinates for vertex in v.neighbors]
