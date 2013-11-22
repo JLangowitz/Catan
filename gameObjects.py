@@ -50,10 +50,13 @@ class Vertex(object):
                     self.neighbors=[vertices[point]]
     
     def getResources(self):
-        resources=[]
+        resources = []
+        rolls = []
         for h in self.hexes:
             resources.append(h.resource)
-        return resources
+            rolls.append(h.rollNumber)
+
+        return resources, rolls
 class Hex(object):
     """Represents each Hexes on the board
 
@@ -82,9 +85,24 @@ class Building(object):
         self.player = player
         self.ifCity = False
 
+    def provideResources(self): #Not done, needs to incorporate roll number
+        resources = {}
+        vertRes = self.vertex.getResources()
+        rolls
+
+        if ifCity:
+            n = 2
+        else: 
+            n = 1
+        for resource in self.vertex.getResources():
+            if resource in resources:
+                resources[resource] += n
+            else:
+                resources[resource] = n
+        return resources
 
 def setup(numPlayers):
-    """Setsup all the board objects and establishes relationships and values"""
+    """Sets up all the board objects and establishes relationships and values"""
     if numPlayers<3 or numPlayers>5:
         return 'Too many or too few players specified'
     if 2<numPlayers<5:

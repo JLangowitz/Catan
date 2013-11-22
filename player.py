@@ -29,7 +29,7 @@ Largest Army? %s
 
     def buildHist(self): # not done     
         for building in self.buildings:     
-            resource = building.resProv
+            resources = building.resourcesProvided()
 
     def takeCards(self, d):     
         """ Takes a player and gives them resource cards
