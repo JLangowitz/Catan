@@ -87,7 +87,6 @@ Largest Army? %s
         Return: Boolean 
 
         """
-
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if vertex.building != None:
             return False
@@ -97,7 +96,9 @@ Largest Army? %s
         for resource in settlementResources:
             if player.hand[resource] < settlementResources[resource]:
                 return False
-        return True
+        for road in self.roads:
+            if road[0] == vertex or road[1] == vertex:
+                return True
 
     def buildSettlement(self,vertex):
         """Checks to see if you can build and builds a settlement 
@@ -183,6 +184,21 @@ def trade(player1,resources1, player2, resources2):
     player2.takeCards(resources1)
     player2.payCards(resources2)
     player1.takeCards(resources2)
+
+
+def buildRoad(player1,playerlist, vertex1, vertex2):
+    """Builds a road for a player
+
+    input: a player object, a list of players, vertex1 and vertex2 objects
+      """
+
+    for player in playerlist:
+        for road in player.roads:
+            if road == (vertex1,vertex2):
+                return "Cannot Build Road"
+    for road in player1.roads:
+        if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2
+            player1.roads.append((vertex1,vertex2))
 
 #    def build(self,)
 
