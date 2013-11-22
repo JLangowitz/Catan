@@ -78,6 +78,7 @@ Largest Army? %s
         self.points = points
         return points
 
+
     def checkSettlement(self,vertex):
         """Checks if you can build a settlement at that location
 

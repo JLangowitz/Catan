@@ -5,7 +5,7 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
     """Builds a road for a player
 
     input: a player object, a list of players, vertex1 and vertex2 objects
-    """
+      """
 
     for player in playerlist:
         for road in player.roads:
@@ -14,3 +14,8 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
     for road in player1.roads:
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2
             player1.roads.append((vertex1,vertex2))
+
+def longestRoad(player1,n):
+    player1.roads[n]
+    
+        
