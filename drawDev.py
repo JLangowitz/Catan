@@ -51,7 +51,6 @@ def playSoldier(player):
     else:
         print "you don't have a Soldier card"
 
-
 def playRoadBuilding(player):
     if canPlay(player, "Boad Building")
         buildRoad(player)
@@ -61,4 +60,5 @@ def playRoadBuilding(player):
         print "you don't have a Road Building card"
 
 def canPlay(player, card): #Add more failure modes
+    """Determines if given devcard can be played"""
     return card in player.devcards and player.devcards[card] > 0
