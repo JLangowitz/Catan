@@ -3,17 +3,17 @@ from gameObjects import *
 class Player:
     """Represents a player in catan
 
-    Attributes: name, points, bonuses, hand, buildings, soldiers, devcards
+    Attributes: name, points, bonuses, hand, buildings, soldiers, devcards,hist
     """
 
     def __init__(self):
-        self.name = raw_input("Player Name? ")
-        self.points = 0
+        self.name = raw_input("Player Name? ")  #Takes in Players name
+        self.points = 0   
         self.bonuses = {'longestRoad':False, 'largestArmy': False}
-        self.hand = {'ore':0,'lumber':0,'brick':0,'sheep':0,'grain':0}
+        self.hand = {'ore':0,'lumber':0,'brick':0,'sheep':0,'grain':0}  #dictionary mapping Resource card strings to number of cards
         self.buildings = []
         self.soldiers = 0
-        self.devcards = {}
+        self.devcards = {}  #dictionary mapping Development card strings to number of dev Cards
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
         self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
@@ -27,11 +27,11 @@ Largest Army? %s
 %d soldiers
 """ % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
-    def buildHist(self): # not done
-        for building in self.buildings:
+    def buildHist(self): # not done     
+        for building in self.buildings:     
             resource = building.resProv
 
-    def takeCards(self, d):
+    def takeCards(self, d):     
         """ Takes a player and gives them resource cards
 
         Input: Player object and a dictionary of resource String mapped to number of resources
@@ -88,7 +88,7 @@ Largest Army? %s
 
         """
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if vertex.building != None:
+        if vertex.building != None: 
             return False
         for point in vertex.neighbors:
             if point.building != None:
@@ -112,12 +112,12 @@ Largest Army? %s
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if checkSettlement(self,vertex) == True:
-            self.payCards(settlementResources)
-            building1 = Building(self, vertex)
-            vertex.building = building1
-            self.buildings.append[building1]
-            self.buildHist
-            self.calcPoints
+            self.payCards(settlementResources)  #pay cards to build
+            building1 = Building(self, vertex)  #creates a building object
+            vertex.building = building1         #build building on vertex
+            self.buildings.append[building1]    #add buildings to list of buildings
+            self.buildHist                      #rebuild the dice histogram
+            self.calcPoints                     #calc points
         else:
             return "You must construct additional pylons"
 
@@ -150,15 +150,15 @@ Largest Army? %s
 
         """
 
-        cityResources = {"ore":3,"grain":2}
-        if checkCity(self,vertex)==True:
-        self.payCards(cityResources)
-            for building in self.buildings:
+        cityResources = {"ore":3,"grain":2}     
+        if checkCity(self,vertex)==True:        
+            self.payCards(cityResources)        #pay resources    
+            for building in self.buildings:     
                 if building == building1:
-                    buiding1.isCity = True
-                    vertex.isCity = True 
-                    self.buildHist
-                    self.calcPoints    
+                    buiding1.isCity = True      #make settlement a city
+                    vertex.isCity = True        #make city on board 
+                    self.buildHist              #remake historgram
+                    self.calcPoints             #calculate points 
         else:
             return "You must construct additional pylons"
 
@@ -196,8 +196,8 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
         for road in player.roads:
             if road == (vertex1,vertex2):
                 return "Cannot Build Road"
-    for road in player1.roads:
-        if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2
+    for road in player1.roads:  #make road if roads touch one of the vertices
+        if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2 
             player1.roads.append((vertex1,vertex2))
 
 #    def build(self,)
