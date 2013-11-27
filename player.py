@@ -27,9 +27,16 @@ Largest Army? %s
 %d soldiers
 """ % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
-    def buildHist(self): # not done     
+    def createHist(self):      
         for building in self.buildings:     
-            resources = building.resourcesProvided()
+            buildHist = building.provideResources()
+            for roll in buildHist:
+                for resource in buildHist[roll]:
+                    if resource in self.hist[roll]:
+                        self.hist[roll][resource] += buildHist[roll][resource]
+                    else:
+                        self.hist[roll][resource] = buildHist[roll][resource]
+        
 
     def takeCards(self, d):     
         """ Takes a player and gives them resource cards
@@ -197,14 +204,23 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
             if road == (vertex1,vertex2):
                 return "Cannot Build Road"
     for road in player1.roads:  #make road if roads touch one of the vertices
-        if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2 
+        if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
 
 #    def build(self,)
 
 
 def main():
-    pass 
+    player1 = Player()
+    hex1 = Hex((0,0),'ore',6)
+    hex2 = Hex((1,.5),'ore',8)
+    hex3 = Hex((1,-.5),'ore',6)
+    vert1 = Vertex((1,0),[hex1,hex2,hex3])
+    building1 = Building(vert1,player1)
+    player1.buildings = [building1]
+    vert1.build(building1)
+    player1.createHist()
+    print player1.hist
 
 if __name__ == '__main__':
     main()

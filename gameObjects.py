@@ -50,11 +50,14 @@ class Vertex(object):
                     self.neighbors=[vertices[point]]
     
     def getResources(self):
-        resources = []
-        rolls = []
+        resources = {}
+        
         for h in self.hexes:
-            resources.append(h.resource)
-            rolls.append(h.rollNumber)
+            if h.rollNumber in resources:
+                resources[h.rollNumber].append(h.resource)
+            else:
+                resources[h.rollNumber] = [h.resource]
+        return resources
 
         return resources, rolls
 class Hex(object):
@@ -70,8 +73,10 @@ class Hex(object):
         self.rollNumber=rollNumber
         self.robber=robber
         self.vertices=[]
+
     def addVertex(self,vertex):
         self.vertices.append(vertex)
+
 
 class Building(object):
     """Represents every structure on the board
@@ -86,20 +91,22 @@ class Building(object):
         self.ifCity = False
 
     def provideResources(self): #Not done, needs to incorporate roll number
-        resources = {}
+        buildHist = {}
         vertRes = self.vertex.getResources()
-        rolls
 
-        if ifCity:
+        if self.ifCity:
             n = 2
         else: 
             n = 1
-        for resource in self.vertex.getResources():
-            if resource in resources:
-                resources[resource] += n
-            else:
-                resources[resource] = n
-        return resources
+        for roll in vertRes:
+            if roll not in buildHist:
+                buildHist[roll] = {}
+            for resource in vertRes[roll]:
+                if resource in buildHist[roll]:
+                    buildHist[roll][resource] += n
+                else:
+                    buildHist[roll][resource] = n
+        return buildHist
 
 def setup(numPlayers):
     """Sets up all the board objects and establishes relationships and values"""
@@ -154,11 +161,12 @@ def setup(numPlayers):
     for vertex in board.vertices.values():
         vertex.addNeighbors(board.vertices)
     return board
-
-b=setup(4)
-
-b.printVertices()
-b.printHexes()
-# b.vertices[2.5,0.0].addNeighbors(b.vertices)
-for v in b.vertices.values():
-    print v.coordinates,[vertex.coordinates for vertex in v.neighbors]
+ 
+    b=setup(4)
+ 
+    b.printVertices()
+    b.printHexes()
+    # b.vertices[2.5,0.0].addNeighbors(b.vertices)
+    for v in b.vertices.values():
+        print v.coordinates,[vertex.coordinates for vertex in v.neighbors]
+ 
