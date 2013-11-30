@@ -85,7 +85,7 @@ class Building(object):
 
 def setup(numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
-    if numPlayers<3 or numPlayers>5:
+    if numPlayers<3 or numPlayers>6:
         return 'Too many or too few players specified'
     if 2<numPlayers<5:
         resources={'lumber':4,'grain':4,'sheep':4,'brick':3,'ore':3,'desert':1}

@@ -10,9 +10,9 @@ $(document).ready(function(){
     var interactive = true;
     var stage = new PIXI.Stage(0xffffff, interactive);
 
-    stage.click=stage.tap=function(){
-        console.log('click')
-    }
+    // stage.click=stage.tap=function(){
+    //     console.log('click');
+    // }
 
     //renderer instance
     var renderer = PIXI.autoDetectRenderer(WIDTH,HEIGHT);
@@ -49,38 +49,49 @@ $(document).ready(function(){
         //draw a hexagon
         graphics.lineStyle(5, 0x000000);
         graphics.beginFill(color);
-        // var hexagon= new PIXI.Polygon(
-        //     x+radius,y,
-        //     x+radius/2, y+vert,
-        //     x-radius/2, y+vert,
-        //     x-radius,y,
-        //     x-radius/2,y-vert,
-        //     x+radius/2,y-vert);
+        
         // console.log(hexagon)
         // graphics.addChild(hexagon);
-        graphics.moveTo(x+radius,y);
-        graphics.lineTo(x+radius/2,y+vert);
-        graphics.lineTo(x-radius/2,y+vert);
-        graphics.lineTo(x-radius,y);
-        graphics.lineTo(x-radius/2,y-vert);
-        graphics.lineTo(x+radius/2,y-vert);
-        graphics.lineTo(x+radius,y);
+        graphics.moveTo(radius,0);
+        graphics.lineTo(radius/2,0+vert);
+        graphics.lineTo(-radius/2,0+vert);
+        graphics.lineTo(-radius,0);
+        graphics.lineTo(-radius/2,0-vert);
+        graphics.lineTo(radius/2,0-vert);
+        graphics.lineTo(radius,0);
         graphics.endFill();
-        graphics.setInteractive(true);
+        graphics.position.x=x;
+        graphics.position.y=y;
+        graphics.interactive=true;
+        var hexagon= new PIXI.Polygon(
+            0+radius,0,
+            0+radius/2, 0+vert,
+            0-radius/2, 0+vert,
+            0-radius,0,
+            0-radius/2,0-vert,
+            0+radius/2,0-vert);
+        graphics.hitArea=hexagon;
         // set the mousedown and touchstart callback..
-        graphics.mousedown = graphics.touchstart = function(data){
+        graphics.mousedown = function(data){
             console.log('mousedown');
             this.isdown = true;
             this.alpha = 0;
         }
         
+        graphics.mousover = function(data){
+            console.log('mouseover');
+            this.isdown = true;
+            this.alpha = 0;
+        }
         // set the mouseup and touchend callback..
-        graphics.mouseup = graphics.touchend = function(data){
+        graphics.mouseup = function(data){
             this.isdown = false;
+            this.alpha = 1;
             console.log('mouseup');
         }
         console.log(graphics);
         stage.addChild(graphics);
+        window.graphics=graphics;
     }
 
     
@@ -92,8 +103,9 @@ $(document).ready(function(){
     requestAnimationFrame( animate );
 
     //make texture
-
+    var i = 0x000000
     function animate() {
+        // console.log('animate')
         requestAnimationFrame( animate );
 
         //render stage

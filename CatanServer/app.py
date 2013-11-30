@@ -23,12 +23,7 @@ app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
 @app.route('/')
 def homepage():
-    title= Test()
-    title.title='Catan'
-    return render_template('index.jade', title=title.title)
-
-class Test():
-    pass
+    return render_template('index.jade', title='Catan')
 
 if __name__ == '__main__':
     app.run()
