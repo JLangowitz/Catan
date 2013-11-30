@@ -50,10 +50,16 @@ class Vertex(object):
                     self.neighbors=[vertices[point]]
     
     def getResources(self):
-        resources=[]
+        resources = {}
+        
         for h in self.hexes:
-            resources.append(h.resource)
+            if h.rollNumber in resources:
+                resources[h.rollNumber].append(h.resource)
+            else:
+                resources[h.rollNumber] = [h.resource]
         return resources
+
+        return resources, rolls
 class Hex(object):
     """Represents each Hexes on the board
 
@@ -67,8 +73,10 @@ class Hex(object):
         self.rollNumber=rollNumber
         self.robber=robber
         self.vertices=[]
+
     def addVertex(self,vertex):
         self.vertices.append(vertex)
+
 
 class Building(object):
     """Represents every structure on the board
@@ -82,6 +90,23 @@ class Building(object):
         self.player = player
         self.ifCity = False
 
+    def provideResources(self): #Not done, needs to incorporate roll number
+        buildHist = {}
+        vertRes = self.vertex.getResources()
+
+        if self.ifCity:
+            n = 2
+        else: 
+            n = 1
+        for roll in vertRes:
+            if roll not in buildHist:
+                buildHist[roll] = {}
+            for resource in vertRes[roll]:
+                if resource in buildHist[roll]:
+                    buildHist[roll][resource] += n
+                else:
+                    buildHist[roll][resource] = n
+        return buildHist
 
 def setup(numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
@@ -99,11 +124,12 @@ def setup(numPlayers):
         ports=[]
     hexes=[]
     vertices={}
-
     rollNumberCounter=0
     boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
+    #number of tiles from center tile
     for i in range(-2*boardRadius,2*(boardRadius+1),2):
         hexesInColumn=int(numHexesInCenter - math.fabs(i/2.0))
+        #calculates the indices for the rows in the column changing from even to odd
         for j in range(-(hexesInColumn-1),(hexesInColumn+1),2):
             r=[]
             robberStatus=False
@@ -120,15 +146,14 @@ def setup(numPlayers):
                 rollNumberCounter=rollNumberCounter+1
             h=Hex((i/2.0,j/2.0),hexResource,rollNumber,robberStatus)
             for vi in range(i-1,i+2,2):
+                #these are all the x coordinates possible for vertices around a hex
                 for vj in range(j-1,j+2):
-                    print (vi/2.0,vj/2.0)
                     if (vi/2.0,vj/2.0) in vertices:
                         vertices[(vi/2.0,vj/2.0)].addHex(h)
                         h.addVertex(vertices[(vi/2.0,vj/2.0)])
                     else:
                         vertex=Vertex((vi/2.0,vj/2.0),[h])
                         vertices[vi/2.0,vj/2.0]=vertex
-                        # print (vi/2.0,vj/2.0) in vertices
                         h.addVertex(vertex)
             hexes.append(h)
 
@@ -136,11 +161,12 @@ def setup(numPlayers):
     for vertex in board.vertices.values():
         vertex.addNeighbors(board.vertices)
     return board
-
-b=setup(4)
-
-b.printVertices()
-b.printHexes()
-# b.vertices[2.5,0.0].addNeighbors(b.vertices)
-for v in b.vertices.values():
-    print v.coordinates,[vertex.coordinates for vertex in v.neighbors]
+ 
+    b=setup(4)
+ 
+    b.printVertices()
+    b.printHexes()
+    # b.vertices[2.5,0.0].addNeighbors(b.vertices)
+    for v in b.vertices.values():
+        print v.coordinates,[vertex.coordinates for vertex in v.neighbors]
+ 

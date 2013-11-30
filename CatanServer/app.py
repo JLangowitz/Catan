@@ -9,6 +9,11 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 import os
 from werkzeug import secure_filename
+from buildRoad import *
+from drawDev import *
+from gameObjects import *
+from player import *
+from rollDice import *
 
 # config
 DEBUG = True
