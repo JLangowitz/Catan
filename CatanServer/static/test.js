@@ -1,11 +1,16 @@
 
 $(document).ready(function(){
-    var HEIGHT=1000;
-    var WIDTH=800;
+    var HEIGHT=$(document).height();
+    var WIDTH=$('.everything').width()
     var HEX_RADIUS=50;
     var HEX_VERT=HEX_RADIUS*Math.sqrt(3)/2;
     var NUM_HEXES_IN_CENTER=5;
-    var RESOURCE_MAP={'lumber':0x003300,'sheep':0x00ff00,'ore':0x2e2e1f,'brick':0xa32900,'desert':0xd68533}
+    var RESOURCE_MAP={'lumber':0x003300,
+        'sheep':0x00ff00,
+        'ore':0x2e2e1f,
+        'brick':0xa32900,
+        'grain':0xffff00,
+        'desert':0xd68533}
     
     //stage instance
     var interactive = true;
@@ -39,7 +44,7 @@ $(document).ready(function(){
                 var j=parseFloat(coordinates[1]);
                 var x=WIDTH/2+i*HEX_RADIUS*3/2;
                 var y=HEIGHT/2+2*j*HEX_VERT;
-                drawHexagon(x,y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource]);
+                drawHexagon(x,y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
             }
         });
         $('#start').hide();
@@ -61,7 +66,7 @@ $(document).ready(function(){
     }
 
 
-    function drawHexagon(x,y,radius,color){
+    function drawHexagon(x,y,radius,color,number){
         var graphics = new PIXI.Graphics();
         // draws regular hexagon centered on x,y
         // x,y: coordinates of center
@@ -75,46 +80,54 @@ $(document).ready(function(){
         
         // console.log(hexagon)
         // graphics.addChild(hexagon);
-        graphics.moveTo(radius,0);
-        graphics.lineTo(radius/2,0+vert);
-        graphics.lineTo(-radius/2,0+vert);
-        graphics.lineTo(-radius,0);
-        graphics.lineTo(-radius/2,0-vert);
-        graphics.lineTo(radius/2,0-vert);
-        graphics.lineTo(radius,0);
-        graphics.endFill();
         graphics.position.x=x;
         graphics.position.y=y;
-        graphics.interactive=true;
-        var hexagon= new PIXI.Polygon(
-            0+radius,0,
-            0+radius/2, 0+vert,
-            0-radius/2, 0+vert,
-            0-radius,0,
-            0-radius/2,0-vert,
-            0+radius/2,0-vert);
-        graphics.hitArea=hexagon;
-        // set the mousedown and touchstart callback..
-        graphics.mousedown = function(data){
-            console.log('mousedown');
-            this.isdown = true;
-            this.alpha = 0;
-        }
+
+        graphics.moveTo(radius,0);
+        graphics.lineTo(radius/2,vert);
+        graphics.lineTo(-radius/2,vert);
+        graphics.lineTo(-radius,0);
+        graphics.lineTo(-radius/2,-vert);
+        graphics.lineTo(radius/2,-vert);
+        graphics.lineTo(radius,0);
+        graphics.endFill();
         
-        graphics.mousover = function(data){
-            console.log('mouseover');
-            this.isdown = true;
-            this.alpha = 0;
+
+        if (number){
+            graphics.beginFill(0xffffff);
+            graphics.drawCircle(0,0,radius/2);
+            graphics.endFill();
+            
+            var dot= new PIXI.Text(number,{font: "24px Arial", fill: "black", align: "center"});
+            dot.position.x=x-radius/4;
+            dot.position.y=y-radius/4;
+
+            var circle= new PIXI.Circle(0,0,radius/3);
+            graphics.interactive=true;
+            graphics.hitArea=circle;
+            // set the mousedown and touchstart callback..
+            graphics.mousedown = function(data){
+                console.log('mousedown');
+                this.isdown = true;
+                this.alpha = 0.5;
+            }
+            
+            graphics.mousover = function(data){
+                console.log('mouseover');
+                this.isdown = true;
+                this.alpha = 0.5;
+            }
+            // set the mouseup and touchend callback..
+            graphics.mouseup = function(data){
+                this.isdown = false;
+                this.alpha = 1;
+                console.log('mouseup');
+            }
         }
-        // set the mouseup and touchend callback..
-        graphics.mouseup = function(data){
-            this.isdown = false;
-            this.alpha = 1;
-            console.log('mouseup');
-        }
-        // console.log(graphics);
         stage.addChild(graphics);
-        window.graphics=graphics;
+        if (number) {
+            stage.addChild(dot);
+        };
     }
 
     

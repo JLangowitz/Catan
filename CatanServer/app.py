@@ -35,9 +35,9 @@ def homepage():
 def start():
     playerNames = request.form['players'].split(', ')
     game = Game(playerNames)
-    game.board.printHexes()
-    for player in game.players:
-        print player
+    # game.board.printHexes()
+    # for player in game.players:
+    #     print player
     jsonGame=jsonpickle.encode(game)
     return jsonGame
 

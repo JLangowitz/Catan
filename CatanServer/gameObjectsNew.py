@@ -135,16 +135,16 @@ def setup(board, numPlayers):
     if 2<numPlayers<5:
         resources={'lumber':4,'grain':4,'sheep':4,'brick':3,'ore':3,'desert':1}
         numHexesInCenter=5
-        rollNumbers=[5,2,6,8,10,9,3,3,11,4,8,4,6,5,10,11,12,9]
+        rollNumbers=[5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11]
         ports=[]
     if 4<numPlayers<7:
         resources={'lumber':6,'grain':6,'sheep':6,'brick':5,'ore':5,'desert':2}
         numHexesInCenter=6
-        rollNumbers=[5,2,6,8,10,9,3,3,11,4,8,4,6,5,10,11,12,9,0,0,0,0,0,0,0,0,0,0,0]
+        rollNumbers=[2,5,4,6,3,9,8,11,11,10,6,3,8,4,8,10,11,12,10,5,4,9,5,9,12,3,2,6]
         ports=[]
     hexes={}
     vertices={}
-    rollNumberCounter=0
+    # rollNumberCounter=0
     boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
     #number of tiles from center tile
     for i in range(-2*boardRadius,2*(boardRadius+1),2):
@@ -153,6 +153,7 @@ def setup(board, numPlayers):
         for j in range(-(hexesInColumn-1),(hexesInColumn+1),2):
             r=[]
             robberStatus=False
+            rollNumber=None
             for key in resources:
                 r.extend([key]*resources[key])
             hexResource=random.choice(r)
@@ -161,9 +162,9 @@ def setup(board, numPlayers):
                 rollNumber=0
                 robberStatus=True
 
-            else:
-                rollNumber=rollNumbers[rollNumberCounter]
-                rollNumberCounter=rollNumberCounter+1
+            # else:
+            #     rollNumber=rollNumbers[rollNumberCounter]
+            #     rollNumberCounter=rollNumberCounter+1
             h=Hex((i/2.0,j/2.0),hexResource,rollNumber,robberStatus)
             for vi in range(i-1,i+2,2):
                 #these are all the x coordinates possible for vertices around a hex
@@ -181,7 +182,52 @@ def setup(board, numPlayers):
     board.vertices=vertices
     for vertex in board.vertices.values():
         vertex.addNeighbors(board)
+    placeDots(board,numPlayers, rollNumbers)
     return board
+
+def placeDots(board, numPlayers, dots):
+    visited=set()
+    if 2<numPlayers<5:
+        x,y=0.0,2.0
+        direc=0
+        last=(0.0,0.0)
+    else:
+        x,y=3.0,1.0
+        direc=1
+        last=(0.0,0.5)
+    index=0
+    while (x,y)!=last:
+        visited.add((x,y))
+        h=board.hexes[x,y]
+        print(x,y)
+        print index
+        print h.resource
+        print dots[index]
+        if h.resource!='desert':
+            h.rollNumber=dots[index]
+            index+=1
+        else:
+            h.rollNumber=0
+        next=nextInSpiral(x,y,direc)
+        while next in visited or next not in board.hexes:
+            direc=(direc+1)%6
+            next=nextInSpiral(x,y,direc)
+        x,y=nextInSpiral(x,y,direc)
+    h=board.hexes[last]
+    print(x,y)
+    print index
+    print h.resource
+    try:
+        h.rollNumber=dots[index]
+        print dots[index]
+    except:
+        h.rollNumber=0
+
+
+def nextInSpiral(x,y,direc):
+    next=((x+1,y-.5),(x,y-1),(x-1,y-.5),(x-1,y+.5),(x,y+1),(x+1,y+.5))
+    return next[direc]
+
 if __name__ == '__main__':
     
     board=Board(4)
