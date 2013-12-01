@@ -1,9 +1,26 @@
 extends layout
 
 block content
-    div
-        h1(id='test') Hello World
+    div(class='center-block text-center')
         h1 #{title}
+        form(class='form-horizontal', role='form',id='start')
+            div(class='form-group')
+                label(for='players', class='control-label') Player Names, Comma Separated
+                input(type='text', class='form-control', id='players')
+                //- h3(id='numPlayers') Select a Number of Players
+                //- label(class='radio-inline')
+                //-     input(type='radio', name='players', value=3) 
+                //-     |3
+                //- label(class='radio-inline')
+                //-     input(type='radio', name='players', value=4) 
+                //-     |4
+                //- label(class='radio-inline')
+                //-     input(type='radio', name='players', value=5) 
+                //-     |5
+                //- label(class='radio-inline')
+                //-     input(type='radio', name='players', value=6) 
+                //-     |6
+            button(type='submit', class='btn btn-primary') Start Game
 
         
 block scripts

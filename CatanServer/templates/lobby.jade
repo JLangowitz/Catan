@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    div(id='gamelist') Here is the list of open games
+        for game in games
+            div(class='game') #{game.players} out of #{game.maxPlayers}
+            button(class='btn inline-block', id=game.id) Join Game
+
+
+block scripts

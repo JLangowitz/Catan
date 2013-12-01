@@ -5,6 +5,7 @@ $(document).ready(function(){
     var HEX_RADIUS=50;
     var HEX_VERT=HEX_RADIUS*Math.sqrt(3)/2;
     var NUM_HEXES_IN_CENTER=5;
+    var RESOURCE_MAP={'lumber':0x003300,'sheep':0x00ff00,'ore':0x2e2e1f,'brick':0xa32900,'desert':0xd68533}
     
     //stage instance
     var interactive = true;
@@ -20,8 +21,30 @@ $(document).ready(function(){
 
     //graphics object
     //var graphics = new PIXI.Graphics();
-
-    drawBoard(WIDTH, HEIGHT, NUM_HEXES_IN_CENTER, HEX_RADIUS);
+    $('#start').submit(function(){
+        // drawBoard(WIDTH, HEIGHT, NUM_HEXES_IN_CENTER, HEX_RADIUS);
+        var playerNames= $('#players').val();
+        console.log(playerNames)
+        $.post('/start', {players:playerNames}, function(game){
+            console.log(game);
+            var game=JSON.parse(game);
+            var hexes=game.board.hexes;
+            console.log(game);
+            console.log(game.board);
+            for (h in hexes){
+                console.log(hexes[h]);
+                var coordinates=h.substring(1, h.length-1);
+                coordinates=coordinates.split(', ');
+                var i=parseFloat(coordinates[0]);
+                var j=parseFloat(coordinates[1]);
+                var x=WIDTH/2+i*HEX_RADIUS*3/2;
+                var y=HEIGHT/2+2*j*HEX_VERT;
+                drawHexagon(x,y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource]);
+            }
+        });
+        $('#start').hide();
+        return false;
+    });
     // drawHexagon(WIDTH/2,HEIGHT/2,HEX_RADIUS,0xff0000);
 
     function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
@@ -31,7 +54,7 @@ $(document).ready(function(){
             var hexesInColumn=numHexesInCenterColumn - Math.abs(i);
             console.log(hexesInColumn);
             for(var j=-(hexesInColumn-1)/2;j<=(hexesInColumn-1)/2;j++){
-                console.log(i,j);
+                // console.log(i,j);
                 drawHexagon(width/2+i*hexRadius*3/2,height/2-2*j*vert,hexRadius,0xff0000);
             };
         };
@@ -89,7 +112,7 @@ $(document).ready(function(){
             this.alpha = 1;
             console.log('mouseup');
         }
-        console.log(graphics);
+        // console.log(graphics);
         stage.addChild(graphics);
         window.graphics=graphics;
     }

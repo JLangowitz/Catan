@@ -12,7 +12,7 @@ class Game(object):
         self.players=[]
         for playerName in playerList:
             self.players.append(Player(name=playerName))
-        self.board=setup(len(self.players))
+        self.board=Board(len(self.players))
 
     def __str__(self):
         return ''
@@ -23,15 +23,16 @@ class Board(object):
 
     attributes: subclass hexes, subclass verticies, 
     """
-    def __init__(self,hexes=[],vertices={}):
-        self.hexes=hexes
-        self.vertices=vertices
+    def __init__(self, numPlayers):
+        setup(self, numPlayers)
+
     def printHexes(self):
-        for h in self.hexes:
+        for coords in self.hexes:
+            h=self.hexes[coords]
             print h.coordinates, h.resource, h.rollNumber,h.robber
     def printVertices(self):
         for key in self.vertices:
-            print self.vertices[key].coordinates, self.vertices[key].getResources()
+            print self.vertices[key].coordinates, self.vertices[key].getResources(self)
 class Vertex(object):
     """Represents each Vertex on the board
 
@@ -52,24 +53,26 @@ class Vertex(object):
     def addHex(self,h):
         self.hexes.append(h)
     
-    def addNeighbors(self,vertices):
+    def addNeighbors(self,board):
+        vertices=board.vertices
         x,y=self.coordinates
         # silly math to figure out whether 3rd vertex is left or right
         leftFacing= (math.floor(x)%2+int(2*y)%2)%2
         direc={0:1,1:-1}
         neighborCoordinates=[(x,y-.5),(x,y+.5),(x+direc[leftFacing],y)]
-        print neighborCoordinates
+        # print neighborCoordinates
         for point in neighborCoordinates:
             if point in vertices:
                 if self.neighbors:
-                    self.neighbors.append(vertices[point])
+                    self.neighbors.append(point)
                 else:
-                    self.neighbors=[vertices[point]]
+                    self.neighbors=[point]
     
-    def getResources(self):
+    def getResources(self, board):
         resources = {}
         
-        for h in self.hexes:
+        for coords in self.hexes:
+            h=board.hexes[coords]
             if h.rollNumber in resources:
                 resources[h.rollNumber].append(h.resource)
             else:
@@ -125,7 +128,7 @@ class Building(object):
                     buildHist[roll][resource] = n
         return buildHist
 
-def setup(numPlayers):
+def setup(board, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
     if numPlayers<3 or numPlayers>6:
         return 'Too many or too few players specified'
@@ -139,7 +142,7 @@ def setup(numPlayers):
         numHexesInCenter=6
         rollNumbers=[5,2,6,8,10,9,3,3,11,4,8,4,6,5,10,11,12,9,0,0,0,0,0,0,0,0,0,0,0]
         ports=[]
-    hexes=[]
+    hexes={}
     vertices={}
     rollNumberCounter=0
     boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
@@ -166,25 +169,26 @@ def setup(numPlayers):
                 #these are all the x coordinates possible for vertices around a hex
                 for vj in range(j-1,j+2):
                     if (vi/2.0,vj/2.0) in vertices:
-                        vertices[(vi/2.0,vj/2.0)].addHex(h)
-                        h.addVertex(vertices[(vi/2.0,vj/2.0)])
+                        vertices[(vi/2.0,vj/2.0)].addHex(h.coordinates)
+                        h.addVertex((vi/2.0,vj/2.0))
                     else:
-                        vertex=Vertex((vi/2.0,vj/2.0),[h])
+                        vertex=Vertex((vi/2.0,vj/2.0),[h.coordinates])
                         vertices[vi/2.0,vj/2.0]=vertex
-                        h.addVertex(vertex)
-            hexes.append(h)
+                        h.addVertex(vertex.coordinates)
+            hexes[i/2.0,j/2.0]=h
 
-    board=Board(hexes,vertices)
+    board.hexes=hexes
+    board.vertices=vertices
     for vertex in board.vertices.values():
-        vertex.addNeighbors(board.vertices)
+        vertex.addNeighbors(board)
     return board
 if __name__ == '__main__':
     
-    b=setup(4)
-
-    b.printVertices()
-    b.printHexes()
+    board=Board(4)
+    print board.__dict__
+    board.printHexes()
+    board.printVertices()
     # b.vertices[2.5,0.0].addNeighbors(b.vertices)
-    for v in b.vertices.values():
+    for v in board.vertices.values():
         print v.coordinates,[vertex.coordinates for vertex in v.neighbors]
      

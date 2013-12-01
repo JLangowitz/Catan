@@ -6,14 +6,15 @@ Website
 """
 # imports
 from flask import Flask, request, session, g, redirect, url_for, \
-     abort, render_template, flash
+     abort, render_template, flash, json, jsonify
 import os
 from werkzeug import secure_filename
-from buildRoad import *
-from drawDev import *
-from gameObjects import *
+# from buildRoad import *
+# from drawDev import *
+from gameObjectsNew import *
 from player import *
-from rollDice import *
+# from rollDice import *
+import jsonpickle
 
 # config
 DEBUG = True
@@ -29,6 +30,16 @@ app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 @app.route('/')
 def homepage():
     return render_template('index.jade', title='Catan')
+
+@app.route('/start', methods=['POST'])
+def start():
+    playerNames = request.form['players'].split(', ')
+    game = Game(playerNames)
+    game.board.printHexes()
+    for player in game.players:
+        print player
+    jsonGame=jsonpickle.encode(game)
+    return jsonGame
 
 if __name__ == '__main__':
     app.run()

@@ -1,4 +1,4 @@
-from gameObjects import *
+from gameObjectsNew import *
 
 class Player:
     """Represents a player in catan
@@ -6,8 +6,9 @@ class Player:
     Attributes: name, points, bonuses, hand, buildings, soldiers, devcards,hist
     """
 
-    def __init__(self):
-        self.name = raw_input("Player Name? ")  #Takes in Players name
+    def __init__(self, name=None):
+        # self.name = raw_input("Player Name? ")  #Takes in Players name
+        self.name = name
         self.points = 0   
         self.bonuses = {'longestRoad':False, 'largestArmy': False}
         self.hand = {'ore':0,'lumber':0,'brick':0,'sheep':0,'grain':0}  #dictionary mapping Resource card strings to number of cards
