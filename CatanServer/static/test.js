@@ -34,7 +34,7 @@ $(document).ready(function(){
             var game=JSON.parse(game);
             var hexes=game.board.hexes;
             var vertices=game.board.vertices;
-            // console.log(game);
+            console.log(game);
             for (h in hexes){
                 // console.log(hexes[h]);
                 var coords = splitCoords(h);
@@ -45,14 +45,18 @@ $(document).ready(function(){
                 var coords = splitCoords(v);
                 var x = coords.x;
                 var y = coords.y;
-                correctLeft=(Math.floor(coords.i)%2+Math.floor(2*coords.j)%2)%2;
-                console.log(coords.i,coords.j,correctLeft);
-                if (correctLeft){
-                    x-=HEX_RADIUS/4;
+                correctRight=Math.abs(Math.floor(coords.i)%2+Math.floor(2*coords.j)%2)%2;
+                console.log('coords',coords.i,coords.j,correctRight);
+                if (game.players.length<5){
+                    correctRight=1-correctRight;
                 }
-                else{
+                if (correctRight){
                     x+=HEX_RADIUS/4;
                 }
+                else{
+                    x-=HEX_RADIUS/4;
+                }
+                
                 drawVertex(x,y,HEX_RADIUS/10,vertices[v].building);
             }
         });

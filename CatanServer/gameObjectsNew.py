@@ -12,7 +12,7 @@ class Game(object):
         self.players=[]
         for playerName in playerList:
             self.players.append(Player(name=playerName))
-        self.board=Board(len(self.players))
+        self.board=Board(self, len(self.players))
 
     def __str__(self):
         return ''
@@ -23,8 +23,8 @@ class Board(object):
 
     attributes: subclass hexes, subclass verticies, 
     """
-    def __init__(self, numPlayers):
-        setup(self, numPlayers)
+    def __init__(self, game, numPlayers):
+        setup(self, game, numPlayers)
 
     def printHexes(self):
         for coords in self.hexes:
@@ -53,14 +53,16 @@ class Vertex(object):
     def addHex(self,h):
         self.hexes.append(h)
     
-    def addNeighbors(self,board):
+    def addNeighbors(self,game,board):
         vertices=board.vertices
         x,y=self.coordinates
         # silly math to figure out whether 3rd vertex is left or right
-        leftFacing= (math.floor(x)%2+int(2*y)%2)%2
-        direc={0:1,1:-1}
-        neighborCoordinates=[(x,y-.5),(x,y+.5),(x+direc[leftFacing],y)]
-        # print neighborCoordinates
+        rightFacing = (math.floor(x)%2+int(2*y)%2)%2
+        if len(game.players)<5:
+            rightFacing = 1-rightFacing
+        direc={0:-1,1:1}
+        neighborCoordinates=[(x,y-.5),(x,y+.5),(x+direc[rightFacing],y)]
+        # print (x,y), neighborCoordinates
         for point in neighborCoordinates:
             if point in vertices:
                 if self.neighbors:
@@ -128,7 +130,7 @@ class Building(object):
                     buildHist[roll][resource] = n
         return buildHist
 
-def setup(board, numPlayers):
+def setup(board, game, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
     if numPlayers<3 or numPlayers>6:
         return 'Too many or too few players specified'
@@ -181,8 +183,10 @@ def setup(board, numPlayers):
     board.hexes=hexes
     board.vertices=vertices
     for vertex in board.vertices.values():
-        vertex.addNeighbors(board)
-    placeDots(board,numPlayers, rollNumbers)
+        vertex.addNeighbors(game, board)
+    placeDots(board, numPlayers, rollNumbers)
+    for v in board.vertices.values():
+        print v.coordinates,[vertex for vertex in v.neighbors]
     return board
 
 def placeDots(board, numPlayers, dots):
@@ -199,10 +203,10 @@ def placeDots(board, numPlayers, dots):
     while (x,y)!=last:
         visited.add((x,y))
         h=board.hexes[x,y]
-        print(x,y)
-        print index
-        print h.resource
-        print dots[index]
+        # print(x,y)
+        # print index
+        # print h.resource
+        # print dots[index]
         if h.resource!='desert':
             h.rollNumber=dots[index]
             index+=1
@@ -214,12 +218,12 @@ def placeDots(board, numPlayers, dots):
             next=nextInSpiral(x,y,direc)
         x,y=nextInSpiral(x,y,direc)
     h=board.hexes[last]
-    print(x,y)
-    print index
-    print h.resource
+    # print(x,y)
+    # print index
+    # print h.resource
     try:
         h.rollNumber=dots[index]
-        print dots[index]
+        # print dots[index]
     except:
         h.rollNumber=0
 
