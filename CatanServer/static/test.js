@@ -31,20 +31,19 @@ $(document).ready(function(){
         var playerNames= $('#players').val();
         console.log(playerNames)
         $.post('/start', {players:playerNames}, function(game){
-            console.log(game);
             var game=JSON.parse(game);
             var hexes=game.board.hexes;
-            console.log(game);
-            console.log(game.board);
+            var vertices=game.board.vertices;
+            // console.log(game);
             for (h in hexes){
-                console.log(hexes[h]);
-                var coordinates=h.substring(1, h.length-1);
-                coordinates=coordinates.split(', ');
-                var i=parseFloat(coordinates[0]);
-                var j=parseFloat(coordinates[1]);
-                var x=WIDTH/2+i*HEX_RADIUS*3/2;
-                var y=HEIGHT/2+2*j*HEX_VERT;
-                drawHexagon(x,y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
+                // console.log(hexes[h]);
+                var coords = splitCoords(h);
+                drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
+            }
+            for (v in vertices){
+                console.log(vertices[v]);
+                var coords = splitCoords(v);
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10,vertices[v].building);
             }
         });
         $('#start').hide();
@@ -52,19 +51,48 @@ $(document).ready(function(){
     });
     // drawHexagon(WIDTH/2,HEIGHT/2,HEX_RADIUS,0xff0000);
 
-    function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
-        var boardRadius = (numHexesInCenterColumn-numHexesInCenterColumn%2)/2;
-        var vert = hexRadius*Math.sqrt(3)/2;
-        for (var i = -boardRadius; i <= boardRadius; i++) {
-            var hexesInColumn=numHexesInCenterColumn - Math.abs(i);
-            console.log(hexesInColumn);
-            for(var j=-(hexesInColumn-1)/2;j<=(hexesInColumn-1)/2;j++){
-                // console.log(i,j);
-                drawHexagon(width/2+i*hexRadius*3/2,height/2-2*j*vert,hexRadius,0xff0000);
-            };
-        };
+    function splitCoords(coordStr){
+        var coordinates=coordStr.substring(1, coordStr.length-1);
+        coordinates=coordinates.split(', ');
+        var i=parseFloat(coordinates[0]);
+        var j=parseFloat(coordinates[1]);
+        var x=WIDTH/2+i*HEX_RADIUS*3/2;
+        var y=HEIGHT/2+2*j*HEX_VERT;
+        return {'x':x,'y':y};
     }
 
+    // function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
+    //     var boardRadius = (numHexesInCenterColumn-numHexesInCenterColumn%2)/2;
+    //     var vert = hexRadius*Math.sqrt(3)/2;
+    //     for (var i = -boardRadius; i <= boardRadius; i++) {
+    //         var hexesInColumn=numHexesInCenterColumn - Math.abs(i);
+    //         console.log(hexesInColumn);
+    //         for(var j=-(hexesInColumn-1)/2;j<=(hexesInColumn-1)/2;j++){
+    //             // console.log(i,j);
+    //             drawHexagon(width/2+i*hexRadius*3/2,height/2-2*j*vert,hexRadius,0xff0000);
+    //         };
+    //     };
+    // }
+
+    function drawVertex(x,y,radius,building){
+        var graphics = new PIXI.Graphics();
+        graphics.lineStyle(1, 0x000000);
+        graphics.beginFill(0x000000);
+        graphics.position.x=x;
+        graphics.position.y=y;
+        graphics.drawCircle(0,0,radius);
+
+        circle = new PIXI.Circle(0,0,radius);
+
+        graphics.interactive=true;
+        graphics.hitArea=circle;
+
+        graphics.click = function(data){
+            console.log('vertex')
+       };
+
+       stage.addChild(graphics);
+    }
 
     function drawHexagon(x,y,radius,color,number){
         var graphics = new PIXI.Graphics();
