@@ -43,7 +43,17 @@ $(document).ready(function(){
             for (v in vertices){
                 console.log(vertices[v]);
                 var coords = splitCoords(v);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10,vertices[v].building);
+                var x = coords.x;
+                var y = coords.y;
+                correctLeft=(Math.floor(coords.i)%2+Math.floor(2*coords.j)%2)%2;
+                console.log(coords.i,coords.j,correctLeft);
+                if (correctLeft){
+                    x-=HEX_RADIUS/4;
+                }
+                else{
+                    x+=HEX_RADIUS/4;
+                }
+                drawVertex(x,y,HEX_RADIUS/10,vertices[v].building);
             }
         });
         $('#start').hide();
@@ -58,7 +68,7 @@ $(document).ready(function(){
         var j=parseFloat(coordinates[1]);
         var x=WIDTH/2+i*HEX_RADIUS*3/2;
         var y=HEIGHT/2+2*j*HEX_VERT;
-        return {'x':x,'y':y};
+        return {'i':i,'j':j,'x':x,'y':y};
     }
 
     // function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
