@@ -18,6 +18,8 @@ class Player:
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
         self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
+        self.cityNumber = 0
+        self.settlementNumber = 0
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -96,17 +98,20 @@ Largest Army? %s
 
         """
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if vertex.building != None: 
+        if vertex.built:
             return False
         for point in vertex.neighbors:
-            if point.building != None:
+            if point.built: 
                 return False
         for resource in settlementResources:
-            if player.hand[resource] < settlementResources[resource]:
+            if self.hand[resource] < settlementResources[resource]:
                 return False
+        if self.settlementNumber >= 4
+            return False
         for road in self.roads:
             if road[0] == vertex or road[1] == vertex:
                 return True
+
 
     def buildSettlement(self,vertex):
         """Checks to see if you can build and builds a settlement 
@@ -121,11 +126,12 @@ Largest Army? %s
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if checkSettlement(self,vertex) == True:
             self.payCards(settlementResources)  #pay cards to build
-            building1 = Building(self, vertex)  #creates a building object
-            vertex.build()         #build building on vertex
-            self.buildings.append[building1]    #add buildings to list of buildings
+            building = Building(self, vertex)  #creates a building object
+            vertex.build()                      #build building on vertex
+            self.buildings.append[building]    #add buildings to list of buildings
             self.buildHist                      #rebuild the dice histogram
             self.calcPoints                     #calc points
+            self.settlementNumber += 1
         else:
             return "You must construct additional pylons"
 
@@ -141,9 +147,11 @@ Largest Army? %s
         for resource in cityResources:
             if player.hand[resource] < cityResources[resource]:
                 return False
-        if vertex.building == None:
+        if vertex.built
             return False
         if building.player != self:
+            return False
+        if self.cityNumber >= 3
             return False
         return True
 
@@ -164,9 +172,10 @@ Largest Army? %s
             for building in self.buildings:     
                 if building == building1:
                     buiding1.isCity = True      #make settlement a city
-                    vertex.isCity = True        #make city on board 
                     self.buildHist              #remake historgram
                     self.calcPoints             #calculate points 
+                    self.settlementNumber -= 1
+                    self.cityNumber += 1
         else:
             return "You must construct additional pylons"
 
