@@ -44,11 +44,11 @@ class Vertex(object):
     def __init__(self,coordinates=(0,0),h=None,neighbors=None):
         self.coordinates=coordinates
         self.hexes=h
-        self.building=None
+        self.built=False
         self.neighbors=neighbors
     
-    def build(self,building):
-        self.building=building
+    def build(self):
+        self.built = True
 
     def addHex(self,h):
         self.hexes.append(h)
@@ -96,8 +96,8 @@ class Hex(object):
         self.robber=robber
         self.vertices=[]
 
-    def addVertex(self,vertex):
-        self.vertices.append(vertex)
+    def addVertex(self,coordiantes):
+        self.vertices.append(coordiantes)
 
 
 class Building(object):
@@ -107,8 +107,8 @@ class Building(object):
     attributes: player class, boolean, ifCity, vertex, resources provided
     """
 
-    def __init__(self, coordinates=(0,0), playernumber):
-        self.coordinates = coordinates
+    def __init__(self, vertex, playernumber):
+        self.vertex = vertex
         self.playernumber = playernumber
         self.ifCity = False
 

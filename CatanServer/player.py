@@ -122,7 +122,7 @@ Largest Army? %s
         if checkSettlement(self,vertex) == True:
             self.payCards(settlementResources)  #pay cards to build
             building1 = Building(self, vertex)  #creates a building object
-            vertex.building = building1         #build building on vertex
+            vertex.build()         #build building on vertex
             self.buildings.append[building1]    #add buildings to list of buildings
             self.buildHist                      #rebuild the dice histogram
             self.calcPoints                     #calc points
