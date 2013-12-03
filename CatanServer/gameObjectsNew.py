@@ -107,9 +107,9 @@ class Building(object):
     attributes: player class, boolean, ifCity, vertex, resources provided
     """
 
-    def __init__(self, vertex, player):
-        self.vertex = vertex
-        self.player = player
+    def __init__(self, coordinates=(0,0), playernumber):
+        self.coordinates = coordinates
+        self.playernumber = playernumber
         self.ifCity = False
 
     def provideResources(self): #Not done, needs to incorporate roll number
