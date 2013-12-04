@@ -13,9 +13,33 @@ class Game(object):
         for playerName in playerList:
             self.players.append(Player(name=playerName))
         self.board=Board(self, len(self.players))
+        self.turn=0
 
     def __str__(self):
         return ''
+
+    def findBuildableAt(self, coordinates):
+        vertex = self.board.vertices[coordinates]
+        player = self.players[self.turn]
+        builtRoads=[road for road in player.roads for player in self.players if vertex.coordinates in road]
+        if all([road not in player.roads for road in builtRoads]):
+            return [],None
+        vertexBuilding=[building for building in player.buildings for player in self.players if building.vertex is vertex]
+        if vertexBuilding:
+            vertexBuilding = vertexBuilding[0]
+            if vertexBuilding not in player.buildings:
+                return [],None
+            else:
+                if vertexBuilding.ifCity:
+                    buildableBuilding = None
+                else:
+                    buildableBuilding = 'city'
+        else:
+            buildableBuilding = 'settlement'
+        buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
+        return buildableRoads, buildableBuilding
+
+
 
 class Board(object):
     """Contains Board and all tile and vertex position
@@ -73,8 +97,7 @@ class Vertex(object):
     def getResources(self, board):
         resources = {}
         
-        for coords in self.hexes:
-            h=board.hexes[coords]
+        for h in self.hexes:
             if h.rollNumber in resources:
                 resources[h.rollNumber].append(h.resource)
             else:
@@ -94,10 +117,10 @@ class Hex(object):
         self.resource=resource
         self.rollNumber=rollNumber
         self.robber=robber
-        self.vertices=[]
+        # self.vertices=[]
 
-    def addVertex(self,coordiantes):
-        self.vertices.append(coordiantes)
+    # def addVertex(self,coordiantes):
+    #     self.vertices.append(coordiantes)
 
 
 class Building(object):
@@ -172,12 +195,12 @@ def setup(board, game, numPlayers):
                 #these are all the x coordinates possible for vertices around a hex
                 for vj in range(j-1,j+2):
                     if (vi/2.0,vj/2.0) in vertices:
-                        vertices[(vi/2.0,vj/2.0)].addHex(h.coordinates)
-                        h.addVertex((vi/2.0,vj/2.0))
+                        vertices[(vi/2.0,vj/2.0)].addHex(h)
+                        # h.addVertex((vi/2.0,vj/2.0))
                     else:
-                        vertex=Vertex((vi/2.0,vj/2.0),[h.coordinates])
+                        vertex=Vertex((vi/2.0,vj/2.0),[h])
                         vertices[vi/2.0,vj/2.0]=vertex
-                        h.addVertex(vertex.coordinates)
+                        # h.addVertex(vertex.coordinates)
             hexes[i/2.0,j/2.0]=h
 
     board.hexes=hexes

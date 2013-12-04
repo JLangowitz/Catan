@@ -15,6 +15,7 @@ from gameObjectsNew import *
 from player import *
 # from rollDice import *
 import jsonpickle
+import shelve
 
 # config
 DEBUG = True
@@ -27,6 +28,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
+d=shelve.open('game')
+
 @app.route('/')
 def homepage():
     return render_template('index.jade', title='Catan')
@@ -35,11 +38,18 @@ def homepage():
 def start():
     playerNames = request.form['players'].split(', ')
     game = Game(playerNames)
+    d['game']=game
     # game.board.printHexes()
     # for player in game.players:
     #     print player
     jsonGame=jsonpickle.encode(game)
     return jsonGame
+
+@app.route('/buildables/<x>/<y>', methods=['POST'])
+def findBuildable(x,y):
+    game=d['game']
+    roads, building = game.findBuildableAt((float(x),float(y)))
+    return jsonpickle.encode({'roads':roads,'building':building})
 
 if __name__ == '__main__':
     app.run()

@@ -1,8 +1,8 @@
 
 $(document).ready(function(){
-    var HEIGHT=$(document).height();
     var WIDTH=$('.everything').width()
-    var HEX_RADIUS=50;
+    var HEX_RADIUS=75;
+    var HEIGHT=HEX_RADIUS*12;
     var HEX_VERT=HEX_RADIUS*Math.sqrt(3)/2;
     var NUM_HEXES_IN_CENTER=5;
     var RESOURCE_MAP={'lumber':0x003300,
@@ -41,12 +41,12 @@ $(document).ready(function(){
                 drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
             }
             for (v in vertices){
-                console.log(vertices[v]);
+                // console.log(vertices[v]);
                 var coords = splitCoords(v);
                 var x = coords.x;
                 var y = coords.y;
                 correctRight=Math.abs(Math.floor(coords.i)%2+Math.floor(2*coords.j)%2)%2;
-                console.log('coords',coords.i,coords.j,correctRight);
+                // console.log('coords',coords.i,coords.j,correctRight);
                 if (game.players.length<5){
                     correctRight=1-correctRight;
                 }
@@ -57,7 +57,7 @@ $(document).ready(function(){
                     x-=HEX_RADIUS/4;
                 }
                 
-                drawVertex(x,y,HEX_RADIUS/10,vertices[v].building);
+                drawVertex(x,y,HEX_RADIUS/10);
             }
         });
         $('#start').hide();
@@ -75,6 +75,13 @@ $(document).ready(function(){
         return {'i':i,'j':j,'x':x,'y':y};
     }
 
+    function pixelsToIndices(x,y){
+        var i = (x-WIDTH/2)/HEX_RADIUS*2/3;
+        i=Math.floor(i*2+.5)/2;
+        var j = (y-HEIGHT/2)/2/HEX_VERT;
+        j=Math.floor(j*2+.5)/2;
+        return {'i':i,'j':j}
+    }
     // function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
     //     var boardRadius = (numHexesInCenterColumn-numHexesInCenterColumn%2)/2;
     //     var vert = hexRadius*Math.sqrt(3)/2;
@@ -88,7 +95,7 @@ $(document).ready(function(){
     //     };
     // }
 
-    function drawVertex(x,y,radius,building){
+    function drawVertex(x,y,radius){
         var graphics = new PIXI.Graphics();
         graphics.lineStyle(1, 0x000000);
         graphics.beginFill(0x000000);
@@ -102,10 +109,25 @@ $(document).ready(function(){
         graphics.hitArea=circle;
 
         graphics.click = function(data){
-            console.log('vertex')
+            var indices=pixelsToIndices(this.position.x,this.position.y);
+            console.log(indices)
+            vertexMenu(indices.i,indices.j);
        };
 
        stage.addChild(graphics);
+    }
+
+    function vertexMenu(x,y){
+        $.post('/buildables/'+x+'/'+y,{},function(data){
+            data=JSON.parse(data);
+            console.log(data);
+            console.log(data.roads);
+            console.log(data.building);
+        });
+    }
+
+    function hexMenu(x,y){
+
     }
 
     function drawHexagon(x,y,radius,color,number){
@@ -117,7 +139,7 @@ $(document).ready(function(){
         // console.log('y: ',y);
         var vert = radius*Math.sqrt(3)/2;
         //draw a hexagon
-        graphics.lineStyle(5, 0x000000);
+        graphics.lineStyle(5, 0xffff66);
         graphics.beginFill(color);
         
         // console.log(hexagon)
@@ -136,35 +158,23 @@ $(document).ready(function(){
         
 
         if (number){
-            graphics.beginFill(0xffffff);
-            graphics.drawCircle(0,0,radius/2);
+            graphics.beginFill(0xffff66);
+            graphics.drawCircle(0,0,radius/3);
             graphics.endFill();
             
-            var dot= new PIXI.Text(number,{font: "24px Arial", fill: "black", align: "center"});
-            dot.position.x=x-radius/4;
-            dot.position.y=y-radius/4;
+            var dot= new PIXI.Text(number,{font: "36px Arial", fill: "black", align: "center"});
+            dot.position.x=x-dot.width/2;
+            dot.position.y=y-dot.height/2;
 
             var circle= new PIXI.Circle(0,0,radius/3);
             graphics.interactive=true;
             graphics.hitArea=circle;
             // set the mousedown and touchstart callback..
-            graphics.mousedown = function(data){
-                console.log('mousedown');
-                this.isdown = true;
-                this.alpha = 0.5;
-            }
-            
-            graphics.mousover = function(data){
-                console.log('mouseover');
-                this.isdown = true;
-                this.alpha = 0.5;
-            }
-            // set the mouseup and touchend callback..
-            graphics.mouseup = function(data){
-                this.isdown = false;
-                this.alpha = 1;
-                console.log('mouseup');
-            }
+            graphics.click = function(data){
+                var indices=pixelsToIndices(this.position.x,this.position.y);
+                console.log(indices)
+                hexMenu(indices.i,indices.j);
+            };
         }
         stage.addChild(graphics);
         if (number) {
