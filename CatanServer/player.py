@@ -20,6 +20,7 @@ class Player:
         self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
         self.cityNumber = 0
         self.settlementNumber = 0
+        self.roadNumber = 0
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -179,7 +180,42 @@ Largest Army? %s
         else:
             return "You must construct additional pylons"
 
-        
+    def fourToOne(self,d,resource):
+        a = keys(d)
+        if len(a) == 1:
+            if d[a[0]] == 4:
+                payCards(self,d)
+                takeCards(self,resource)
+            else:
+                return "You cannont complete this trade"
+        else:
+            return "You cannot complete this trade"
+
+    def threeToOne(self,d,resource):
+        a = keys(d)
+        if len(a) == 1:
+            if d[a[0]] == 3:
+                payCards(self,d)
+                takeCards(self,resource)
+            else:
+                return "You cannont complete this trade"
+        else:
+            return "You cannot complete this trade"
+
+    def twoToOne(self,d,resource1,resource2):
+        a = keys(d)
+        if len(a) == 1:
+            if d[a[0]] == 2:
+                if d[a] == resource1
+                    payCards(self,d)
+                    takeCards(self,resource2)
+                else:
+                    return "You cannont complete this trade"
+            else:
+                return "You cannont complete this trade"
+        else:
+            return "You cannot complete this trade"
+
 
 
 def trade(player1,resources1, player2, resources2):
@@ -213,6 +249,9 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
         for road in player.roads:
             if road == (vertex1,vertex2):
                 return "Cannot Build Road"
+            if player1.roadNumber >= 14:
+                return "Cannot Build Road"
+
     for road in player1.roads:  #make road if roads touch one of the vertices
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
