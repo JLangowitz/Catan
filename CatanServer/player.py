@@ -21,6 +21,7 @@ class Player:
         self.cityNumber = 0
         self.settlementNumber = 0
         self.roadNumber = 0
+        self.ports = {"three":False,'ore':False,'lumber':False,'brick':False,'sheep':False,'grain':False,'none':False}
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -133,6 +134,7 @@ Largest Army? %s
             self.buildHist                      #rebuild the dice histogram
             self.calcPoints                     #calc points
             self.settlementNumber += 1
+            self.ports[isPort(vertex)] = True
         else:
             return "You must construct additional pylons"
 
@@ -193,29 +195,34 @@ Largest Army? %s
 
     def threeToOne(self,d,resource):
         a = keys(d)
-        if len(a) == 1:
-            if d[a[0]] == 3:
-                payCards(self,d)
-                takeCards(self,resource)
-            else:
-                return "You cannont complete this trade"
-        else:
-            return "You cannot complete this trade"
-
-    def twoToOne(self,d,resource1,resource2):
-        a = keys(d)
-        if len(a) == 1:
-            if d[a[0]] == 2:
-                if d[a] == resource1
+        if self.ports["three"]
+            if len(a) == 1:
+                if d[a[0]] == 3:
                     payCards(self,d)
-                    takeCards(self,resource2)
+                    takeCards(self,resource)
                 else:
                     return "You cannont complete this trade"
             else:
-                return "You cannont complete this trade"
+                return "You cannot complete this trade"
+        else:
+            return "You cannont complete this trade"
+
+    def twoToOne(self,d,resource1,resource2):
+        a = keys(d)
+        if self.ports[resource1]
+            if len(a) == 1:
+                if d[a[0]] == 2:
+                    if d[a] == resource1
+                        payCards(self,d)
+                        takeCards(self,resource2)
+                    else:
+                        return "You cannont complete this trade"
+                else:
+                    return "You cannont complete this trade"
+            else:
+                return "You cannot complete this trade"
         else:
             return "You cannot complete this trade"
-
 
 
 def trade(player1,resources1, player2, resources2):
