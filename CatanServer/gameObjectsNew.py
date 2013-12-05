@@ -19,7 +19,7 @@ class Game(object):
         return ''
 
     def findBuildableAt(self, coordinates):
-        vertex = self.board.vertices[coordinates]
+        vertex = self.getVertex(coordinates)
         player = self.players[self.turn]
         builtRoads=[road for road in player.roads for player in self.players if vertex.coordinates in road]
         if all([road not in player.roads for road in builtRoads]):
@@ -38,6 +38,16 @@ class Game(object):
             buildableBuilding = 'settlement'
         buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
         return buildableRoads, buildableBuilding
+
+    def getVertex(self, coordinates):
+        return self.board.vertices[coordinates]
+
+    def getHex(self, coordinates):
+        return self.board.hexes[coordinates]
+
+    def endTurn(self):
+        self.turn=(self.turn+1)%len(self.players)
+        # Any other end of turn cleanup logic should go here, like check points and longest road
 
 
 
@@ -93,6 +103,9 @@ class Vertex(object):
                     self.neighbors.append(point)
                 else:
                     self.neighbors=[point]
+
+    def getNeighbors(self):
+        return self.neighbors
     
     def getResources(self, board):
         resources = {}
