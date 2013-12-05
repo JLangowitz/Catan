@@ -18,6 +18,10 @@ class Player:
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
         self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
+        self.cityNumber = 0
+        self.settlementNumber = 0
+        self.roadNumber = 0
+        self.ports = {"three":False,'ore':False,'lumber':False,'brick':False,'sheep':False,'grain':False,'none':False}
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -96,17 +100,20 @@ Largest Army? %s
 
         """
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if vertex.building != None: 
+        if vertex.built:
             return False
         for point in vertex.neighbors:
-            if point.building != None:
+            if point.built: 
                 return False
         for resource in settlementResources:
-            if player.hand[resource] < settlementResources[resource]:
+            if self.hand[resource] < settlementResources[resource]:
                 return False
+        if self.settlementNumber >= 4
+            return False
         for road in self.roads:
             if road[0] == vertex or road[1] == vertex:
                 return True
+
 
     def buildSettlement(self,vertex):
         """Checks to see if you can build and builds a settlement 
@@ -121,11 +128,13 @@ Largest Army? %s
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if checkSettlement(self,vertex) == True:
             self.payCards(settlementResources)  #pay cards to build
-            building1 = Building(self, vertex)  #creates a building object
-            vertex.build()         #build building on vertex
-            self.buildings.append[building1]    #add buildings to list of buildings
+            building = Building(self, vertex)  #creates a building object
+            vertex.build()                      #build building on vertex
+            self.buildings.append[building]    #add buildings to list of buildings
             self.buildHist                      #rebuild the dice histogram
             self.calcPoints                     #calc points
+            self.settlementNumber += 1
+            self.ports[isPort(vertex)] = True
         else:
             return "You must construct additional pylons"
 
@@ -141,9 +150,11 @@ Largest Army? %s
         for resource in cityResources:
             if player.hand[resource] < cityResources[resource]:
                 return False
-        if vertex.building == None:
+        if vertex.built
             return False
         if building.player != self:
+            return False
+        if self.cityNumber >= 3
             return False
         return True
 
@@ -164,13 +175,54 @@ Largest Army? %s
             for building in self.buildings:     
                 if building == building1:
                     buiding1.isCity = True      #make settlement a city
-                    vertex.isCity = True        #make city on board 
                     self.buildHist              #remake historgram
                     self.calcPoints             #calculate points 
+                    self.settlementNumber -= 1
+                    self.cityNumber += 1
         else:
             return "You must construct additional pylons"
 
-        
+    def fourToOne(self,d,resource):
+        a = keys(d)
+        if len(a) == 1:
+            if d[a[0]] == 4:
+                payCards(self,d)
+                takeCards(self,resource)
+            else:
+                return "You cannont complete this trade"
+        else:
+            return "You cannot complete this trade"
+
+    def threeToOne(self,d,resource):
+        a = keys(d)
+        if self.ports["three"]
+            if len(a) == 1:
+                if d[a[0]] == 3:
+                    payCards(self,d)
+                    takeCards(self,resource)
+                else:
+                    return "You cannont complete this trade"
+            else:
+                return "You cannot complete this trade"
+        else:
+            return "You cannont complete this trade"
+
+    def twoToOne(self,d,resource1,resource2):
+        a = keys(d)
+        if self.ports[resource1]
+            if len(a) == 1:
+                if d[a[0]] == 2:
+                    if d[a] == resource1
+                        payCards(self,d)
+                        takeCards(self,resource2)
+                    else:
+                        return "You cannont complete this trade"
+                else:
+                    return "You cannont complete this trade"
+            else:
+                return "You cannot complete this trade"
+        else:
+            return "You cannot complete this trade"
 
 
 def trade(player1,resources1, player2, resources2):
@@ -204,6 +256,9 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
         for road in player.roads:
             if road == (vertex1,vertex2):
                 return "Cannot Build Road"
+            if player1.roadNumber >= 14:
+                return "Cannot Build Road"
+
     for road in player1.roads:  #make road if roads touch one of the vertices
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))

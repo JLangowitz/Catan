@@ -80,7 +80,8 @@ class Vertex(object):
         self.hexes=h
         self.built=False
         self.neighbors=neighbors
-    
+        self.ports = "none"
+
     def build(self):
         self.built = True
 
