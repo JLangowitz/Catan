@@ -123,11 +123,23 @@ $(document).ready(function(){
             console.log(data);
             console.log(data.roads);
             console.log(data.building);
+            var graphics=[];
+            for (var i = 0; i < data.roads.length; i++) {
+                graphics.push(makeRoad(data.roads[i]));
+            };
         });
     }
 
-    function hexMenu(x,y){
+    function makeRoad(road){
 
+    }
+
+    function hexMenu(x,y){
+        $.post('/stealables/'+x+'/'+y,{},function(data){
+            data=JSON.parse(data);
+            console.log(data);
+            console.log(data.players);s
+        });
     }
 
     function drawHexagon(x,y,radius,color,number){

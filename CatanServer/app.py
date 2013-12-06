@@ -51,5 +51,11 @@ def findBuildable(x,y):
     roads, building = game.findBuildableAt((float(x),float(y)))
     return jsonpickle.encode({'roads':roads,'building':building})
 
+@app.route('/stealables/<x>/<y>', methods=['POST'])
+def findStealable(x,y):
+    game=d['game']
+    players = game.findStealableAt((float(x),float(y)))
+    return jsonpickle.encode({'players':players})
+
 if __name__ == '__main__':
     app.run()
