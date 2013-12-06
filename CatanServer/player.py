@@ -108,7 +108,7 @@ Largest Army? %s
         for resource in settlementResources:
             if self.hand[resource] < settlementResources[resource]:
                 return False
-        if self.settlementNumber >= 4
+        if self.settlementNumber >= 4:
             return False
         for road in self.roads:
             if road[0] == vertex or road[1] == vertex:
@@ -150,11 +150,11 @@ Largest Army? %s
         for resource in cityResources:
             if player.hand[resource] < cityResources[resource]:
                 return False
-        if vertex.built
+        if vertex.built:
             return False
         if building.player != self:
             return False
-        if self.cityNumber >= 3
+        if self.cityNumber >= 3:
             return False
         return True
 
@@ -195,7 +195,7 @@ Largest Army? %s
 
     def threeToOne(self,d,resource):
         a = keys(d)
-        if self.ports["three"]
+        if self.ports["three"]:
             if len(a) == 1:
                 if d[a[0]] == 3:
                     payCards(self,d)
@@ -209,10 +209,10 @@ Largest Army? %s
 
     def twoToOne(self,d,resource1,resource2):
         a = keys(d)
-        if self.ports[resource1]
+        if self.ports[resource1]:
             if len(a) == 1:
                 if d[a[0]] == 2:
-                    if d[a] == resource1
+                    if d[a] == resource1:
                         payCards(self,d)
                         takeCards(self,resource2)
                     else:
