@@ -47,7 +47,7 @@ def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, play
     """   
     d = randint(1,6)+randint(1,6)
     if d = 7:
-        #Josh add robber call function
+        #TODO Josh add robber call function
     else:
         player1.takeCards(player1.hist[d])
         player2.takeCards(player1.hist[d])
