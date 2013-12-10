@@ -18,6 +18,13 @@ class Game(object):
     def __str__(self):
         return ''
 
+    def allBuildings(self):
+        return [building for building in player for player in self.players]
+
+    def findStealableAt(self, coordinates):
+        buildings=self.allBuildings()
+        return [building.playerNumber for bulding in building if self.getHex(coordinates) in building.vertex.hexes]
+
     def findBuildableAt(self, coordinates):
         vertex = self.getVertex(coordinates)
         player = self.players[self.turn]
@@ -144,9 +151,9 @@ class Building(object):
     attributes: player class, boolean, ifCity, vertex, resources provided
     """
 
-    def __init__(self, vertex, playernumber):
+    def __init__(self, vertex, playerNumber):
         self.vertex = vertex
-        self.playernumber = playernumber
+        self.playerNumber = playerNumber
         self.ifCity = False
 
     def provideResources(self): #Not done, needs to incorporate roll number
