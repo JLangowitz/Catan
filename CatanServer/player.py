@@ -263,6 +263,9 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
 
+def getRoads(self):
+    return self.roads
+
 #    def build(self,)
 
 
