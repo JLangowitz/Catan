@@ -37,7 +37,7 @@ def robberSteal(player1,settlement):
     player1.trade({},settlement.player,{card:1})
 
 
-def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, player6 = None):
+def rollDice(playerList):
     """Returns the result of rolling two rolled dice and
     gives resources appropriately to each player
 
@@ -48,17 +48,8 @@ def rollDice(player1,player2,player3 = None, player4 = None,player5 = None, play
     d = randint(1,6)+randint(1,6)
     if d = 7:
         #TODO Josh add robber call function
-    else:
-        player1.takeCards(player1.hist[d])
-        player2.takeCards(player1.hist[d])
-        if player3 != None:
-            player3.takeCards(player1.hist[d])
-        if player4 != None:
-            player4.takeCards(player1.hist[d])    
-        if player5 != None:
-            player5.takeCards(player1.hist[d])
-        if player6 != None:
-            player6.takeCardsp(player1.hist[d])    
+    for player in playerList:
+        player.takeCards(player.hist[d])
     return d
 
 def main():

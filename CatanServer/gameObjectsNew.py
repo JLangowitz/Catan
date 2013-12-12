@@ -72,7 +72,11 @@ class Game(object):
         return self.board.hexes[coordinates]
 
     def endTurn(self):
-        self.turn=(self.turn+1)%len(self.players)
+        player = self.players[self.turn]
+        if player.calcPoints() == 10:
+            return "You Win Game Over"
+        else:    
+            self.turn=(self.turn+1)%len(self.players)
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
 
