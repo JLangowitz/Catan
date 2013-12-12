@@ -46,6 +46,24 @@ class Game(object):
         buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
         return buildableRoads, buildableBuilding
 
+    def buildSettlement(self, coordinates):
+        player = self.players[self.turn]
+        vertex = self.getVertex(coordinates)
+        if player.checkSettlement(vertex):
+            player.buildSettlement(vertex)
+        else:
+            return "Error"
+
+    def buildCity(self, coordinates):
+        player = self.players[self.turn]
+        vertex = self.getVertex(coordinates)
+        building = findBuildingAt(self,coordinates)
+        if player.checkCity(vertex):
+            player.buildCity(vertex,building)
+        else:
+            return "Error"
+
+
     def getVertex(self, coordinates):
         return self.board.vertices[coordinates]
 
