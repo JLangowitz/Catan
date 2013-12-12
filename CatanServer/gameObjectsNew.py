@@ -49,20 +49,21 @@ class Game(object):
     def buildSettlement(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
-        if player.checkSettlement(vertex):
-            player.buildSettlement(vertex)
-        else:
-            return "Error"
+        player.buildSettlement(vertex)
+
 
     def buildCity(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         building = findBuildingAt(self,coordinates)
-        if player.checkCity(vertex):
-            player.buildCity(vertex,building)
-        else:
-            return "Error"
+        player.buildCity(vertex,building)
 
+
+    def buildRoad(self,coordinates1,coordinates2):
+        player = self.players[self.turn]
+        vertex1 = self.getVertex(coordinates1)
+        vertex2 = self.getVertex(coordinates2)
+        player.buildRoad(playerList,vertex1,vertex2)
 
     def getVertex(self, coordinates):
         return self.board.vertices[coordinates]

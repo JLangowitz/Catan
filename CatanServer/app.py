@@ -57,7 +57,7 @@ def findStealable(x,y):
     players = game.findStealableAt((float(x),float(y)))
     return jsonpickle.encode({'players':players})
 
-#TODO Josh can you fix the next two functions?
+#TODO Josh can you fix the next 3 functions?
 @app.route('/buildsettlement/<x>/<y>', methods=['POST'])
 def buildSettlement(x,y):
     game=d['game']
@@ -69,6 +69,12 @@ def buildCity(x,y):
     game=d['game']
     building = game.buildCity((float(x),float(y)))
     return jsonpickle.encode({'building':building})
+
+@app.route('/road/<x>/<y>', methods=['POST'])
+def buildRoad(x1,y1,x2,y2):
+    game=d['game']
+    building = game.buildRoad((float(x1),float(y1)),(float(x2),float(y2)))
+    return jsonpickle.encode({'road':road})
 
 if __name__ == '__main__':
     app.run()
