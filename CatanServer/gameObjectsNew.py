@@ -87,7 +87,9 @@ class Game(object):
 
     def drawDev1(self):
         player = self.players[self.turn]
-        player.drawDev()
+        dev = player.drawDev()
+        return (player,dev)
+
 
     def playYearOfPlenty1(self,resource1,resource2): 
         player = self.players[self.turn]
