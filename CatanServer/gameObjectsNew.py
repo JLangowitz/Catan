@@ -1,5 +1,6 @@
 import math
 import random
+from random import randint
 from player import *
 
 class Game(object):
@@ -14,6 +15,7 @@ class Game(object):
             self.players.append(Player(name=playerName))
         self.board=Board(self, len(self.players))
         self.turn=0
+
 
     def __str__(self):
         return ''
@@ -79,6 +81,55 @@ class Game(object):
             self.turn=(self.turn+1)%len(self.players)
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
+
+def moveRobber(player1,hex1):
+    """Moves the robber to a tile chosen by player1
+
+    player1: Player object
+    hex1: Hex object
+    """
+    robberHex = False
+    robberHex = hex1
+    robberHex.robber = True
+    settlements = []
+    for vertex in robberHex.vertices:
+        if vertex.building != None:
+            settlements.append[vertex.building]
+    return settlements
+
+def robberSteal(player1,settlement):
+    """Steals a random resource the player controlling the given settlement 
+    and gives it to player1
+
+    player1: Player object
+    settlement: Building object
+    """
+    player2 = settlement.player
+    cards = []
+    for resource in player2.hand.keys():
+        for i in range(player2.hand[resource]):
+            cards.append(resource)
+    card = cards.pop(randint(0,len(cards)-1))
+    player1.trade({},settlement.player,{card:1})
+
+
+def rollDice(playerList):
+    """Returns the result of rolling two rolled dice and
+    gives resources appropriately to each player
+
+    input: All of the player objects
+
+    return: int
+    """ 
+    player = self.players[self.turn]
+    d = randint(1,6)+randint(1,6)
+  #TODO Josh add robber call function
+    #if d == 7:
+    #    settlements = player.moveRobber(player, hex)
+    #    robberSteal()
+    for player in playerList:
+        player.takeCards(player.hist[d])
+    return d
 
 
 class Board(object):
