@@ -11,8 +11,7 @@ import os
 from werkzeug import secure_filename
 # from buildRoad import *
 # from drawDev import *
-from gameObjectsNew import *
-from player import *
+import gameObjectsNew as g
 # from rollDice import *
 import jsonpickle
 import shelve
@@ -61,20 +60,31 @@ def findStealable(x,y):
 @app.route('/buildsettlement/<x>/<y>', methods=['POST'])
 def buildSettlement(x,y):
     game=d['game']
-    building = game.buildSettlement((float(x),float(y)))
-    return jsonpickle.encode({'building':building})
+    game.buildSettlement1((float(x),float(y)))
+    d['game']=game
+    return jsonpickle.encode((float(x),float(y)))
 
 @app.route('/buildcity/<x>/<y>', methods=['POST'])
 def buildCity(x,y):
     game=d['game']
-    building = game.buildCity((float(x),float(y)))
-    return jsonpickle.encode({'building':building})
+    game.buildCity1((float(x),float(y)))
+    d['game']=game
+    return jsonpickle.encode((float(x),float(y)))
 
 @app.route('/road/<x>/<y>', methods=['POST'])
 def buildRoad(x1,y1,x2,y2):
     game=d['game']
-    building = game.buildRoad((float(x1),float(y1)),(float(x2),float(y2)))
-    return jsonpickle.encode({'road':road})
+    game.buildRoad1((float(x1),float(y1)),(float(x2),float(y2)))
+    d['game']=game
+    return jsonpickle.encode((float(x1),float(y1)),(float(x2),float(y2)))
+
+@app.route('/drawdev/<x>/<y>', methods=['POST'])
+def drawDev():
+    game=d['game']
+    dev = game.drawDev1()   #dev contains (player,dev)
+    d['game']=game
+    return jsonpickle.encode(dev)
+
 
 if __name__ == '__main__':
     app.run()

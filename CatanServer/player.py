@@ -235,7 +235,7 @@ Largest Army? %s
 
         returns: Blank
         """
-        devResources = {"ore":3,"grain":2}
+        devResources = {"ore":1,"grain":1,"sheep":1}
         for resource in devResources:
             if player.hand[resource] >= cityResources[resource]:
                 self.payCards(devResources) 
@@ -243,12 +243,14 @@ Largest Army? %s
         for word,freq in devCards.items():
             t.extend([word]*freq)
         a = random.choice(t)
+        devCards[a] =  devCards[a] - 1
         if a not in player.devcards:
             player.devcards[a] = 1
         else:
             player.devcards[a] += 1
         if a == "Victory Point":
             player.points += 1
+        return a
 
     def playYearOfPlenty(self,resource1,resource2):
         if canPlay(player,"Year of Plenty"):

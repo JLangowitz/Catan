@@ -48,20 +48,20 @@ class Game(object):
         buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
         return buildableRoads, buildableBuilding
 
-    def buildSettlement(self, coordinates):
+    def buildSettlement1(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         player.buildSettlement(vertex)
 
 
-    def buildCity(self, coordinates):
+    def buildCity1(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         building = findBuildingAt(self,coordinates)
         player.buildCity(vertex,building)
 
 
-    def buildRoad(self,coordinates1,coordinates2):
+    def buildRoad1(self,coordinates1,coordinates2):
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
@@ -81,28 +81,29 @@ class Game(object):
             self.turn=(self.turn+1)%len(self.players)
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
-    def Trade(self,resource1,player2,resource2):
-        trade(self.players[self.turn],resources1, player2, resources2)
+    def Trade1(self,resource1,player2,resource2):
+        player = self.players[self.turn]        
+        player.trade(resources1, player2, resources2)
 
-    def drawDev(self):
+    def drawDev1(self):
         player = self.players[self.turn]
-        drawDev(player)
+        player.drawDev()
 
-    def playYearOfPlenty(self,resource1,resource2): 
+    def playYearOfPlenty1(self,resource1,resource2): 
         player = self.players[self.turn]
-        playYearOfPlenty(player,resource1,resource2)
+        player.playYearOfPlenty(resource1,resource2)
 
-    def playMonopoly(self,playerList,resource):
+    def playMonopoly1(self,playerList,resource):
         player = self.players[self.turn]
-        playMonopoly(player,playerList,resource)
+        player.playMonopoly(playerList,resource)
     
-    def playSoldier(self):
+    def playSoldier1(self):
         player = self.players[self.turn]
-        playSoldier(player)
+        player.playSoldier()
 
-    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
+    def playRoadBuilding1(self,vertex1,vertex2,vertex3,vertex4):
         player = self.players[self.turn]
-        playRoadBuilding(player,vertex1,vertex2,vertex3,vertex4)
+        player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4)
 
     def moveRobber(player1,hex1):
         """Moves the robber to a tile chosen by player1
