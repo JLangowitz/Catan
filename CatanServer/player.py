@@ -1,4 +1,7 @@
 from gameObjectsNew import *
+from random import *
+
+devCards = {"Soldier":19,"Victory Point":5,"Year Of Plenty":2,"Monopoly":2,"Road Building":2}
 
 class Player:
     """Represents a player in catan
@@ -225,6 +228,64 @@ Largest Army? %s
             return "You cannot complete this trade"
 
 
+    def drawDev(player):
+        """Gives a player a random devolpment card 
+
+        input: player object
+
+        returns: Blank
+        """
+
+        t = []
+        for word,freq in devCards.items():
+            t.extend([word]*freq)
+        a = random.choice(t)
+        if a not in player.devcards:
+            player.devcards[a] = 1
+        else:
+            player.devcards[a] += 1
+        if a == "Victory Point":
+            player.points += 1
+
+
+    def playYearOfPlenty(player,resource1,resource2):
+        if canPlay(player,"Year of Plenty"):
+            takeCard(player,resource1)
+            takeCard(player,resource2)
+            player.devcards["Year of Plenty"] -= 1
+        else:
+            print "You don't have a Year of Plenty card"
+
+    def playMonopoly(player1,playerslist,resource):
+        if canPlay(player, "Monopoly"):
+            for player in playerslist:
+                n = player.hand[resource]
+                for i in range (n-1):
+                    trade[player1,"None",player2,resource]
+            player.devcards["Monopoly"] -= 1
+        else:
+            print "you don't have a Monopoly card"
+
+    def playSoldier(player):
+        if canPlay(player, "Soldier"):
+            moveRobber(player)
+            player.soldiers += 1
+            player.devcards["Soldier"] -= 1
+        else:
+            print "you don't have a Soldier card"
+
+    def playRoadBuilding(player,vertex1,vertex2,vertex3,vertex4):
+        if canPlay(player, "Boad Building"):
+            buildRoad(player,vertex1,vertex2)
+            buildRoad(player,vertex3,vertex4)
+            player.devcards["Road Building"] -= 1
+        else:
+            print "you don't have a Road Building card"
+
+    def canPlay(player, card): #Add more failure modes
+        """Determines if given devcard can be played"""
+        return card in player.devcards and player.devcards[card] > 0
+
 def trade(player1,resources1, player2, resources2):
     """ Commits a trade between two players. May be able to 
     trade something for nothing 
@@ -246,13 +307,13 @@ def trade(player1,resources1, player2, resources2):
     player1.takeCards(resources2)
 
 
-def buildRoad(player1,playerlist, vertex1, vertex2):
+def buildRoad(player1,playerList, vertex1, vertex2):
     """Builds a road for a player
 
     input: a player object, a list of players, vertex1 and vertex2 objects
       """
 
-    for player in playerlist:
+    for player in playerList:
         for road in player.roads:
             if road == (vertex1,vertex2):
                 return "Cannot Build Road"
