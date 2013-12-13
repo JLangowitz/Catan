@@ -228,14 +228,17 @@ Largest Army? %s
             return "You cannot complete this trade"
 
 
-    def drawDev(player):
+    def drawDev(self):
         """Gives a player a random devolpment card 
 
         input: player object
 
         returns: Blank
         """
-
+        devResources = {"ore":3,"grain":2}
+        for resource in devResources:
+            if player.hand[resource] >= cityResources[resource]:
+                self.payCards(devResources) 
         t = []
         for word,freq in devCards.items():
             t.extend([word]*freq)
@@ -247,8 +250,7 @@ Largest Army? %s
         if a == "Victory Point":
             player.points += 1
 
-
-    def playYearOfPlenty(player,resource1,resource2):
+    def playYearOfPlenty(self,resource1,resource2):
         if canPlay(player,"Year of Plenty"):
             takeCard(player,resource1)
             takeCard(player,resource2)
@@ -256,7 +258,7 @@ Largest Army? %s
         else:
             print "You don't have a Year of Plenty card"
 
-    def playMonopoly(player1,playerslist,resource):
+    def playMonopoly(self,playerList,resource):
         if canPlay(player, "Monopoly"):
             for player in playerslist:
                 n = player.hand[resource]
@@ -266,7 +268,7 @@ Largest Army? %s
         else:
             print "you don't have a Monopoly card"
 
-    def playSoldier(player):
+    def playSoldier(self):
         if canPlay(player, "Soldier"):
             moveRobber(player)
             player.soldiers += 1
@@ -274,7 +276,7 @@ Largest Army? %s
         else:
             print "you don't have a Soldier card"
 
-    def playRoadBuilding(player,vertex1,vertex2,vertex3,vertex4):
+    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         if canPlay(player, "Boad Building"):
             buildRoad(player,vertex1,vertex2)
             buildRoad(player,vertex3,vertex4)
@@ -282,7 +284,7 @@ Largest Army? %s
         else:
             print "you don't have a Road Building card"
 
-    def canPlay(player, card): #Add more failure modes
+    def canPlay(self, card): #Add more failure modes
         """Determines if given devcard can be played"""
         return card in player.devcards and player.devcards[card] > 0
 
