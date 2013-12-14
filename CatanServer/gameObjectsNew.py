@@ -162,7 +162,7 @@ class Board(object):
     """Contains Board and all tile and vertex position
 
 
-    attributes: subclass hexes, subclass verticies, 
+    attributes: subclass hexes, subclass verticies, vertex map 
     """
     def __init__(self, game, numPlayers):
         setup(self, game, numPlayers)
@@ -174,6 +174,10 @@ class Board(object):
     def printVertices(self):
         for key in self.vertices:
             print self.vertices[key].coordinates, self.vertices[key].getResources(self)
+    def vertexMap(self):
+        return self.vertMap
+    
+
 class Vertex(object):
     """Represents each Vertex on the board
 
@@ -330,7 +334,9 @@ def setup(board, game, numPlayers):
     for vertex in board.vertices.values():
         vertex.addNeighbors(game, board)
     placeDots(board, numPlayers, rollNumbers)
+    board.vertMap = {}
     for v in board.vertices.values():
+        board.vertMap[v.coordinates] = [vertex for vertex in v.neighbors]
         print v.coordinates,[vertex for vertex in v.neighbors]
     return board
 
