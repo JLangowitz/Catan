@@ -6,12 +6,14 @@ def longestRoad(players):
     winner = None
     for player in players:
         playerMaxRoad = roadLength(player)
-        if playerMaxRoad > maxRoad:
+        if playerMaxRoad == maxRoad:
+            winner == None
+        elif playerMaxRoad > maxRoad:
             winner = player
     return winner
 
 
-def roadLength(game, player):
+def roadLength(vertMap, player):
     verticies = []
     roads = player.getRoads()
     
@@ -32,8 +34,72 @@ def roadLength(game, player):
 
     if len(starts) == 0 and len(forks) == 2:
         return len(roads)
-    
-    bfs(game, vertHist, game.getVertex((0.5,-1.5)))
+    print findLongest(vertMap, vertHist, [[(1.5,-1.5)]])
+
+    #for vertex in vertHist:
+        #print 'longest path for', vertex, 'is', findLongest(vertMap, vertHist, [[vertex]])
+
+
+def findLongest(vertMap, vertHist, oldPaths):
+    newPaths = []
+    for path in oldPaths:
+        #print 'path', path
+        newPaths += extend(vertMap, vertHist, path) #Path is list of coord tuples
+    if newPaths == []:
+        return oldPaths
+    else: 
+        return findLongest(vertMap, vertHist, newPaths)
+
+
+def extend(vertMap, vertHist, path):
+    newPaths = []
+    #print path
+
+    neighbors = vertMap[path[-1]]
+    print 'path end', path[-1]
+    print 'neighbors', neighbors
+    for neighbor in neighbors:
+        #print 'neigh', neighbor
+        temp = path
+        if neighbor in vertHist and neighbor not in path:
+            temp.append(neighbor)
+            newPaths += [temp]
+            
+    print 'newpaths', newPaths
+    return newPaths
+
+
+def main():
+    p1 = Player()
+    p2 = Player()
+    p3 = Player()
+    p4 = Player()
+    players = [p1, p2, p3, p4]
+    game = Game(players)
+    vertMap = game.board.vertexMap()
+    """
+    p1.roads = [[game.getVertex((0.5,-1.5)),game.getVertex((0.5,-2.0))]]
+    p1.roads.append([game.getVertex((0.5,-2.0)),game.getVertex((0.5,-2.5))])
+    p1.roads.append([game.getVertex((0.5,-2.5)),game.getVertex((-0.5,-2.5))])
+    p1.roads.append([game.getVertex((0.5,-2.0)),game.getVertex((1.5,-2.0))])
+    p1.roads.append([game.getVertex((1.5,-2.0)),game.getVertex((1.5,-1.5))])
+    p1.roads.append([game.getVertex((-0.5,-2.5)),game.getVertex((-0.5,-2.0))])
+    """
+    p1.roads = [[(0.5,-1.5),(0.5,-2.0)]]
+    p1.roads.append([(0.5,-2.0),(0.5,-2.5)])
+    p1.roads.append([(0.5,-2.5),(-0.5,-2.5)])
+    p1.roads.append([(0.5,-2.0),(1.5,-2.0)])
+    p1.roads.append([(1.5,-2.0),(1.5,-1.5)])
+    p1.roads.append([(-0.5,-2.5),(-0.5,-2.0)])
+    p1.roads.append([(-0.5,-2.0),(-0.5,-1.5)])
+    p1.roads.append([(-0.5,-1.5),(0.5,-1.5)])
+    p1.roads.append([(0.5,-1.5),(0.5,-1.0)])
+
+    roadLength(vertMap, p1)
+
+if __name__ == '__main__':
+    main()
+
 
 
 """
@@ -48,7 +114,7 @@ def roadLength(game, player):
                 pass
 """
 
-
+"""
 def bfs(game, coordhist, start):
     memo = [start]
     paths = {}
@@ -68,24 +134,4 @@ def bfs(game, coordhist, start):
             for neighbor in path.getNeighbors():
                 if neighbor not in memo:
                     paths[neighbor] = newPath
-
-
-def main():
-    p1 = Player()
-    p2 = Player()
-    p3 = Player()
-    p4 = Player()
-    players = [p1, p2, p3, p4]
-    game = Game(players)
-    p1.roads = [[game.getVertex((0.5,-1.5)),game.getVertex((0.5,-2.0))]]
-    p1.roads.append([game.getVertex((0.5,-2.0)),game.getVertex((0.5,-2.5))])
-    p1.roads.append([game.getVertex((0.5,-2.5)),game.getVertex((-0.5,-2.5))])
-    p1.roads.append([game.getVertex((0.5,-2.0)),game.getVertex((1.5,-2.0))])
-    p1.roads.append([game.getVertex((1.5,-2.0)),game.getVertex((1.5,-1.5))])
-    p1.roads.append([game.getVertex((-0.5,-2.5)),game.getVertex((-0.5,-2.0))])
-
-    
-    roadLength(game, p1)
-
-if __name__ == '__main__':
-    main()
+"""
