@@ -9,11 +9,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash, json, jsonify
 import os
 from werkzeug import secure_filename
-# from buildRoad import *
-# from drawDev import *
-from gameObjectsNew import *
-from player import *
-# from rollDice import *
+from gameObjectsNew import Game
 import jsonpickle
 import shelve
 
