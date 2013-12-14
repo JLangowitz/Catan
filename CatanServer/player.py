@@ -1,4 +1,7 @@
 from gameObjectsNew import *
+from random import *
+
+devCards = {"Soldier":19,"Victory Point":5,"Year Of Plenty":2,"Monopoly":2,"Road Building":2}
 
 class Player:
     """Represents a player in catan
@@ -63,8 +66,7 @@ Largest Army? %s
                 print "player has insufficient cards" 
                 return None           
         for resource in d:         
-            self.hand[resource] =  self.hand[resource] - d[resource]
-        
+            self.hand[resource] =  self.hand[resource] - d[resource]        
 
 
     def calcPoints(self):
@@ -225,6 +227,72 @@ Largest Army? %s
             return "You cannot complete this trade"
 
 
+    def drawDev(self):
+        """Gives a player a random devolpment card 
+
+        input: player object
+
+        returns: Blank
+        """
+        devResources = {"ore":1,"grain":1,"sheep":1}
+        for resource in devResources:
+            if player.hand[resource] >= cityResources[resource]:
+                self.payCards(devResources) 
+        t = []
+        for word,freq in devCards.items():
+            t.extend([word]*freq)
+        a = random.choice(t)
+        devCards[a] =  devCards[a] - 1
+        if a not in player.devcards:
+            player.devcards[a] = 1
+        else:
+            player.devcards[a] += 1
+        if a == "Victory Point":
+            player.points += 1
+        return a
+
+    def playYearOfPlenty(self,resource1,resource2):
+        if canPlay(player,"Year of Plenty"):
+            takeCard(player,resource1)
+            takeCard(player,resource2)
+            player.devcards["Year of Plenty"] -= 1
+        else:
+            print "You don't have a Year of Plenty card"
+
+    def playMonopoly(self,playerList,resource):
+        if canPlay(player, "Monopoly"):
+            for player in playerslist:
+                n = player.hand[resource]
+                for i in range (n-1):
+                    trade[player1,"None",player2,resource]
+            player.devcards["Monopoly"] -= 1
+        else:
+            print "you don't have a Monopoly card"
+
+    def playSoldier(self):
+        if canPlay(player, "Soldier"):
+            moveRobber(player)
+            player.soldiers += 1
+            player.devcards["Soldier"] -= 1
+        else:
+            print "you don't have a Soldier card"
+
+    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
+        if canPlay(player, "Boad Building"):
+            buildRoad(player,vertex1,vertex2)
+            buildRoad(player,vertex3,vertex4)
+            player.devcards["Road Building"] -= 1
+        else:
+            print "you don't have a Road Building card"
+
+    def canPlay(self, card): #Add more failure modes
+        """Determines if given devcard can be played"""
+        return card in player.devcards and player.devcards[card] > 0
+
+
+    def getRoads(self):
+        return self.roads
+
 def trade(player1,resources1, player2, resources2):
     """ Commits a trade between two players. May be able to 
     trade something for nothing 
@@ -246,13 +314,13 @@ def trade(player1,resources1, player2, resources2):
     player1.takeCards(resources2)
 
 
-def buildRoad(player1,playerlist, vertex1, vertex2):
+def buildRoad(player1,playerList, vertex1, vertex2):
     """Builds a road for a player
 
     input: a player object, a list of players, vertex1 and vertex2 objects
       """
-
-    for player in playerlist:
+    
+    for player in playerList:
         for road in player.roads:
             if road == (vertex1,vertex2):
                 return "Cannot Build Road"
@@ -260,8 +328,13 @@ def buildRoad(player1,playerlist, vertex1, vertex2):
                 return "Cannot Build Road"
 
     for road in player1.roads:  #make road if roads touch one of the vertices
+        print road#, vertex1, vertex2
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
+        else:
+            return 'Invalid road placement, must have existing adjacent'
+
+
 
 #    def build(self,)
 

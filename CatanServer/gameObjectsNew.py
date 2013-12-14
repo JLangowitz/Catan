@@ -1,5 +1,7 @@
 import math
 import random
+from random import randint
+from random import choice
 from player import *
 
 class Game(object):
@@ -15,15 +17,16 @@ class Game(object):
         self.board=Board(self, len(self.players))
         self.turn=0
 
+
     def __str__(self):
         return ''
 
     def allBuildings(self):
-        return [building for building in player for player in self.players]
+        return [building for building in [player.buildings for player in self.players]]
 
     def findStealableAt(self, coordinates):
         buildings=self.allBuildings()
-        return [building.playerNumber for bulding in building if self.getHex(coordinates) in building.vertex.hexes]
+        return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
     def findBuildableAt(self, coordinates):
         vertex = self.getVertex(coordinates)
@@ -46,6 +49,25 @@ class Game(object):
         buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
         return buildableRoads, buildableBuilding
 
+    def buildSettlement1(self, coordinates):
+        player = self.players[self.turn]
+        vertex = self.getVertex(coordinates)
+        player.buildSettlement(vertex)
+
+
+    def buildCity1(self, coordinates):
+        player = self.players[self.turn]
+        vertex = self.getVertex(coordinates)
+        building = findBuildingAt(self,coordinates)
+        player.buildCity(vertex,building)
+
+
+    def buildRoad1(self,coordinates1,coordinates2):
+        player = self.players[self.turn]
+        vertex1 = self.getVertex(coordinates1)
+        vertex2 = self.getVertex(coordinates2)
+        player.buildRoad(playerList,vertex1,vertex2)
+
     def getVertex(self, coordinates):
         return self.board.vertices[coordinates]
 
@@ -53,9 +75,87 @@ class Game(object):
         return self.board.hexes[coordinates]
 
     def endTurn(self):
-        self.turn=(self.turn+1)%len(self.players)
+        player = self.players[self.turn]
+        if player.calcPoints() == 10:
+            return "You Win Game Over"
+        else:    
+            self.turn=(self.turn+1)%len(self.players)
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
+    def Trade1(self,resource1,player2,resource2):
+        player = self.players[self.turn]        
+        player.trade(resources1, player2, resources2)
+
+    def drawDev1(self):
+        player = self.players[self.turn]
+        dev = player.drawDev()
+        return (player,dev)
+
+
+    def playYearOfPlenty1(self,resource1,resource2): 
+        player = self.players[self.turn]
+        player.playYearOfPlenty(resource1,resource2)
+
+    def playMonopoly1(self,playerList,resource):
+        player = self.players[self.turn]
+        player.playMonopoly(playerList,resource)
+    
+    def playSoldier1(self):
+        player = self.players[self.turn]
+        player.playSoldier()
+
+    def playRoadBuilding1(self,vertex1,vertex2,vertex3,vertex4):
+        player = self.players[self.turn]
+        player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4)
+
+    def moveRobber(player1,hex1):
+        """Moves the robber to a tile chosen by player1
+
+        player1: Player object
+        hex1: Hex object
+        """
+        robberHex = False
+        robberHex = hex1
+        robberHex.robber = True
+        settlements = []
+        for vertex in robberHex.vertices:
+            if vertex.building != None:
+                settlements.append[vertex.building]
+        return settlements
+
+    def robberSteal(player1,settlement):
+        """Steals a random resource the player controlling the given settlement 
+        and gives it to player1
+
+        player1: Player object
+        settlement: Building object
+        """
+        player2 = settlement.player
+        cards = []
+        for resource in player2.hand.keys():
+            for i in range(player2.hand[resource]):
+                cards.append(resource)
+        card = cards.pop(randint(0,len(cards)-1))
+        player1.trade({},settlement.player,{card:1})
+
+
+    def rollDice(playerList):
+        """Returns the result of rolling two rolled dice and
+        gives resources appropriately to each player
+
+        input: All of the player objects
+
+        return: int
+        """ 
+        player = self.players[self.turn]
+        d = randint(1,6)+randint(1,6)
+      #TODO Josh add robber call function
+        #if d == 7:
+        #    settlements = player.moveRobber(player, hex)
+        #    robberSteal()
+        for player in playerList:
+            player.takeCards(player.hist[d])
+        return d
 
 
 class Board(object):
@@ -88,6 +188,7 @@ class Vertex(object):
         self.built=False
         self.neighbors=neighbors
         self.ports = "none"
+
 
     def build(self):
         self.built = True
@@ -202,7 +303,7 @@ def setup(board, game, numPlayers):
             rollNumber=None
             for key in resources:
                 r.extend([key]*resources[key])
-            hexResource=random.choice(r)
+            hexResource = choice(r)
             resources[hexResource]=resources.get(hexResource)-1
             if hexResource=='desert':
                 rollNumber=0
