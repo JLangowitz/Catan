@@ -56,7 +56,7 @@ def findStealable(x,y):
     players = game.findStealableAt((float(x),float(y)))
     return jsonpickle.encode({'players':players})
 
-#TODO Josh can you fix the next 3 functions?
+#TODO Josh can you fix the next 7 functions?
 @app.route('/buildsettlement/<x>/<y>', methods=['POST'])
 def buildSettlement(x,y):
     game=d['game']
@@ -71,19 +71,51 @@ def buildCity(x,y):
     d['game']=game
     return jsonpickle.encode((float(x),float(y)))
 
-@app.route('/road/<x>/<y>', methods=['POST'])
+@app.route('/road/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
 def buildRoad(x1,y1,x2,y2):
     game=d['game']
     game.buildRoad1((float(x1),float(y1)),(float(x2),float(y2)))
     d['game']=game
     return jsonpickle.encode((float(x1),float(y1)),(float(x2),float(y2)))
 
-@app.route('/drawdev/<x>/<y>', methods=['POST'])
+@app.route('/drawdev', methods=['POST'])
 def drawDev():
     game=d['game']
     dev = game.drawDev1()   #dev contains (player,dev)
     d['game']=game
     return jsonpickle.encode(dev)
+
+@app.route('/playyearofplenty/<resource1>/<resource2>', methods=['POST'])
+def playYearOfPlenty():
+    game=d['game']
+    game.playYearOfPlenty1((resource1,resource2))
+    d['game']=game
+    return jsonpickle.encode()
+
+@app.route('/playMonopoly/resource', methods=['POST'])
+def playMonopoly():
+    game=d['game']
+    game.playMonopoly1(resource)
+    d['game']=game
+    return jsonpickle.encode()
+
+@app.route('/playSoldier', methods=['POST'])
+def playSoldier():
+    game=d['game']
+    game.playSoldier1()
+    d['game']=game
+    return jsonpickle.encode()
+
+@app.route('/playRoadBuilding/<x1>/<y1>/<x2>/<y2>/<x3>/<y3>/<x4>/<y4>', methods=['POST'])
+def playRoadBuilding():
+    game=d['game']
+    game.playRoadBuilding1((float(x1),float(y1)),(float(x2),float(y2)),(float(x3),float(y3)),(float(x4),float(y4)))
+    d['game']=game
+    return jsonpickle.encode()
+
+
+
+
 
 
 if __name__ == '__main__':
