@@ -183,48 +183,42 @@ Largest Army? %s
                     self.cityNumber += 1
         else:
             return "You must construct additional pylons"
+    
+    def checkPorts(self,d,n):
+        a = keys(d)
+        if len(a) != 1:
+            return False
+        if d[a[0]] != n:
+            return False
+        if n == 4:
+            return True
+        if n == 3:
+            return self.ports["three"]
+        if n == 2:
+            return self.ports[a[0]]
+
 
     def fourToOne(self,d,resource):
-        a = keys(d)
-        if len(a) == 1:
-            if d[a[0]] == 4:
-                payCards(self,d)
-                takeCards(self,resource)
-            else:
-                return "You cannont complete this trade"
+        if checkPorts(self,d,4) :
+            payCards(self,d)
+            takeCards(self,resource)
         else:
-            return "You cannot complete this trade"
+            return False
+
 
     def threeToOne(self,d,resource):
-        a = keys(d)
-        if self.ports["three"]:
-            if len(a) == 1:
-                if d[a[0]] == 3:
-                    payCards(self,d)
-                    takeCards(self,resource)
-                else:
-                    return "You cannont complete this trade"
-            else:
-                return "You cannot complete this trade"
+        if checkPorts(self,d,3):
+            payCards(self,d)
+            takeCards(self,resource)
         else:
             return "You cannont complete this trade"
 
-    def twoToOne(self,d,resource1,resource2):
-        a = keys(d)
-        if self.ports[resource1]:
-            if len(a) == 1:
-                if d[a[0]] == 2:
-                    if d[a] == resource1:
-                        payCards(self,d)
-                        takeCards(self,resource2)
-                    else:
-                        return "You cannont complete this trade"
-                else:
-                    return "You cannont complete this trade"
-            else:
-                return "You cannot complete this trade"
+    def twoToOne(self,d,resource2):
+        if checkPorts(self,d,2):
+            payCards(self,d)
+            takeCards(self,resource2)
         else:
-            return "You cannot complete this trade"
+            return False
 
 
     def drawDev(self):
@@ -340,16 +334,17 @@ def buildRoad(player1,playerList, vertex1, vertex2):
 
 
 def main():
-    player1 = Player()
-    hex1 = Hex((0,0),'ore',6)
-    hex2 = Hex((1,.5),'ore',8)
-    hex3 = Hex((1,-.5),'ore',6)
-    vert1 = Vertex((1,0),[hex1,hex2,hex3])
-    building1 = Building(vert1,player1)
-    player1.buildings = [building1]
-    vert1.build(building1)
-    player1.createHist()
-    print player1.hist
+    pass
+#    player1 = Player()
+#    hex1 = Hex((0,0),'ore',6)
+#    hex2 = Hex((1,.5),'ore',8)
+#    hex3 = Hex((1,-.5),'ore',6)
+#    vert1 = Vertex((1,0),[hex1,hex2,hex3])
+#    building1 = Building(vert1,player1)
+#    player1.buildings = [building1]
+#    vert1.build(building1)
+#    player1.createHist()
+#    print player1.hist
 
 if __name__ == '__main__':
     main()
