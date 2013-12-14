@@ -66,8 +66,7 @@ Largest Army? %s
                 print "player has insufficient cards" 
                 return None           
         for resource in d:         
-            self.hand[resource] =  self.hand[resource] - d[resource]
-        
+            self.hand[resource] =  self.hand[resource] - d[resource]        
 
 
     def calcPoints(self):
@@ -290,6 +289,10 @@ Largest Army? %s
         """Determines if given devcard can be played"""
         return card in player.devcards and player.devcards[card] > 0
 
+
+    def getRoads(self):
+        return self.roads
+
 def trade(player1,resources1, player2, resources2):
     """ Commits a trade between two players. May be able to 
     trade something for nothing 
@@ -316,7 +319,7 @@ def buildRoad(player1,playerList, vertex1, vertex2):
 
     input: a player object, a list of players, vertex1 and vertex2 objects
       """
-
+    
     for player in playerList:
         for road in player.roads:
             if road == (vertex1,vertex2):
@@ -325,11 +328,13 @@ def buildRoad(player1,playerList, vertex1, vertex2):
                 return "Cannot Build Road"
 
     for road in player1.roads:  #make road if roads touch one of the vertices
+        print road#, vertex1, vertex2
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
+        else:
+            return 'Invalid road placement, must have existing adjacent'
 
-def getRoads(self):
-    return self.roads
+
 
 #    def build(self,)
 

@@ -1,6 +1,7 @@
 import math
 import random
 from random import randint
+from random import choice
 from player import *
 
 class Game(object):
@@ -188,6 +189,7 @@ class Vertex(object):
         self.neighbors=neighbors
         self.ports = "none"
 
+
     def build(self):
         self.built = True
 
@@ -301,7 +303,7 @@ def setup(board, game, numPlayers):
             rollNumber=None
             for key in resources:
                 r.extend([key]*resources[key])
-            hexResource=random.choice(r)
+            hexResource = choice(r)
             resources[hexResource]=resources.get(hexResource)-1
             if hexResource=='desert':
                 rollNumber=0
