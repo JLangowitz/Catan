@@ -313,8 +313,8 @@ Largest Army? %s
 
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         if canPlay(player, "Boad Building"):
-            buildRoad(player,vertex1,vertex2)
-            buildRoad(player,vertex3,vertex4)
+            buildRoad(player,vertex1,vertex2,True)
+            buildRoad(player,vertex3,vertex4,True)
             player.devcards["Road Building"] -= 1
             return False
         else:
