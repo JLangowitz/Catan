@@ -231,10 +231,11 @@ $(document).ready(function(){
     function buildSettlementSetup(i,j,x,y){
         $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
             clearGame();
-            var data=JSON.parse(data)
-            var game=data.game
-            var error=data.error
+            var data=JSON.parse(data);
+            var game=data.game;
+            var error=data.error;
             console.log(game);
+            console.log(error);
             drawGame(game);
         });
     }
