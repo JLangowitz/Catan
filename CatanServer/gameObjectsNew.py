@@ -22,7 +22,12 @@ class Game(object):
         return ''
 
     def allBuildings(self):
-        return [building for building in [player.buildings for player in self.players]]
+        playerBuildings = [player.buildings for player in self.players]
+        buildings = []
+        for t in playerBuildings:
+            for building in t:
+                buildings.append(building)
+        return buildings
 
     def findStealableAt(self, coordinates):
         buildings=self.allBuildings()
