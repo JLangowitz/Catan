@@ -148,20 +148,21 @@ class Game(object):
                 settlements.append[vertex.building]
         return settlements
 
-    def robberSteal(player1,settlement):
+    def robberSteal(settlement):
         """Steals a random resource the player controlling the given settlement 
         and gives it to player1
 
         player1: Player object
         settlement: Building object
         """
+        player1 = self.players[self.turn]
         player2 = settlement.player
         cards = []
         for resource in player2.hand.keys():
             for i in range(player2.hand[resource]):
                 cards.append(resource)
         card = cards.pop(randint(0,len(cards)-1))
-        player1.trade({},settlement.player,{card:1})
+        player1.trade({},player2,{card:1})
 
 
     def rollDice():
