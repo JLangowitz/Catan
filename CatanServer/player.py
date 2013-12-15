@@ -92,7 +92,7 @@ Largest Army? %s
         return points
 
 
-    def checkSettlement(self,vertex):
+    def checkSettlement(self,vertex,start):
         """Checks if you can build a settlement at that location
 
         input: player object and vertex object
@@ -106,9 +106,10 @@ Largest Army? %s
         for point in vertex.neighbors:
             if point.built: 
                 return False
-        for resource in settlementResources:
-            if self.hand[resource] < settlementResources[resource]:
-                return False
+        if start == False:                
+            for resource in settlementResources:
+                if self.hand[resource] < settlementResources[resource]:
+                    return False
         if self.settlementNumber >= 4:
             return False
         for road in self.roads:
@@ -116,7 +117,7 @@ Largest Army? %s
                 return True
 
 
-    def buildSettlement(self,vertex):
+    def buildSettlement(self,vertex,start=False):
         """Checks to see if you can build and builds a settlement 
         at the location
 
@@ -127,8 +128,9 @@ Largest Army? %s
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if checkSettlement(self,vertex) == True:
-            self.payCards(settlementResources)  #pay cards to build
+        if checkSettlement(self,vertex,start) == True:
+            if start == False:
+                self.payCards(settlementResources)  #pay cards to build
             building = Building(self, vertex)  #creates a building object
             vertex.build()                      #build building on vertex
             self.buildings.append[building]    #add buildings to list of buildings
@@ -139,6 +141,7 @@ Largest Army? %s
             return False
         else:
             return "You must construct additional pylons"
+
 
     def checkCity(self,vertex):
         """Checks if you can build a City at that location
@@ -184,6 +187,36 @@ Largest Army? %s
                     return False
         else:
             return "You must construct additional pylons"
+    
+    def checkRoad(player1, vertex1, vertex2, start):
+        if player1.roadNumber >= 14:
+            return "Cannot Build Road" 
+        if start == False:                
+            for resource in roadResources:
+                if self.hand[resource] < roadResources[resource]:
+                    return False  
+        for player in playerList:
+            for road in player.roads:
+                if road == (vertex1,vertex2):
+                    return False
+
+
+
+    def buildRoad(player1, vertex1, vertex2,start=False):
+        """Builds a road for a player
+
+        input: a player object, a list of players, vertex1 and vertex2 objects
+          """
+        
+        roadResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
+
+        if checkRoad(player1, vertex1, vertex2, start):
+            if start == False:
+                self.payCards(roadResources) 
+            player1.roads.append((vertex1,vertex2))
+            return False
+        else:
+            return 'Invalid road placement'
     
     def checkPorts(self,d,n):
         a = keys(d)
@@ -319,28 +352,6 @@ def trade(player1,resources1, player2, resources2):
     player2.payCards(resources2)
     player1.takeCards(resources2)
     return False
-
-
-def buildRoad(player1,playerList, vertex1, vertex2):
-    """Builds a road for a player
-
-    input: a player object, a list of players, vertex1 and vertex2 objects
-      """
-    
-    for player in playerList:
-        for road in player.roads:
-            if road == (vertex1,vertex2):
-                return "Cannot Build Road"
-            if player1.roadNumber >= 14:
-                return "Cannot Build Road"
-
-    for road in player1.roads:  #make road if roads touch one of the vertices
-        print road#, vertex1, vertex2
-        if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
-            player1.roads.append((vertex1,vertex2))
-            return False
-        else:
-            return 'Invalid road placement, must have existing adjacent'
 
 
 
