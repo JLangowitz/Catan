@@ -62,9 +62,8 @@ Largest Army? %s
         Input: Player object and a Resource Card String
         """
         for resource in d:
-            if self.hand[resource] < d[resource]:
-                print "player has insufficient cards" 
-                return None           
+            if self.hand[resource] < d[resource]: 
+                return False           
         for resource in d:         
             self.hand[resource] =  self.hand[resource] - d[resource]        
 
@@ -137,6 +136,7 @@ Largest Army? %s
             self.calcPoints                     #calc points
             self.settlementNumber += 1
             self.ports[isPort(vertex)] = True
+            return False
         else:
             return "You must construct additional pylons"
 
@@ -181,6 +181,7 @@ Largest Army? %s
                     self.calcPoints             #calculate points 
                     self.settlementNumber -= 1
                     self.cityNumber += 1
+                    return False
         else:
             return "You must construct additional pylons"
     
@@ -202,14 +203,16 @@ Largest Army? %s
         if checkPorts(self,d,4) :
             payCards(self,d)
             takeCards(self,resource)
-        else:
             return False
+        else:
+            return "You cannot complete this trade"
 
 
     def threeToOne(self,d,resource):
         if checkPorts(self,d,3):
             payCards(self,d)
             takeCards(self,resource)
+            return False
         else:
             return "You cannont complete this trade"
 
@@ -217,8 +220,9 @@ Largest Army? %s
         if checkPorts(self,d,2):
             payCards(self,d)
             takeCards(self,resource2)
-        else:
             return False
+        else:
+            return "You cannot complete this trade"
 
 
     def drawDev(self):
@@ -230,8 +234,10 @@ Largest Army? %s
         """
         devResources = {"ore":1,"grain":1,"sheep":1}
         for resource in devResources:
-            if player.hand[resource] >= cityResources[resource]:
-                self.payCards(devResources) 
+            if player.hand[resource] >= devResources[resource]:
+                self.payCards(devResources)
+            else:
+                return  "Insufficient resources"
         t = []
         for word,freq in devCards.items():
             t.extend([word]*freq)
@@ -250,34 +256,38 @@ Largest Army? %s
             takeCard(player,resource1)
             takeCard(player,resource2)
             player.devcards["Year of Plenty"] -= 1
+            return False
         else:
             print "You don't have a Year of Plenty card"
 
     def playMonopoly(self,playerList,resource):
         if canPlay(player, "Monopoly"):
-            for player in playerslist:
+            for player in playerList:
                 n = player.hand[resource]
                 for i in range (n-1):
                     trade[player1,"None",player2,resource]
             player.devcards["Monopoly"] -= 1
+            return False
         else:
-            print "you don't have a Monopoly card"
+            print "You don't have a Monopoly card"
 
     def playSoldier(self):
         if canPlay(player, "Soldier"):
             moveRobber(player)
             player.soldiers += 1
             player.devcards["Soldier"] -= 1
+            return False
         else:
-            print "you don't have a Soldier card"
+            print "You don't have a Soldier card"
 
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         if canPlay(player, "Boad Building"):
             buildRoad(player,vertex1,vertex2)
             buildRoad(player,vertex3,vertex4)
             player.devcards["Road Building"] -= 1
+            return False
         else:
-            print "you don't have a Road Building card"
+            print "You don't have a Road Building card"
 
     def canPlay(self, card): #Add more failure modes
         """Determines if given devcard can be played"""
@@ -306,6 +316,7 @@ def trade(player1,resources1, player2, resources2):
     player2.takeCards(resources1)
     player2.payCards(resources2)
     player1.takeCards(resources2)
+    return False
 
 
 def buildRoad(player1,playerList, vertex1, vertex2):
