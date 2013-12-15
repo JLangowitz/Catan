@@ -145,7 +145,8 @@ Largest Army? %s
             if second == True:
                 hexes = vertex.hexes
                 for hex1 in hexes:
-                    self.takeCards({hex1.resource:1})
+                    if hex1.rollNumber:
+                        self.takeCards({hex1.resource:1})
             # self.ports[isPort(vertex)] = True
             return False
         else:

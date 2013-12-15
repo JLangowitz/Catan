@@ -54,11 +54,12 @@ def setTurn(turn):
     return jsonpickle.encode(game, make_refs=False)
 
 @app.route('/rollDice', methods=['POST'])
-def roll():
+def rollDice():
     game=d['game']
-    roll=game.rollDice
+    roll = game.rollDice()
     d['game']=game
-    return jsonpickle.encode({'roll':roll,'error':False})
+    return jsonpickle.encode({'game':game,"roll":roll,'error':False}, make_refs=False)
+
 
 @app.route('/buildables/<x>/<y>', methods=['POST'])
 def findBuildable(x,y):
@@ -166,14 +167,6 @@ def getNeigbhors(x,y):
     neighbors = game.getNeighbors()
     d['game']=game
     return jsonpickle.encode({'neigbhors':neighbors}, make_refs=False)
-
-
-@app.route('/rolldice', methods=['POST'])
-def rollDice():
-    game=d['game']
-    roll = game.rollDice()
-    d['game']=game
-    return jsonpickle.encode({"roll":roll}, make_refs=False)
 
 @app.route('/robbersteal/<settlement>', methods=['POST'])
 def robberSteal(settlement):

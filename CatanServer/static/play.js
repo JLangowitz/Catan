@@ -137,7 +137,12 @@ $(document).ready(function(){
         console.log('rolling dice');
         $.post('/rollDice',{},function(data){
             var data=JSON.parse(data);
-            var roll=data.roll
+            var roll=data.roll;
+            var game=data.game;
+            console.log(data);
+            console.log(roll);
+            console.log(game);
+            drawGame(game);
         });
     }
 
