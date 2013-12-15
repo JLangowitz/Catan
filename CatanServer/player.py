@@ -135,7 +135,7 @@ Largest Army? %s
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if self.checkSettlement(vertex,game,start):
-            if start == False:
+            if start != False:
                 self.payCards(settlementResources)  #pay cards to build
                 return "StartSettlement Error"
             building = Building(self, vertex)  #creates a building object
