@@ -121,14 +121,14 @@ def drawDev():
     return jsonpickle.encode({'dev':dev,'error':error}, make_refs=False)
 
 @app.route('/playyearofplenty/<resource1>/<resource2>', methods=['POST'])
-def playYearOfPlenty():
+def playYearOfPlenty(resource1,resource2):
     game=d['game']
     error = game.playYearOfPlenty((resource1,resource2))
     d['game']=game
     return jsonpickle.encode({'error':error}, make_refs=False)
 
 @app.route('/playMonopoly/resource', methods=['POST'])
-def playMonopoly():
+def playMonopoly(resource):
     game=d['game']
     error = game.playMonopoly(resource)
     d['game']=game
@@ -142,26 +142,47 @@ def playSoldier():
     return jsonpickle.encode({'error':error}, make_refs=False)
 
 @app.route('/playRoadBuilding/<x1>/<y1>/<x2>/<y2>/<x3>/<y3>/<x4>/<y4>', methods=['POST'])
-def playRoadBuilding():
+def playRoadBuilding(x1,y1,x2,y2,x3,y3,x4,y4):
     game=d['game']
     error = game.playRoadBuilding((float(x1),float(y1)),(float(x2),float(y2)),(float(x3),float(y3)),(float(x4),float(y4)))
     d['game']=game
     return jsonpickle.encode({'error':error}, make_refs=False)
 
 @app.route('/trade/<dresource1>/<player2>/<dresource2>', methods=['POST'])
-def trade():
+def trade(dresource1,player2,dresource2):
     game=d['game'] 
     error = game.trade(dresource1,player2,dresource2)
     d['game']=game
     return jsonpickle.encode({'error':error}, make_refs=False)
 
 @app.route('/getneighbors/<x>/<y>', methods=['POST'])
-def getNeigbhors():
+def getNeigbhors(x,y):
     game=d['game']
     neighbors = game.getNeighbors()
     d['game']=game
-    return jsonpickle.encode({'neibhors':neighbors}, make_refs=False)
+    return jsonpickle.encode({'neigbhors':neighbors}, make_refs=False)
 
+
+@app.route('/rolldice', methods=['POST'])
+def rollDice():
+    game=d['game']
+    roll = game.rollDice()
+    d['game']=game
+    return jsonpickle.encode({"roll":roll}, make_refs=False)
+
+@app.route('/robbersteal/<settlement>', methods=['POST'])
+def robberSteal(settlement):
+    game=d['game']
+    card,settlements = game.robberSteal(settlement)
+    d['game']=game
+    return jsonpickle.encode({"card":card,"settlement":settlment}, make_refs=False)
+
+@app.route('/moverobber/<hex1>', methods=['POST'])
+def moverobber(hex1):
+    game=d['game']
+    settlements = game.robberSteal(hex1)
+    d['game']=game
+    return jsonpickle.encode({"settlements":settlements}, make_refs=False)
 
 if __name__ == '__main__':
     app.run()
