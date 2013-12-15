@@ -63,12 +63,12 @@ class Game(object):
     def buildSettlement(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
-        return player.buildSettlement(vertex)
+        return player.buildSettlement(vertex,self)
 
     def buildStartSettlement(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
-        return player.buildSettlement(vertex,True)
+        return player.buildSettlement(vertex,self,True)
 
     def buildCity(self, coordinates):
         player = self.players[self.turn]
@@ -164,7 +164,7 @@ class Game(object):
         player1.trade({},settlement.player,{card:1})
 
 
-    def rollDice(players):
+    def rollDice():
         """Returns the result of rolling two rolled dice and
         gives resources appropriately to each player
 
@@ -178,7 +178,7 @@ class Game(object):
         #if d == 7:
         #    settlements = player.moveRobber(player, hex)
         #    robberSteal()
-        for player in players:
+        for player in self.players:
             player.takeCards(player.hist[d])
         return d
 
