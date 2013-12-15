@@ -1,5 +1,6 @@
 
 $(document).ready(function(){
+    $('#end').hide();
     var WIDTH=$('.everything').width()
     var HEX_RADIUS=75;
     var HEIGHT=HEX_RADIUS*12;
@@ -11,7 +12,8 @@ $(document).ready(function(){
         'brick':0xa32900,
         'grain':0xffff00,
         'desert':0xd68533}
-    
+    var PLAYER_MAP=[0x000066,0xFF0000,0xFFFFFF,0xFF9900,0x006600,0x663300];
+    var ROAD_WIDTH=.1;
     //stage instance
     var interactive = true;
     var stage = new PIXI.Stage(0xffffff, interactive);
@@ -22,7 +24,11 @@ $(document).ready(function(){
 
     //renderer instance
     var renderer = PIXI.autoDetectRenderer(WIDTH,HEIGHT);
-
+    var currentOptions = [];
+    var currentPlayer = 0;
+    var inSetup = true;
+    var setupForward = true;
+    window.players = [];
 
     //graphics object
     //var graphics = new PIXI.Graphics();
@@ -32,8 +38,14 @@ $(document).ready(function(){
         console.log(playerNames)
         $.post('/start', {players:playerNames}, function(game){
             var game=JSON.parse(game);
+            for (player in game.players){
+                // console.log(player);
+                console.log(game.players[player].name);
+                window.players.push(game.players[player].name);
+            }
             var hexes=game.board.hexes;
             var vertices=game.board.vertices;
+            console.log(window.players[currentPlayer]);
             console.log(game);
             for (h in hexes){
                 // console.log(hexes[h]);
@@ -42,28 +54,45 @@ $(document).ready(function(){
             }
             for (v in vertices){
                 // console.log(vertices[v]);
-                var coords = splitCoords(v);
-                var x = coords.x;
-                var y = coords.y;
-                correctRight=Math.abs(Math.floor(coords.i)%2+Math.floor(2*coords.j)%2)%2;
-                // console.log('coords',coords.i,coords.j,correctRight);
-                if (game.players.length<5){
-                    correctRight=1-correctRight;
-                }
-                if (correctRight){
-                    x+=HEX_RADIUS/4;
-                }
-                else{
-                    x-=HEX_RADIUS/4;
-                }
-                
-                drawVertex(x,y,HEX_RADIUS/10);
+                var coords = calculateVertex(v);
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10)
             }
+            $('#activePlayer').text(window.players[currentPlayer]+'\'s turn')
         });
         $('#start').hide();
+        $('#end').show();
         return false;
     });
     // drawHexagon(WIDTH/2,HEIGHT/2,HEX_RADIUS,0xff0000);
+
+    $('#endTurn').click(function(){
+        if (inSetup){
+            if (setupForward){
+                if (currentPlayer+1>=window.players.length){
+                    setupForward=false;
+                }
+                else{
+                    currentPlayer++;
+                }
+            }
+            else{
+                if (currentPlayer-1<0){
+                    inSetup=false;
+                    rollDice();
+                }
+                else currentPlayer--;
+            }
+        }
+        else{
+            currentPlayer=(currentPlayer+1)%window.players.length;
+            rollDice();
+        }
+        $('#activePlayer').text(window.players[currentPlayer]+'\'s turn');
+    });
+
+    function rollDice(){
+        console.log('rolling dice');
+    }
 
     function splitCoords(coordStr){
         var coordinates=coordStr.substring(1, coordStr.length-1);
@@ -82,18 +111,24 @@ $(document).ready(function(){
         j=Math.floor(j*2+.5)/2;
         return {'i':i,'j':j}
     }
-    // function drawBoard(width, height, numHexesInCenterColumn, hexRadius){
-    //     var boardRadius = (numHexesInCenterColumn-numHexesInCenterColumn%2)/2;
-    //     var vert = hexRadius*Math.sqrt(3)/2;
-    //     for (var i = -boardRadius; i <= boardRadius; i++) {
-    //         var hexesInColumn=numHexesInCenterColumn - Math.abs(i);
-    //         console.log(hexesInColumn);
-    //         for(var j=-(hexesInColumn-1)/2;j<=(hexesInColumn-1)/2;j++){
-    //             // console.log(i,j);
-    //             drawHexagon(width/2+i*hexRadius*3/2,height/2-2*j*vert,hexRadius,0xff0000);
-    //         };
-    //     };
-    // }
+
+    function calculateVertex(v){
+        var coords = splitCoords(v);
+        var x = coords.x;
+        var y = coords.y;
+        correctRight=Math.abs(Math.floor(coords.i)%2+Math.floor(2*coords.j)%2)%2;
+        if (window.players.length<5){
+            correctRight=1-correctRight;
+        }
+        if (correctRight){
+            x+=HEX_RADIUS/4;
+        }
+        else{
+            x-=HEX_RADIUS/4;
+        }
+        return {'x':x,'y':y}
+        drawVertex(x,y,HEX_RADIUS/10);
+    }
 
     function drawVertex(x,y,radius){
         var graphics = new PIXI.Graphics();
@@ -117,28 +152,51 @@ $(document).ready(function(){
        stage.addChild(graphics);
     }
 
-    function vertexMenu(x,y){
-        $.post('/buildables/'+x+'/'+y,{},function(data){
+    function vertexMenu(i,j,x,y){
+        $.post('/buildables/'+i+'/'+j,{},function(data){
             data=JSON.parse(data);
             console.log(data);
             console.log(data.roads);
             console.log(data.building);
-            var graphics=[];
-            for (var i = 0; i < data.roads.length; i++) {
-                graphics.push(makeRoad(data.roads[i]));
+            for (var k = 0; k < data.roads.length; k++) {
+                var coords = calculateVertex(data.roads[k]);
+                currentOptions.push(roadOption(coords.x,coords.y,x,y));
             };
         });
     }
 
-    function makeRoad(road){
+    function roadOption(x1,y1,x2,y2){
+        var graphics = new PIXI.Graphics();
+        var x = x2-x1;
+        var y = y2-y1
+        graphics.position.x=x1+x*.2;
+        graphics.position.y=x2+y*.2;
+        graphics.lineStyle(5, PLAYER_MAP[currentPlayer]);
+        graphics.lineTo(x*.8,y*.8);
 
+        road = new Polygon(
+            x*.2-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH,
+            x*.2+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH,
+            x*.2-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH,
+            x*.2+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH);
+
+        graphics.interactive = true;
+        graphics.hitArea = road;
+        graphics.opacity = .5;
+
+        graphics.click = function(data){
+
+        };
+
+        stage.addChild(graphics);
+        return graphics;
     }
 
     function hexMenu(x,y){
         $.post('/stealables/'+x+'/'+y,{},function(data){
             data=JSON.parse(data);
             console.log(data);
-            console.log(data.players);s
+            console.log(data.players);
         });
     }
 
@@ -185,7 +243,7 @@ $(document).ready(function(){
             graphics.click = function(data){
                 var indices=pixelsToIndices(this.position.x,this.position.y);
                 console.log(indices)
-                hexMenu(indices.i,indices.j);
+                hexMenu(indices.i,indices.j,this.position.x,this.position.y);
             };
         }
         stage.addChild(graphics);

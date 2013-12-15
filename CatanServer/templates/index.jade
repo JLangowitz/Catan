@@ -21,7 +21,9 @@ block content
                 //-     input(type='radio', name='players', value=6) 
                 //-     |6
             button(type='submit', class='btn btn-primary') Start Game
-
+        div(id='end')
+            button(class='btn btn-success',id='endTurn') End Turn
+            h2(id='activePlayer')
         
 block scripts
     script(src="{{url_for('static', filename='play.js')}}")
