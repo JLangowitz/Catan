@@ -139,9 +139,13 @@ Largest Army? %s
             building = gO.Building(vertex,game.turn)  #creates a building object
             vertex.build()                      #build building on vertex
             self.buildings.append(building)    #add buildings to list of buildings
-            self.createHist()                      #rebuild the dice histogram
+            self.createHist()                    #rebuild the dice histogram
             self.calcPoints()                     #calc points
             self.settlementNumber += 1
+            if second == True:
+                hexes = vertex.hexes
+                for hex1 in hexes:
+                    self.takeCards(hex1.resource)
             # self.ports[isPort(vertex)] = True
             return False
         else:
@@ -184,8 +188,8 @@ Largest Army? %s
             for building in self.buildings:     
                 if building == building1:
                     buiding1.isCity = True      #make settlement a city
-                    self.buildHist              #remake historgram
-                    self.calcPoints             #calculate points 
+                    self.buildHist()              #remake historgram
+                    self.calcPoints()             #calculate points 
                     self.settlementNumber -= 1
                     self.cityNumber += 1
                     return False
