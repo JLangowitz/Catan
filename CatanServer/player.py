@@ -36,12 +36,12 @@ Largest Army? %s
 """ % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
     def createHist(self): 
-    """ Creates a historgram that maps dice rolls to resources recieved. 
-        Stored in self.hist
+        """ Creates a historgram that maps dice rolls to resources recieved. 
+            Stored in self.hist
 
-    inputs: self player object
+        inputs: self player object
 
-    """
+        """
         for building in self.buildings:     
             buildHist = building.provideResources()
             for roll in buildHist:
@@ -133,7 +133,7 @@ Largest Army? %s
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if checkSettlement(self,vertex,start) == True:
+        if self.checkSettlement(vertex,start) == True:
             if start == False:
                 self.payCards(settlementResources)  #pay cards to build
             building = Building(self, vertex)  #creates a building object
