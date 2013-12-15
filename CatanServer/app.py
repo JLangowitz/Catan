@@ -41,6 +41,13 @@ def start():
     jsonGame=jsonpickle.encode(game)
     return jsonGame
 
+@app.route('/setTurn/<turn>', methods=['POST'])
+def setTurn(turn):
+    game=d['game']
+    game.turn = int(turn)
+    d['game'] = game
+    return jsonpickle.encode(game)
+
 @app.route('/buildables/<x>/<y>', methods=['POST'])
 def findBuildable(x,y):
     game=d['game']
@@ -75,7 +82,7 @@ def buildStartSettlement(x,y):
     game=d['game']
     error = game.buildStartSettlement((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode({'error':error})
+    return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
 
 @app.route('/buildcity/<x>/<y>', methods=['POST'])
