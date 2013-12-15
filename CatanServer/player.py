@@ -119,6 +119,8 @@ Largest Army? %s
                     return False
         if self.settlementNumber >= 4:
             return False
+        if start
+            return True
         for road in self.roads:
             if road[0] == vertex or road[1] == vertex:
                 return True
@@ -135,9 +137,8 @@ Largest Army? %s
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
         if self.checkSettlement(vertex,game,start):
-            if start != False:
+            if start == False:
                 self.payCards(settlementResources)  #pay cards to build
-                return "StartSettlement Error"
             building = Building(self, vertex)  #creates a building object
             vertex.build()                      #build building on vertex
             self.buildings.append[building]    #add buildings to list of buildings
