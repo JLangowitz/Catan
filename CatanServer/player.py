@@ -137,6 +137,7 @@ Largest Army? %s
         if self.checkSettlement(vertex,game,start):
             if start == False:
                 self.payCards(settlementResources)  #pay cards to build
+                return "StartSettlement Error"
             building = Building(self, vertex)  #creates a building object
             vertex.build()                      #build building on vertex
             self.buildings.append[building]    #add buildings to list of buildings
