@@ -245,8 +245,10 @@ Largest Army? %s
         devCards[a] =  devCards[a] - 1
         if a not in player.devcards:
             player.devcards[a] = 1
+            return False
         else:
             player.devcards[a] += 1
+            return False
         if a == "Victory Point":
             player.points += 1
         return a
@@ -336,6 +338,7 @@ def buildRoad(player1,playerList, vertex1, vertex2):
         print road#, vertex1, vertex2
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
+            return False
         else:
             return 'Invalid road placement, must have existing adjacent'
 

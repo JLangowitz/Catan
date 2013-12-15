@@ -49,20 +49,20 @@ class Game(object):
         buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
         return buildableRoads, buildableBuilding
 
-    def buildSettlement1(self, coordinates):
+    def buildSettlement(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
-        return player.buildSettlement(vertex):
+        return player.buildSettlement(vertex)
 
 
-    def buildCity1(self, coordinates):
+    def buildCity(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         building = findBuildingAt(self,coordinates)
         return player.buildCity(vertex,building)
 
 
-    def buildRoad1(self,coordinates1,coordinates2):
+    def buildRoad(self,coordinates1,coordinates2):
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
@@ -86,29 +86,29 @@ class Game(object):
             self.turn=(self.turn+1)%len(self.players)
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
-    def trade1(self,resource1,player2,resource2):
+    def trade(self,resource1,player2,resource2):
         player = self.players[self.turn]        
         return player.trade(resources1, player2, resources2)
 
-    def drawDev1(self):
+    def drawDev(self):
         player = self.players[self.turn]
         dev = player.drawDev()
         return (player,dev)
 
 
-    def playYearOfPlenty1(self,resource1,resource2): 
+    def playYearOfPlenty(self,resource1,resource2): 
         player = self.players[self.turn]
         return player.playYearOfPlenty(resource1,resource2)
 
-    def playMonopoly1(self,playerList,resource):
+    def playMonopoly(self,playerList,resource):
         player = self.players[self.turn]
         return player.playMonopoly(playerList,resource)
     
-    def playSoldier1(self):
+    def playSoldier(self):
         player = self.players[self.turn]
         return player.playSoldier()
 
-    def playRoadBuilding1(self,vertex1,vertex2,vertex3,vertex4):
+    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         player = self.players[self.turn]
         return player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4)
 
@@ -389,6 +389,7 @@ def nextInSpiral(x,y,direc):
 
 if __name__ == '__main__':
     
+    game = Game()
     board=Board(4)
     print board.__dict__
     board.printHexes()
