@@ -175,10 +175,8 @@ class Game(object):
         """ 
         player = self.players[self.turn]
         d = randint(1,6)+randint(1,6)
-      #TODO Josh add robber call function
-        #if d == 7:
-        #    settlements = player.moveRobber(player, hex)
-        #    robberSteal()
+        if d == 7:
+            return d
         for player in self.players:
             player.takeCards(player.hist[d])
         return d
