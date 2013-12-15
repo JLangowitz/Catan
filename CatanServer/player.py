@@ -21,7 +21,7 @@ class Player:
         self.devcards = {"Soldier":0,"Victory Point":0,"Year Of Plenty":0,"Monopoly":0,"Road Building":0}  #dictionary mapping Development card strings to number of dev Cards
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
-        self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
+        self.hist = {0:{},2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
         self.cityNumber = 0
         self.settlementNumber = 0
         self.roadNumber = 0
