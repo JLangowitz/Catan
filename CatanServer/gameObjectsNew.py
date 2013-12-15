@@ -29,6 +29,12 @@ class Game(object):
                 buildings.append(building)
         return buildings
 
+    def buildingAt(self,coordinates):
+        for building in self.allBuildings():
+            if building.vertex.coordinates==coordinates:
+                return building
+        return False
+
     def findStealableAt(self, coordinates):
         buildings=self.allBuildings()
         return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
@@ -73,9 +79,9 @@ class Game(object):
         vertex2 = self.getVertex(coordinates2)
         return player.buildRoad(playerList,vertex1,vertex2)
 
-    def getNeighbors(self,coordinate):
-            vertex = self.getVertex(coordinates1)
-            return vertex.getNeighbors
+    def getNeighbors(self,coordinates):
+        vertex = self.getVertex(coordinates)
+        return vertex.getNeighbors()
 
     def getVertex(self, coordinates):
         return self.board.vertices[coordinates]

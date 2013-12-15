@@ -43,20 +43,7 @@ $(document).ready(function(){
                 console.log(game.players[player].name);
                 window.players.push(game.players[player].name);
             }
-            var hexes=game.board.hexes;
-            var vertices=game.board.vertices;
-            console.log(window.players[currentPlayer]);
-            console.log(game);
-            for (h in hexes){
-                // console.log(hexes[h]);
-                var coords = splitCoords(h);
-                drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
-            }
-            for (v in vertices){
-                // console.log(vertices[v]);
-                var coords = calculateVertex(v);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10)
-            }
+            drawGame(game);
             $('#activePlayer').text(window.players[currentPlayer]+'\'s turn')
         });
         $('#start').hide();
@@ -89,6 +76,28 @@ $(document).ready(function(){
         }
         $('#activePlayer').text(window.players[currentPlayer]+'\'s turn');
     });
+
+    function drawGame(game){
+        var hexes=game.board.hexes;
+        var vertices=game.board.vertices;
+        var players=game.players;
+        var buildings=[];
+        for (player in players){
+            for (building in player.buildings){
+                buildings.push(building);
+            }
+        }
+        for (h in hexes){
+            var coords = splitCoords(h);
+            drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
+        }
+        for (v in vertices){
+            if (!vertices[v].built) {
+                var coords = calculateVertex(v);
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10)
+            };
+        }
+    }
 
     function rollDice(){
         console.log('rolling dice');
@@ -153,15 +162,34 @@ $(document).ready(function(){
     }
 
     function vertexMenu(i,j,x,y){
-        $.post('/buildables/'+i+'/'+j,{},function(data){
-            data=JSON.parse(data);
-            console.log(data);
-            console.log(data.roads);
-            console.log(data.building);
-            for (var k = 0; k < data.roads.length; k++) {
-                var coords = calculateVertex(data.roads[k]);
-                currentOptions.push(roadOption(coords.x,coords.y,x,y));
-            };
+        if (inSetup){
+            $.post('/setupBuildables/'+i+'/'+j,{},function(data){
+                data=JSON.parse(data);
+                console.log(data);
+                console.log(data.roads);
+                console.log(data.building);
+                if (data.building) {
+                    buildSettlementSetup(i,j,x,y);
+                };
+            });
+        }
+        else{
+            $.post('/buildables/'+i+'/'+j,{},function(data){
+                data=JSON.parse(data);
+                console.log(data);
+                console.log(data.roads);
+                console.log(data.building);
+                for (var k = 0; k < data.roads.length; k++) {
+                    var coords = calculateVertex(data.roads[k]);
+                    currentOptions.push(roadOption(coords.x,coords.y,x,y));
+                };
+            });
+        }
+    }
+
+    function buildSettlement(i,j,x,y){
+        $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
+
         });
     }
 
