@@ -52,7 +52,7 @@ class Game(object):
             if vertexBuilding not in player.buildings:
                 return [],None
             else:
-                if vertexBuilding.ifCity:
+                if vertexBuilding.isCity:
                     buildableBuilding = None
                 else:
                     buildableBuilding = 'city'
@@ -246,7 +246,7 @@ class Vertex(object):
     def getNeighbors(self):
         return self.neighbors
     
-    def getResources(self, board):
+    def getResources(self):
         resources = {}
         
         for h in self.hexes:
@@ -280,13 +280,13 @@ class Building(object):
     """Represents every structure on the board
 
 
-    attributes: player class, boolean, ifCity, vertex, resources provided
+    attributes: player class, boolean, isCity, vertex, resources provided
     """
 
     def __init__(self, vertex, playerNumber):
         self.vertex = vertex
         self.playerNumber = playerNumber
-        self.ifCity = False
+        self.isCity = False
 
     def __repr__(self):
         return jsonpickle.encode(self)
@@ -295,7 +295,7 @@ class Building(object):
         buildHist = {}
         vertRes = self.vertex.getResources()
 
-        #if self.ifCity:
+        #if self.isCity:
         #    n = 2
         #else: 
         n = 1

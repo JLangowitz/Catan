@@ -82,9 +82,9 @@ Largest Army? %s
 
         Returns: int points
         """
-
+        self.points=0
         for i in range(0,len(self.buildings)):
-            if (self.buildings[i]).isCity():
+            if (self.buildings[i]).isCity:
                 self.points += 2
             else:
                 self.points += 1
@@ -145,8 +145,7 @@ Largest Army? %s
             if second == True:
                 hexes = vertex.hexes
                 for hex1 in hexes:
-                    self.takeCards(hex1.resource)
-
+                    self.takeCards({hex1.resource:1})
             # self.ports[isPort(vertex)] = True
             return False
         else:
