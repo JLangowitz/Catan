@@ -168,21 +168,21 @@ def rollDice():
     game=d['game']
     roll = game.rollDice()
     d['game']=game
-    return jsonpickle.encode({"roll":roll})
+    return jsonpickle.encode({"roll":roll}, make_refs=False)
 
 @app.route('/robbersteal/<settlement>', methods=['POST'])
 def robberSteal(settlement):
     game=d['game']
     card,settlements = game.robberSteal(settlement)
     d['game']=game
-    return jsonpickle.encode({"card":card,"settlement":settlment})
+    return jsonpickle.encode({"card":card,"settlement":settlment}, make_refs=False)
 
 @app.route('/moverobber/<hex1>', methods=['POST'])
 def moverobber(hex1):
     game=d['game']
     settlements = game.robberSteal(hex1)
     d['game']=game
-    return jsonpickle.encode({"settlements":settlements})
+    return jsonpickle.encode({"settlements":settlements}, make_refs=False)
 
 if __name__ == '__main__':
     app.run()
