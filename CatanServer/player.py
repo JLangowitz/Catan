@@ -83,20 +83,16 @@ Largest Army? %s
         Returns: int points
         """
 
-        points = 0
         for i in range(0,len(self.buildings)):
             if (self.buildings[i]).isCity():
-                points += 2
+                self.points += 2
             else:
-                points += 1
+                self.points += 1
 
         if self.bonuses['longestRoad']:
-            points +=2
+            self.points +=2
         if self.bonuses['largestArmy']:
-            points +=2
-        points += self.bonuses['devPoints']
-        self.points = points
-        return points
+            self.points +=2
 
 
     def checkSettlement(self,vertex,game,start):
@@ -127,7 +123,7 @@ Largest Army? %s
                 return True
 
 
-    def buildSettlement(self,vertex, game,start=False):
+    def buildSettlement(self,vertex, game,start=False,second=False):
         """Checks to see if you can build and builds a settlement 
         at the location
 
@@ -146,6 +142,8 @@ Largest Army? %s
             self.createHist                      #rebuild the dice histogram
             self.calcPoints                     #calc points
             self.settlementNumber += 1
+            if second == True:
+                vertex.getResources
             # self.ports[isPort(vertex)] = True
             return False
         else:

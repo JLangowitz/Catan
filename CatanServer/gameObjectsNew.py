@@ -66,10 +66,10 @@ class Game(object):
         vertex = self.getVertex(coordinates)
         return player.buildSettlement(vertex,self)
 
-    def buildStartSettlement(self, coordinates):
+    def buildStartSettlement(self, coordinates,second=False):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
-        return player.buildSettlement(vertex,self,True)
+        return player.buildSettlement(vertex,self,True,second)
 
     def buildCity(self, coordinates):
         player = self.players[self.turn]
@@ -256,7 +256,8 @@ class Vertex(object):
                 resources[h.rollNumber] = [h.resource]
         return resources
 
-        return resources, rolls
+        #return resources, roll
+
 class Hex(object):
     """Represents each Hexes on the board
 
@@ -290,14 +291,14 @@ class Building(object):
     def __repr__(self):
         return jsonpickle.encode(self)
 
-    def provideResources(self): #Not done, needs to incorporate roll number
+    def provideResources(self): 
         buildHist = {}
         vertRes = self.vertex.getResources()
 
-        if self.ifCity:
-            n = 2
-        else: 
-            n = 1
+        #if self.ifCity:
+        #    n = 2
+        #else: 
+        n = 1
         for roll in vertRes:
             if roll not in buildHist:
                 buildHist[roll] = {}
