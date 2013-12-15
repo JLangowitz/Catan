@@ -57,62 +57,73 @@ def findStealable(x,y):
 @app.route('/buildsettlement/<x>/<y>', methods=['POST'])
 def buildSettlement(x,y):
     game=d['game']
-    game.buildSettlement1((float(x),float(y)))
+    error = game.buildSettlement((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode((float(x),float(y)))
+    return jsonpickle.encode({'error':error})
+
 
 @app.route('/buildcity/<x>/<y>', methods=['POST'])
 def buildCity(x,y):
     game=d['game']
-    game.buildCity1((float(x),float(y)))
+    error = game.buildCity((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode((float(x),float(y)))
+    return jsonpickle.encode({'error':error})
 
 @app.route('/road/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
 def buildRoad(x1,y1,x2,y2):
     game=d['game']
-    game.buildRoad1((float(x1),float(y1)),(float(x2),float(y2)))
+    error = game.buildRoad((float(x1),float(y1)),(float(x2),float(y2)))
     d['game']=game
-    return jsonpickle.encode((float(x1),float(y1)),(float(x2),float(y2)))
+    return jsonpickle.encode({'error':error})
 
 @app.route('/drawdev', methods=['POST'])
 def drawDev():
     game=d['game']
-    dev = game.drawDev1()   #dev contains (player,dev)
+    dev, error = game.drawDev1()   #dev contains (player,dev)
     d['game']=game
-    return jsonpickle.encode(dev)
+    return jsonpickle.encode({'dev':dev,'error':error})
 
 @app.route('/playyearofplenty/<resource1>/<resource2>', methods=['POST'])
 def playYearOfPlenty():
     game=d['game']
-    game.playYearOfPlenty1((resource1,resource2))
+    error = game.playYearOfPlenty((resource1,resource2))
     d['game']=game
-    return jsonpickle.encode()
+    return jsonpickle.encode({'error':error})
 
 @app.route('/playMonopoly/resource', methods=['POST'])
 def playMonopoly():
     game=d['game']
-    game.playMonopoly1(resource)
+    error = game.playMonopoly(resource)
     d['game']=game
-    return jsonpickle.encode()
+    return jsonpickle.encode({'error':error})
 
 @app.route('/playSoldier', methods=['POST'])
 def playSoldier():
     game=d['game']
-    game.playSoldier1()
+    error = game.playSoldier()
     d['game']=game
-    return jsonpickle.encode()
+    return jsonpickle.encode({'error':error})
 
 @app.route('/playRoadBuilding/<x1>/<y1>/<x2>/<y2>/<x3>/<y3>/<x4>/<y4>', methods=['POST'])
 def playRoadBuilding():
     game=d['game']
-    game.playRoadBuilding1((float(x1),float(y1)),(float(x2),float(y2)),(float(x3),float(y3)),(float(x4),float(y4)))
+    error = game.playRoadBuilding((float(x1),float(y1)),(float(x2),float(y2)),(float(x3),float(y3)),(float(x4),float(y4)))
     d['game']=game
-    return jsonpickle.encode()
+    return jsonpickle.encode({'error':error})
 
+@app.route('/trade/<dresource1>/<player2>/<dresource2>', methods=['POST'])
+def trade():
+    game=d['game'] 
+    error = game.trade(dresource1,player2,dresource2)
+    d['game']=game
+    return jsonpickle.encode({'error':error})
 
-
-
+@app.route('/getneighbors/<x>/<y>', methods=['POST'])
+def getNeigbhors():
+    game=d['game']
+    neighbors = game.getNeighbors()
+    d['game']=game
+    return jsonpickle.encode({'neibhors':neighbors})
 
 
 if __name__ == '__main__':

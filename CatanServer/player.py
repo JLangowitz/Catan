@@ -62,9 +62,8 @@ Largest Army? %s
         Input: Player object and a Resource Card String
         """
         for resource in d:
-            if self.hand[resource] < d[resource]:
-                print "player has insufficient cards" 
-                return None           
+            if self.hand[resource] < d[resource]: 
+                return False           
         for resource in d:         
             self.hand[resource] =  self.hand[resource] - d[resource]        
 
@@ -137,6 +136,7 @@ Largest Army? %s
             self.calcPoints                     #calc points
             self.settlementNumber += 1
             self.ports[isPort(vertex)] = True
+            return False
         else:
             return "You must construct additional pylons"
 
@@ -181,48 +181,46 @@ Largest Army? %s
                     self.calcPoints             #calculate points 
                     self.settlementNumber -= 1
                     self.cityNumber += 1
+                    return False
         else:
             return "You must construct additional pylons"
+    
+    def checkPorts(self,d,n):
+        a = keys(d)
+        if len(a) != 1:
+            return False
+        if d[a[0]] != n:
+            return False
+        if n == 4:
+            return True
+        if n == 3:
+            return self.ports["three"]
+        if n == 2:
+            return self.ports[a[0]]
+
 
     def fourToOne(self,d,resource):
-        a = keys(d)
-        if len(a) == 1:
-            if d[a[0]] == 4:
-                payCards(self,d)
-                takeCards(self,resource)
-            else:
-                return "You cannont complete this trade"
+        if checkPorts(self,d,4) :
+            payCards(self,d)
+            takeCards(self,resource)
+            return False
         else:
             return "You cannot complete this trade"
 
+
     def threeToOne(self,d,resource):
-        a = keys(d)
-        if self.ports["three"]:
-            if len(a) == 1:
-                if d[a[0]] == 3:
-                    payCards(self,d)
-                    takeCards(self,resource)
-                else:
-                    return "You cannont complete this trade"
-            else:
-                return "You cannot complete this trade"
+        if checkPorts(self,d,3):
+            payCards(self,d)
+            takeCards(self,resource)
+            return False
         else:
             return "You cannont complete this trade"
 
-    def twoToOne(self,d,resource1,resource2):
-        a = keys(d)
-        if self.ports[resource1]:
-            if len(a) == 1:
-                if d[a[0]] == 2:
-                    if d[a] == resource1:
-                        payCards(self,d)
-                        takeCards(self,resource2)
-                    else:
-                        return "You cannont complete this trade"
-                else:
-                    return "You cannont complete this trade"
-            else:
-                return "You cannot complete this trade"
+    def twoToOne(self,d,resource2):
+        if checkPorts(self,d,2):
+            payCards(self,d)
+            takeCards(self,resource2)
+            return False
         else:
             return "You cannot complete this trade"
 
@@ -236,8 +234,10 @@ Largest Army? %s
         """
         devResources = {"ore":1,"grain":1,"sheep":1}
         for resource in devResources:
-            if player.hand[resource] >= cityResources[resource]:
-                self.payCards(devResources) 
+            if player.hand[resource] >= devResources[resource]:
+                self.payCards(devResources)
+            else:
+                return  "Insufficient resources"
         t = []
         for word,freq in devCards.items():
             t.extend([word]*freq)
@@ -245,8 +245,10 @@ Largest Army? %s
         devCards[a] =  devCards[a] - 1
         if a not in player.devcards:
             player.devcards[a] = 1
+            return False
         else:
             player.devcards[a] += 1
+            return False
         if a == "Victory Point":
             player.points += 1
         return a
@@ -256,34 +258,38 @@ Largest Army? %s
             takeCard(player,resource1)
             takeCard(player,resource2)
             player.devcards["Year of Plenty"] -= 1
+            return False
         else:
             print "You don't have a Year of Plenty card"
 
     def playMonopoly(self,playerList,resource):
         if canPlay(player, "Monopoly"):
-            for player in playerslist:
+            for player in playerList:
                 n = player.hand[resource]
                 for i in range (n-1):
                     trade[player1,"None",player2,resource]
             player.devcards["Monopoly"] -= 1
+            return False
         else:
-            print "you don't have a Monopoly card"
+            print "You don't have a Monopoly card"
 
     def playSoldier(self):
         if canPlay(player, "Soldier"):
             moveRobber(player)
             player.soldiers += 1
             player.devcards["Soldier"] -= 1
+            return False
         else:
-            print "you don't have a Soldier card"
+            print "You don't have a Soldier card"
 
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         if canPlay(player, "Boad Building"):
             buildRoad(player,vertex1,vertex2)
             buildRoad(player,vertex3,vertex4)
             player.devcards["Road Building"] -= 1
+            return False
         else:
-            print "you don't have a Road Building card"
+            print "You don't have a Road Building card"
 
     def canPlay(self, card): #Add more failure modes
         """Determines if given devcard can be played"""
@@ -312,6 +318,7 @@ def trade(player1,resources1, player2, resources2):
     player2.takeCards(resources1)
     player2.payCards(resources2)
     player1.takeCards(resources2)
+    return False
 
 
 def buildRoad(player1,playerList, vertex1, vertex2):
@@ -331,6 +338,7 @@ def buildRoad(player1,playerList, vertex1, vertex2):
         print road#, vertex1, vertex2
         if road[0]==vertex1 or road[1]==vertex1 or road[0]==vertex2 or road[1]==vertex2: 
             player1.roads.append((vertex1,vertex2))
+            return False
         else:
             return 'Invalid road placement, must have existing adjacent'
 
@@ -340,16 +348,17 @@ def buildRoad(player1,playerList, vertex1, vertex2):
 
 
 def main():
-    player1 = Player()
-    hex1 = Hex((0,0),'ore',6)
-    hex2 = Hex((1,.5),'ore',8)
-    hex3 = Hex((1,-.5),'ore',6)
-    vert1 = Vertex((1,0),[hex1,hex2,hex3])
-    building1 = Building(vert1,player1)
-    player1.buildings = [building1]
-    vert1.build(building1)
-    player1.createHist()
-    print player1.hist
+    pass
+#    player1 = Player()
+#    hex1 = Hex((0,0),'ore',6)
+#    hex2 = Hex((1,.5),'ore',8)
+#    hex3 = Hex((1,-.5),'ore',6)
+#    vert1 = Vertex((1,0),[hex1,hex2,hex3])
+#    building1 = Building(vert1,player1)
+#    player1.buildings = [building1]
+#    vert1.build(building1)
+#    player1.createHist()
+#    print player1.hist
 
 if __name__ == '__main__':
     main()
