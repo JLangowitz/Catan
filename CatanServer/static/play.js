@@ -14,7 +14,7 @@ $(document).ready(function(){
         'desert':0xd68533}
     var PLAYER_MAP=[0x000066,0xFF0000,0xFFFFFF,0xFF9900,0x006600,0x663300];
     var ROAD_WIDTH=.1;
-    var BUILDING_DIM=HEX_RADIUS/5;
+    var BUILDING_DIM=HEX_RADIUS/10;
     //stage instance
     var interactive = true;
     var stage = new PIXI.Stage(0xffffff, interactive);
@@ -75,6 +75,9 @@ $(document).ready(function(){
             currentPlayer=(currentPlayer+1)%window.players.length;
             rollDice();
         }
+        $.post('/setTurn/'+currentPlayer,{},function(data){
+
+        });
         $('#activePlayer').text(window.players[currentPlayer]+'\'s turn');
     });
 
@@ -82,15 +85,22 @@ $(document).ready(function(){
         var hexes=game.board.hexes;
         var vertices=game.board.vertices;
         var players=game.players;
-        for (player in players){
-            for (building in player.buildings){
-                var coords = calculateVertex(building.vertex)
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.ifCity, building.playerNumber)
-            }
-        }
         for (h in hexes){
             var coords = splitCoords(h);
             drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
+        }
+        for (player in players){
+            for (building in players[player].buildings){
+                building=players[player].buildings[building];
+                var vert = JSON.parse(building.vertex);
+                console.log('vertex',vert);
+                var coordStr = vert.coordinates['py/tuple'];
+                coordStr='('+coordStr[0]+', '+coordStr[1]+')';
+                console.log(coordStr);
+                var coords = calculateVertex(coordStr);
+                console.log(coords);
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.ifCity, building.playerNumber)
+            }
         }
         for (v in vertices){
             if (!vertices[v].built) {
@@ -155,35 +165,39 @@ $(document).ready(function(){
 
         var hit;
         if (building){
-            graphics.moveTo(-BUILDING_DIM,-BUILDING_DIM);
-            graphics.lineTo(-BUILDING_DIM,BUILDING_DIM);
-            graphics.lineTo(0,2*BUILDING_DIM);
-            graphics.lineTo(BUILDING_DIM,BUILDING_DIM)
+            graphics.lineStyle(1,PLAYER_MAP[player]);
+            graphics.beginFill(PLAYER_MAP[player]);
+            console.log(player);
+
+            graphics.moveTo(BUILDING_DIM,BUILDING_DIM);
+            graphics.lineTo(BUILDING_DIM,-BUILDING_DIM);
+            graphics.lineTo(0,2*-BUILDING_DIM);
+            graphics.lineTo(-BUILDING_DIM,-BUILDING_DIM)
             if(city){
-                graphics.lineTo(BUILDING_DIM,0);
-                graphics.lineTo(2*BUILDING_DIM,0);
-                graphics.lineTo(2*BUILDING_DIM,-BUILDING_DIM);
+                graphics.lineTo(-BUILDING_DIM,0);
+                graphics.lineTo(2*-BUILDING_DIM,0);
+                graphics.lineTo(2*-BUILDING_DIM,BUILDING_DIM);
                 hit = new PIXI.Polygon(
-                    -BUILDING_DIM,-BUILDING_DIM,
-                    -BUILDING_DIM,BUILDING_DIM,
-                    0,2*BUILDING_DIM,
-                    BUILDING_DIM,BUILDING_DIM,
-                    BUILDING_DIM,0,
-                    2*BUILDING_DIM,0,
-                    2*BUILDING_DIM,-BUILDING_DIM,
-                    -BUILDING_DIM,-BUILDING_DIM)
-            }
-            else{
-                graphics.lineTo(BUILDING_DIM,-BUILDING_DIM);
-                hit = new PIXI.Polygon(
-                    -BUILDING_DIM,-BUILDING_DIM,
-                    -BUILDING_DIM,BUILDING_DIM,
-                    0,2*BUILDING_DIM,
                     BUILDING_DIM,BUILDING_DIM,
                     BUILDING_DIM,-BUILDING_DIM,
-                    -BUILDING_DIM,-BUILDING_DIM)
+                    0,2*-BUILDING_DIM,
+                    -BUILDING_DIM,-BUILDING_DIM,
+                    -BUILDING_DIM,0,
+                    2*-BUILDING_DIM,0,
+                    2*-BUILDING_DIM,BUILDING_DIM,
+                    BUILDING_DIM,BUILDING_DIM)
             }
-            graphics.lineTo(-BUILDING_DIM,-BUILDING_DIM)
+            else{
+                graphics.lineTo(-BUILDING_DIM,BUILDING_DIM);
+                hit = new PIXI.Polygon(
+                    BUILDING_DIM,BUILDING_DIM,
+                    BUILDING_DIM,-BUILDING_DIM,
+                    0,2*-BUILDING_DIM,
+                    -BUILDING_DIM,-BUILDING_DIM,
+                    -BUILDING_DIM,BUILDING_DIM,
+                    BUILDING_DIM,BUILDING_DIM)
+            }
+            graphics.lineTo(BUILDING_DIM,BUILDING_DIM)
         }
         else{
             graphics.drawCircle(0,0,radius);
@@ -196,7 +210,7 @@ $(document).ready(function(){
         graphics.click = function(data){
             var indices=pixelsToIndices(this.position.x,this.position.y);
             console.log(indices)
-            vertexMenu(indices.i,indices.j);
+            vertexMenu(indices.i,indices.j,this.position.x,this.position.y);
        };
 
        stage.addChild(graphics);
@@ -210,8 +224,11 @@ $(document).ready(function(){
                 console.log(data.roads);
                 console.log(data.building);
                 if (data.building) {
-                    buildSettlementSetup(i,j,x,y);
-                };
+                    buildSettlementSetup(i,j);
+                }
+                else{
+                    showOptions(false, false, data.roads, x, y)
+                }
             });
         }
         else{
@@ -220,15 +237,26 @@ $(document).ready(function(){
                 console.log(data);
                 console.log(data.roads);
                 console.log(data.building);
-                for (var k = 0; k < data.roads.length; k++) {
-                    var coords = calculateVertex(data.roads[k]);
-                    currentOptions.push(roadOption(coords.x,coords.y,x,y));
-                };
+                
             });
         }
     }
 
-    function buildSettlementSetup(i,j,x,y){
+    function showOptions(settlement, city, roads, x, y){
+        for (road in roads){
+            coordStr= roads[road]['py/tuple'];
+            // console.log('coordStr', coordStr);
+            coordStr='('+coordStr[0]+', '+coordStr[1]+')';
+            var coords = calculateVertex(coordStr);
+            // console.log('coords',coords);
+            // console.log(x,y)
+            currentOptions.push(roadOption(coords.x,coords.y,x,y));
+        };
+        // console.log('options', currentOptions);
+        // console.log(stage);
+    }
+
+    function buildSettlementSetup(i,j){
         $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
             clearGame();
             var data=JSON.parse(data);
@@ -243,24 +271,42 @@ $(document).ready(function(){
     function roadOption(x1,y1,x2,y2){
         var graphics = new PIXI.Graphics();
         var x = x2-x1;
-        var y = y2-y1
-        graphics.position.x=x1+x*.2;
-        graphics.position.y=x2+y*.2;
-        graphics.lineStyle(5, PLAYER_MAP[currentPlayer]);
-        graphics.lineTo(x*.8,y*.8);
+        var y = y2-y1;
+        console.log(x1,y1,x2,y2,x,y);
+        graphics.position.x=x1;
+        graphics.position.y=y1;
+        graphics.lineStyle(1, PLAYER_MAP[currentPlayer]);
+        graphics.beginFill(PLAYER_MAP[currentPlayer]);
+        graphics.moveTo(x*.2-y*ROAD_WIDTH, y*.2+x*ROAD_WIDTH);
+        graphics.lineTo(x*.2+y*ROAD_WIDTH, y*.2-x*ROAD_WIDTH);
+        graphics.lineTo(x*.8+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH);
+        graphics.lineTo(x*.8-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH);
+        graphics.lineTo(x*.2-y*ROAD_WIDTH, y*.2+x*ROAD_WIDTH);
 
-        road = new Polygon(
-            x*.2-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH,
-            x*.2+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH,
-            x*.2-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH,
-            x*.2+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH);
+        road = new PIXI.Polygon(
+            x*.2-y*ROAD_WIDTH, y*.2+x*ROAD_WIDTH,
+            x*.2+y*ROAD_WIDTH, y*.2-x*ROAD_WIDTH,
+            x*.8+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH);
+            x*.8-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH,
 
         graphics.interactive = true;
         graphics.hitArea = road;
-        graphics.opacity = .5;
+        graphics.alpha = .5;
+
+        graphics.mouseover = function (data) {
+            this.alpha=1;
+        }
+
+        graphics.mouseout = function (data) {
+            this.alpha=.5;
+        }
 
         graphics.click = function(data){
-
+            coords1 = pixelsToIndices(x1,y1);
+            coords2 = pixelsToIndices(x2,y2);
+            $.post('/road/'+coords1.x+'/'+coords1.y+'/'+coords2.x+'/'+coords2.y,{},function(data){
+                
+            });
         };
 
         stage.addChild(graphics);

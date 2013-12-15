@@ -1,5 +1,6 @@
 import math
 import random
+import jsonpickle
 from random import randint
 from random import choice
 from player import *
@@ -218,6 +219,8 @@ class Vertex(object):
         self.neighbors=neighbors
         self.ports = "none"
 
+    def __repr__(self):
+        return jsonpickle.encode(self)
 
     def build(self):
         self.built = True
@@ -285,6 +288,9 @@ class Building(object):
         self.vertex = vertex
         self.playerNumber = playerNumber
         self.ifCity = False
+
+    def __repr__(self):
+        return jsonpickle.encode(self)
 
     def provideResources(self): #Not done, needs to incorporate roll number
         buildHist = {}
