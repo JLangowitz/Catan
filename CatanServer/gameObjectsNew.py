@@ -81,7 +81,7 @@ class Game(object):
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
-        return player.buildRoad(playerList,vertex1,vertex2)
+        return player.buildRoad(vertex1,vertex2)
 
     def getNeighbors(self,coordinates):
         vertex = self.getVertex(coordinates)
@@ -121,9 +121,9 @@ class Game(object):
         player = self.players[self.turn]
         return player.playYearOfPlenty(resource1,resource2)
 
-    def playMonopoly(self,playerList,resource):
+    def playMonopoly(self,resource):
         player = self.players[self.turn]
-        return player.playMonopoly(playerList,resource)
+        return player.playMonopoly(self.players,resource)
     
     def playSoldier(self):
         player = self.players[self.turn]
@@ -164,7 +164,7 @@ class Game(object):
         player1.trade({},settlement.player,{card:1})
 
 
-    def rollDice(playerList):
+    def rollDice(players):
         """Returns the result of rolling two rolled dice and
         gives resources appropriately to each player
 
@@ -178,7 +178,7 @@ class Game(object):
         #if d == 7:
         #    settlements = player.moveRobber(player, hex)
         #    robberSteal()
-        for player in playerList:
+        for player in players:
             player.takeCards(player.hist[d])
         return d
 
