@@ -83,20 +83,16 @@ Largest Army? %s
         Returns: int points
         """
 
-        points = 0
         for i in range(0,len(self.buildings)):
             if (self.buildings[i]).isCity():
-                points += 2
+                self.points += 2
             else:
-                points += 1
+                self.points += 1
 
         if self.bonuses['longestRoad']:
-            points +=2
+            self.points +=2
         if self.bonuses['largestArmy']:
-            points +=2
-        points += self.bonuses['devPoints']
-        self.points = points
-        return points
+            self.points +=2
 
 
     def checkSettlement(self,vertex,game,start):
