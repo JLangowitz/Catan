@@ -14,6 +14,7 @@ $(document).ready(function(){
         'desert':0xd68533}
     var PLAYER_MAP=[0x000066,0xFF0000,0xFFFFFF,0xFF9900,0x006600,0x663300];
     var ROAD_WIDTH=.1;
+    var BUILDING_DIM=HEX_RADIUS/5;
     //stage instance
     var interactive = true;
     var stage = new PIXI.Stage(0xffffff, interactive);
@@ -81,10 +82,10 @@ $(document).ready(function(){
         var hexes=game.board.hexes;
         var vertices=game.board.vertices;
         var players=game.players;
-        var buildings=[];
         for (player in players){
             for (building in player.buildings){
-                buildings.push(building);
+                var coords = calculateVertex(building.vertex)
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.ifCity, building.playerNumber)
             }
         }
         for (h in hexes){
@@ -94,8 +95,14 @@ $(document).ready(function(){
         for (v in vertices){
             if (!vertices[v].built) {
                 var coords = calculateVertex(v);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10)
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, false, false, false)
             };
+        }
+    }
+
+    function clearGame(){
+        while (stage.children){
+            stage.removeChild(stage.getChildAt(0));
         }
     }
 
@@ -139,18 +146,52 @@ $(document).ready(function(){
         drawVertex(x,y,HEX_RADIUS/10);
     }
 
-    function drawVertex(x,y,radius){
+    function drawVertex(x,y,radius,building,city,player){
         var graphics = new PIXI.Graphics();
         graphics.lineStyle(1, 0x000000);
         graphics.beginFill(0x000000);
         graphics.position.x=x;
         graphics.position.y=y;
-        graphics.drawCircle(0,0,radius);
 
-        circle = new PIXI.Circle(0,0,radius);
+        var hit;
+        if (building){
+            graphics.moveTo(-BUILDING_DIM,-BUILDING_DIM);
+            graphics.lineTo(-BUILDING_DIM,BUILDING_DIM);
+            graphics.lineTo(0,2*BUILDING_DIM);
+            graphics.lineTo(BUILDING_DIM,BUILDING_DIM)
+            if(city){
+                graphics.lineTo(BUILDING_DIM,0);
+                graphics.lineTo(2*BUILDING_DIM,0);
+                graphics.lineTo(2*BUILDING_DIM,-BUILDING_DIM);
+                hit = new PIXI.Polygon(
+                    -BUILDING_DIM,-BUILDING_DIM,
+                    -BUILDING_DIM,BUILDING_DIM,
+                    0,2*BUILDING_DIM,
+                    BUILDING_DIM,BUILDING_DIM,
+                    BUILDING_DIM,0,
+                    2*BUILDING_DIM,0,
+                    2*BUILDING_DIM,-BUILDING_DIM,
+                    -BUILDING_DIM,-BUILDING_DIM)
+            }
+            else{
+                graphics.lineTo(BUILDING_DIM,-BUILDING_DIM);
+                hit = new PIXI.Polygon(
+                    -BUILDING_DIM,-BUILDING_DIM,
+                    -BUILDING_DIM,BUILDING_DIM,
+                    0,2*BUILDING_DIM,
+                    BUILDING_DIM,BUILDING_DIM,
+                    BUILDING_DIM,-BUILDING_DIM,
+                    -BUILDING_DIM,-BUILDING_DIM)
+            }
+            graphics.lineTo(-BUILDING_DIM,-BUILDING_DIM)
+        }
+        else{
+            graphics.drawCircle(0,0,radius);
+            hit = new PIXI.Circle(0,0,radius);
+        }
 
         graphics.interactive=true;
-        graphics.hitArea=circle;
+        graphics.hitArea=hit;
 
         graphics.click = function(data){
             var indices=pixelsToIndices(this.position.x,this.position.y);
@@ -187,9 +228,10 @@ $(document).ready(function(){
         }
     }
 
-    function buildSettlement(i,j,x,y){
-        $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
-
+    function buildSettlementSetup(i,j,x,y){
+        $.post('/buildStartSettlement/'+i+'/'+j,{},function(game){
+            clearGame();
+            drawGame(game);
         });
     }
 
