@@ -30,6 +30,11 @@ d=shelve.open('game')
 def homepage():
     return render_template('index.jade', title='Catan')
 
+@app.route('/playerTable')
+def playerTable():
+    game=d['game']
+    return render_template('_table.jade', players=game.players)
+
 @app.route('/start', methods=['POST'])
 def start():
     playerNames = request.form['players'].split(', ')

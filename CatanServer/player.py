@@ -18,7 +18,7 @@ class Player:
         self.hand = {'ore':0,'lumber':0,'brick':0,'sheep':0,'grain':0}  #dictionary mapping Resource card strings to number of cards
         self.buildings = []
         self.soldiers = 0
-        self.devcards = {}  #dictionary mapping Development card strings to number of dev Cards
+        self.devcards = {"Soldier":0,"Victory Point":0,"Year Of Plenty":0,"Monopoly":0,"Road Building":0}  #dictionary mapping Development card strings to number of dev Cards
         self.roads = []
         #self.hist is a dic mapping dice roll to cards a person goes        
         self.hist = {2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}

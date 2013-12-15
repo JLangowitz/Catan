@@ -36,12 +36,9 @@ $(document).ready(function(){
     $('#start').submit(function(){
         // drawBoard(WIDTH, HEIGHT, NUM_HEXES_IN_CENTER, HEX_RADIUS);
         var playerNames= $('#players').val();
-        console.log(playerNames)
         $.post('/start', {players:playerNames}, function(game){
             var game=JSON.parse(game);
             for (player in game.players){
-                // console.log(player);
-                console.log(game.players[player].name);
                 window.players.push(game.players[player].name);
             }
             drawGame(game);
@@ -97,7 +94,6 @@ $(document).ready(function(){
                 var vert = JSON.parse(building.vertex);
                 var coordStr = vert.coordinates['py/tuple'];
                 coordStr=parseCoords(coordStr);
-                console.log(coordStr);
                 var coords = calculateVertex(coordStr);
                 drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.ifCity, building.playerNumber)
             }
@@ -116,6 +112,14 @@ $(document).ready(function(){
                 drawVertex(coords.x,coords.y,HEX_RADIUS/10, false, false, false)
             };
         }
+        playerTable();
+        console.log(game);
+    }
+
+    function playerTable(){
+        $.get('/playerTable',{},function(data){
+            $('#gameTable').html(data);
+        });
     }
 
     function parseCoords(coordArray){
@@ -183,7 +187,6 @@ $(document).ready(function(){
         if (building){
             graphics.lineStyle(1,PLAYER_MAP[player]);
             graphics.beginFill(PLAYER_MAP[player]);
-            console.log(player);
 
             graphics.moveTo(BUILDING_DIM,BUILDING_DIM);
             graphics.lineTo(BUILDING_DIM,-BUILDING_DIM);
@@ -225,7 +228,6 @@ $(document).ready(function(){
 
         graphics.click = function(data){
             var indices=pixelsToIndices(this.position.x,this.position.y);
-            console.log(indices)
             vertexMenu(indices.i,indices.j,this.position.x,this.position.y);
        };
 
@@ -236,9 +238,6 @@ $(document).ready(function(){
         if (inSetup){
             $.post('/setupBuildables/'+i+'/'+j,{},function(data){
                 data=JSON.parse(data);
-                console.log(data);
-                console.log(data.roads);
-                console.log(data.building);
                 if (data.error){
                     return
                 }
@@ -253,9 +252,9 @@ $(document).ready(function(){
         else{
             $.post('/buildables/'+i+'/'+j,{},function(data){
                 data=JSON.parse(data);
-                console.log(data);
-                console.log(data.roads);
-                console.log(data.building);
+                // console.log(data);
+                // console.log(data.roads);
+                // console.log(data.building);
                 
             });
         }
@@ -281,8 +280,8 @@ $(document).ready(function(){
             var data=JSON.parse(data);
             var game=data.game;
             var error=data.error;
-            console.log(game);
-            console.log(error);
+            // console.log(game);
+            // console.log(error);
             drawGame(game);
             showOptions(false, false, roads, x, y)
         });
@@ -291,7 +290,7 @@ $(document).ready(function(){
     function buildRoadSetup(i1,j1,i2,j2){
         $.post('/startRoad/'+i1+'/'+j1+'/'+i2+'/'+j2,{},function(data){
             data=JSON.parse(data);
-            console.log(data);
+            // console.log(data);
             var game=data.game;
             var error=data.error;
             drawGame(game);
@@ -305,10 +304,8 @@ $(document).ready(function(){
         graphics.y1=y1;
         graphics.x2=x2;
         graphics.y2=y2;
-        console.log(graphics);
         var x = x2-x1;
         var y = y2-y1;
-        console.log(x1,y1,x2,y2,x,y);
         graphics.position.x=x1;
         graphics.position.y=y1;
         graphics.lineStyle(1, PLAYER_MAP[player]);
@@ -341,8 +338,6 @@ $(document).ready(function(){
         }
 
         graphics.click = function(data){
-            console.log(this);
-            console.log(this.x1);
             coords1 = pixelsToIndices(this.x1,this.y1);
             coords2 = pixelsToIndices(this.x2,this.y2);
             buildRoadSetup(coords1.i,coords1.j,coords2.i,coords2.j);
@@ -355,8 +350,8 @@ $(document).ready(function(){
     function hexMenu(x,y){
         $.post('/stealables/'+x+'/'+y,{},function(data){
             data=JSON.parse(data);
-            console.log(data);
-            console.log(data.players);
+            // console.log(data);
+            // console.log(data.players);
         });
     }
 
@@ -402,7 +397,6 @@ $(document).ready(function(){
             // set the mousedown and touchstart callback..
             graphics.click = function(data){
                 var indices=pixelsToIndices(this.position.x,this.position.y);
-                console.log(indices)
                 hexMenu(indices.i,indices.j,this.position.x,this.position.y);
             };
         }

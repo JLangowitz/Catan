@@ -15,8 +15,16 @@ table(class='table')
         th Points
     for player in players
         tr
-            td Ore: #{player.hand.ore}
-            td Lumber: #{player.hand.ore}
-            td Brick: #{player.hand.ore}
-            td Sheep: #{player.hand.ore}
-            td Grain: #{player.hand.ore}
+            td #{player.name}
+            td #{player.hand.ore}
+            td #{player.hand.lumber}
+            td #{player.hand.brick}
+            td #{player.hand.sheep}
+            td #{player.hand.grain}
+            td #{player.devcards.Soldier}
+            td #{player.devcards.Monopoly}
+            td #{player.devcards['Year Of Plenty']}
+            td #{player.devcards['Road Building']}
+            td #{player.devcards['Victory Point']}
+            td #{player.soldiers}
+            td #{player.points}
