@@ -54,6 +54,10 @@ class Game(object):
         vertex = self.getVertex(coordinates)
         return player.buildSettlement(vertex)
 
+    def buildStartSettlement(self, coordinates):
+        player = self.players[self.turn]
+        vertex = self.getVertex(coordinates)
+        return player.buildSettlement(vertex,True)
 
     def buildCity(self, coordinates):
         player = self.players[self.turn]
@@ -67,6 +71,12 @@ class Game(object):
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
         return player.buildRoad(playerList,vertex1,vertex2)
+
+    def buildStartRoad(self,coordinates1,coordinates2):
+        player = self.players[self.turn]
+        vertex1 = self.getVertex(coordinates1)
+        vertex2 = self.getVertex(coordinates2)
+        return player.buildRoad(playerList,vertex1,vertex2,True)
 
     def getNeighbors(self,coordinate):
             vertex = self.getVertex(coordinates1)
