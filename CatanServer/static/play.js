@@ -101,7 +101,7 @@ $(document).ready(function(){
     }
 
     function clearGame(){
-        while (stage.children){
+        while (stage.children.length){
             stage.removeChild(stage.getChildAt(0));
         }
     }
@@ -229,8 +229,12 @@ $(document).ready(function(){
     }
 
     function buildSettlementSetup(i,j,x,y){
-        $.post('/buildStartSettlement/'+i+'/'+j,{},function(game){
+        $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
             clearGame();
+            var data=JSON.parse(data)
+            var game=data.game
+            var error=data.error
+            console.log(game);
             drawGame(game);
         });
     }

@@ -75,7 +75,7 @@ def buildStartSettlement(x,y):
     game=d['game']
     error = game.buildStartSettlement((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode({'error':error})
+    return jsonpickle.encode({'game':game, 'error':error})
 
 
 @app.route('/buildcity/<x>/<y>', methods=['POST'])
