@@ -43,7 +43,7 @@ Largest Army? %s
         inputs: self player object
 
         """
-        self.hist = 0
+        self.hist = {0:{},2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
         for building in self.buildings:     
             buildHist = building.provideResources()
             for roll in buildHist:
