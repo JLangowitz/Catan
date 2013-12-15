@@ -95,7 +95,7 @@ $(document).ready(function(){
                 var coordStr = vert.coordinates['py/tuple'];
                 coordStr=parseCoords(coordStr);
                 var coords = calculateVertex(coordStr);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.ifCity, building.playerNumber)
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.isCity, building.playerNumber)
             }
             for (road in players[player].roads){
                 road=players[player].roads[road];
@@ -242,7 +242,7 @@ $(document).ready(function(){
                     return
                 }
                 if (data.building && inSetup) {
-                    buildSettlementSetup(i,j,data.roads,x,y);
+                    buildSettlementSetup(i,j,data.roads,x,y,!setupForward);
                 }
                 else{
                     showOptions(false, false, data.roads, x, y)
@@ -274,8 +274,8 @@ $(document).ready(function(){
         // console.log(stage);
     }
 
-    function buildSettlementSetup(i,j,roads,x,y){
-        $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
+    function buildSettlementSetup(i,j,roads,x,y,second){
+        $.post('/buildStartSettlement/'+i+'/'+j+'/'+second,{},function(data){
             clearGame();
             var data=JSON.parse(data);
             var game=data.game;

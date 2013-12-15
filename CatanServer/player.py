@@ -82,9 +82,9 @@ Largest Army? %s
 
         Returns: int points
         """
-
+        self.points=0
         for i in range(0,len(self.buildings)):
-            if (self.buildings[i]).isCity():
+            if (self.buildings[i]).isCity:
                 self.points += 2
             else:
                 self.points += 1
@@ -139,11 +139,9 @@ Largest Army? %s
             building = gO.Building(vertex,game.turn)  #creates a building object
             vertex.build()                      #build building on vertex
             self.buildings.append(building)    #add buildings to list of buildings
-            self.createHist                      #rebuild the dice histogram
-            self.calcPoints                     #calc points
+            self.createHist()                      #rebuild the dice histogram
+            self.calcPoints()                     #calc points
             self.settlementNumber += 1
-            if second == True:
-                vertex.getResources
             # self.ports[isPort(vertex)] = True
             return False
         else:
