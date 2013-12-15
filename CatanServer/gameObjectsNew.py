@@ -134,10 +134,9 @@ class Game(object):
         player = self.players[self.turn]
         return player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4)
 
-    def moveRobber(player1,hex1):
+    def moveRobber(hex1):
         """Moves the robber to a tile chosen by player1
 
-        player1: Player object
         hex1: Hex object
         """
         robberHex = False
@@ -153,7 +152,6 @@ class Game(object):
         """Steals a random resource the player controlling the given settlement 
         and gives it to player1
 
-        player1: Player object
         settlement: Building object
         """
         player1 = self.players[self.turn]
@@ -164,6 +162,7 @@ class Game(object):
                 cards.append(resource)
         card = cards.pop(randint(0,len(cards)-1))
         player1.trade({},player2,{card:1})
+        return card
 
 
     def rollDice():
