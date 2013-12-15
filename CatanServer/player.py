@@ -188,17 +188,13 @@ Largest Army? %s
         else:
             return "You must construct additional pylons"
     
-    def checkRoad(player1, vertex1, vertex2, start):
+    def checkRoad(player1, playerList, vertex1, vertex2, start):
         if player1.roadNumber >= 14:
             return "Cannot Build Road" 
         if start == False:                
             for resource in roadResources:
                 if self.hand[resource] < roadResources[resource]:
                     return False  
-        for player in playerList:
-            for road in player.roads:
-                if road == (vertex1,vertex2):
-                    return False
 
 
 
