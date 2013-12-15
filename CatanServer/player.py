@@ -98,7 +98,7 @@ Largest Army? %s
         return points
 
 
-    def checkSettlement(self,vertex,start):
+    def checkSettlement(self,vertex,game,start):
         """Checks if you can build a settlement at that location
 
         input: player object and vertex object
@@ -110,6 +110,7 @@ Largest Army? %s
         if vertex.built:
             return False
         for point in vertex.neighbors:
+            point = game.getVertex(point)
             if point.built: 
                 return False
         if start == False:                
@@ -123,7 +124,7 @@ Largest Army? %s
                 return True
 
 
-    def buildSettlement(self,vertex,start=False):
+    def buildSettlement(self,vertex, game,start=False):
         """Checks to see if you can build and builds a settlement 
         at the location
 
@@ -133,7 +134,7 @@ Largest Army? %s
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if self.checkSettlement(vertex,start) == True:
+        if self.checkSettlement(vertex,game,start):
             if start == False:
                 self.payCards(settlementResources)  #pay cards to build
             building = Building(self, vertex)  #creates a building object
@@ -179,7 +180,7 @@ Largest Army? %s
         """
 
         cityResources = {"ore":3,"grain":2}     
-        if checkCity(self,vertex)==True:        
+        if self.checkCity(vertex)==True:        
             self.payCards(cityResources)        #pay resources    
             for building in self.buildings:     
                 if building == building1:
@@ -210,7 +211,7 @@ Largest Army? %s
 
 
 
-    def buildRoad(player1, vertex1, vertex2,start=False):
+    def buildRoad(self, vertex1, vertex2,start=False):
         """Builds a road for a player
 
         input: a player object, vertex1 and vertex2 objects, Optional Boolean
@@ -220,10 +221,10 @@ Largest Army? %s
         
         roadResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
 
-        if checkRoad(player1, vertex1, vertex2, start):
+        if self.checkRoad(vertex1, vertex2, start):
             if start == False:
                 self.payCards(roadResources) 
-            player1.roads.append((vertex1,vertex2))
+            self.roads.append((vertex1,vertex2))
             return False
         else:
             return 'Invalid road placement'
@@ -259,9 +260,9 @@ Largest Army? %s
         output: Boolean or string
         """
 
-        if checkPorts(self,d,4) :
-            payCards(self,d)
-            takeCards(self,resource)
+        if self.checkPorts(d,4) :
+            self.payCards(d)
+            self.takeCards(resource)
             return False
         else:
             return "You cannot complete this trade"
@@ -276,9 +277,9 @@ Largest Army? %s
         output: Boolean or string
         """
 
-        if checkPorts(self,d,3):
-            payCards(self,d)
-            takeCards(self,resource)
+        if self.checkPorts(d,3):
+            self.payCards(d)
+            self.takeCards(resource)
             return False
         else:
             return "You cannont complete this trade"
@@ -292,9 +293,9 @@ Largest Army? %s
         output: Boolean or string
         """
 
-        if checkPorts(self,d,2):
-            payCards(self,d)
-            takeCards(self,resource2)
+        if self.checkPorts(d,2):
+            self.payCards(d)
+            self.takeCards(resource2)
             return False
         else:
             return "You cannot complete this trade"
@@ -335,9 +336,9 @@ Largest Army? %s
                
         output: Boolean or string
         """
-        if canPlay(player,"Year of Plenty"):
-            takeCard(player,resource1)
-            takeCard(player,resource2)
+        if self.canPlay("Year of Plenty"):
+            self.takeCard(resource1)
+            self.takeCard(resource2)
             player.devcards["Year of Plenty"] -= 1
             return False
         else:
@@ -350,12 +351,12 @@ Largest Army? %s
                
         output: Boolean or string
         """
-        if canPlay(player, "Monopoly"):
+        if self.canPlay("Monopoly"):
             for player in playerList:
                 n = player.hand[resource]
                 for i in range (n-1):
-                    trade[player1,"None",player2,resource]
-            player.devcards["Monopoly"] -= 1
+                    self.trade["None",player2,resource]
+            self.devcards["Monopoly"] -= 1
             return False
         else:
             print "You don't have a Monopoly card"
@@ -367,10 +368,10 @@ Largest Army? %s
                
         output: Boolean or string
         """
-        if canPlay(player, "Soldier"):
+        if self.canPlay("Soldier"):
             moveRobber(player)
-            player.soldiers += 1
-            player.devcards["Soldier"] -= 1
+            self.soldiers += 1
+            self.devcards["Soldier"] -= 1
             return False
         else:
             print "You don't have a Soldier card"
@@ -382,10 +383,10 @@ Largest Army? %s
                
         output: Boolean or string
         """
-        if canPlay(player, "Boad Building"):
-            buildRoad(player,vertex1,vertex2,True)
-            buildRoad(player,vertex3,vertex4,True)
-            player.devcards["Road Building"] -= 1
+        if self.canPlay("Boad Building"):
+            self.buildRoad(vertex1,vertex2,True)
+            self.buildRoad(vertex3,vertex4,True)
+            self.devcards["Road Building"] -= 1
             return False
         else:
             print "You don't have a Road Building card"
@@ -398,33 +399,33 @@ Largest Army? %s
         Output: Boolean
 
         """
-        return card in player.devcards and player.devcards[card] > 0
+        return card in self.devcards and self.devcards[card] > 0
 
 
     def getRoads(self):
         """Returns list of Roads"""
         return self.roads
 
-def trade(player1,resources1, player2, resources2):
-    """ Commits a trade between two players. May be able to 
-    trade something for nothing 
+    def trade(self,resources1, player2, resources2):
+        """ Commits a trade between two players. May be able to 
+        trade something for nothing 
 
-    Input: 2 player objects and two dictionary of resources saying what
-    each player is offering
-    """
-    for resources in resources1:
-        if player1.hand[resources] < resources1[resources]:
-            print "Player 1 has insufficient resources"
-            return None
-    for resources in resources2:
-        if player2.hand[resources2] < resources2[resources]:
-            print "Player 2 has insufficient resources"
-            return None
-    player1.payCards(resources1)
-    player2.takeCards(resources1)
-    player2.payCards(resources2)
-    player1.takeCards(resources2)
-    return False
+        Input: 2 player objects and two dictionary of resources saying what
+        each player is offering
+        """
+        for resources in resources1:
+            if self.hand[resources] < resources1[resources]:
+                print "Player 1 has insufficient resources"
+                return None
+        for resources in resources2:
+            if player2.hand[resources2] < resources2[resources]:
+                print "Player 2 has insufficient resources"
+                return None
+        self.payCards(resources1)
+        player2.takeCards(resources1)
+        player2.payCards(resources2)
+        self.takeCards(resources2)
+        return False
 
 
 
