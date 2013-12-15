@@ -84,10 +84,10 @@ def buildSettlement(x,y):
     d['game']=game
     return jsonpickle.encode({'error':error}, make_refs=False)
 
-@app.route('/buildStartSettlement/<x>/<y>', methods=['POST'])
-def buildStartSettlement(x,y):
+@app.route('/buildStartSettlement/<x>/<y>/<second>', methods=['POST'])
+def buildStartSettlement(x,y,second):
     game=d['game']
-    error = game.buildStartSettlement((float(x),float(y)))
+    error = game.buildStartSettlement((float(x),float(y)),second)
     d['game']=game
     return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 

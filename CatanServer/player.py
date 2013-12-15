@@ -127,7 +127,7 @@ Largest Army? %s
                 return True
 
 
-    def buildSettlement(self,vertex, game,start=False):
+    def buildSettlement(self,vertex, game,start=False,second=False):
         """Checks to see if you can build and builds a settlement 
         at the location
 
@@ -146,6 +146,8 @@ Largest Army? %s
             self.createHist                      #rebuild the dice histogram
             self.calcPoints                     #calc points
             self.settlementNumber += 1
+            if second == True:
+                vertex.getResources
             # self.ports[isPort(vertex)] = True
             return False
         else:
