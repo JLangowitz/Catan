@@ -81,6 +81,7 @@ $(document).ready(function(){
     }
 
     function drawGame(game){
+        clearGame();
         var hexes=game.board.hexes;
         var vertices=game.board.vertices;
         var players=game.players;
@@ -136,7 +137,12 @@ $(document).ready(function(){
         console.log('rolling dice');
         $.post('/rollDice',{},function(data){
             var data=JSON.parse(data);
-            var roll=data.roll
+            var roll=data.roll;
+            var game=data.game;
+            console.log(data);
+            console.log(roll);
+            console.log(game);
+            drawGame(game);
         });
     }
 
@@ -276,7 +282,6 @@ $(document).ready(function(){
 
     function buildSettlementSetup(i,j,roads,x,y,second){
         $.post('/buildStartSettlement/'+i+'/'+j+'/'+second,{},function(data){
-            clearGame();
             var data=JSON.parse(data);
             var game=data.game;
             var error=data.error;

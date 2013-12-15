@@ -165,7 +165,7 @@ class Game(object):
         return card
 
 
-    def rollDice():
+    def rollDice(self):
         """Returns the result of rolling two rolled dice and
         gives resources appropriately to each player
 
