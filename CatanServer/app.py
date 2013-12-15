@@ -38,7 +38,7 @@ def start():
     # game.board.printHexes()
     # for player in game.players:
     #     print player
-    jsonGame=jsonpickle.encode(game)
+    jsonGame=jsonpickle.encode(game, make_refs=False)
     return jsonGame
 
 @app.route('/setTurn/<turn>', methods=['POST'])
@@ -46,7 +46,7 @@ def setTurn(turn):
     game=d['game']
     game.turn = int(turn)
     d['game'] = game
-    return jsonpickle.encode(game)
+    return jsonpickle.encode(game, make_refs=False)
 
 @app.route('/rollDice', methods=['POST'])
 def roll():
