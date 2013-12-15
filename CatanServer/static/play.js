@@ -53,7 +53,9 @@ $(document).ready(function(){
     });
     // drawHexagon(WIDTH/2,HEIGHT/2,HEX_RADIUS,0xff0000);
 
-    $('#endTurn').click(function(){
+    $('#endTurn').click(endTurn);
+
+    function endTurn(){
         if (inSetup){
             if (setupForward){
                 if (currentPlayer+1>=window.players.length){
@@ -79,7 +81,7 @@ $(document).ready(function(){
 
         });
         $('#activePlayer').text(window.players[currentPlayer]+'\'s turn');
-    });
+    }
 
     function drawGame(game){
         var hexes=game.board.hexes;
@@ -93,13 +95,19 @@ $(document).ready(function(){
             for (building in players[player].buildings){
                 building=players[player].buildings[building];
                 var vert = JSON.parse(building.vertex);
-                console.log('vertex',vert);
                 var coordStr = vert.coordinates['py/tuple'];
-                coordStr='('+coordStr[0]+', '+coordStr[1]+')';
+                coordStr=parseCoords(coordStr);
                 console.log(coordStr);
                 var coords = calculateVertex(coordStr);
-                console.log(coords);
                 drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.ifCity, building.playerNumber)
+            }
+            for (road in players[player].roads){
+                road=players[player].roads[road];
+                var vert1 = JSON.parse(road['py/tuple'][0]);
+                var vert2 = JSON.parse(road['py/tuple'][1]);
+                var coords1 = calculateVertex(parseCoords(vert1.coordinates['py/tuple']));
+                var coords2 = calculateVertex(parseCoords(vert2.coordinates['py/tuple']));
+                drawRoad(coords1.x,coords1.y,coords2.x,coords2.y,false,player);
             }
         }
         for (v in vertices){
@@ -110,6 +118,10 @@ $(document).ready(function(){
         }
     }
 
+    function parseCoords(coordArray){
+        return '('+coordArray[0]+', '+coordArray[1]+')';
+    }
+
     function clearGame(){
         while (stage.children.length){
             stage.removeChild(stage.getChildAt(0));
@@ -118,6 +130,10 @@ $(document).ready(function(){
 
     function rollDice(){
         console.log('rolling dice');
+        $.post('/rollDice',{},function(data){
+            var data=JSON.parse(data);
+            var roll=data.roll
+        });
     }
 
     function splitCoords(coordStr){
@@ -223,8 +239,11 @@ $(document).ready(function(){
                 console.log(data);
                 console.log(data.roads);
                 console.log(data.building);
-                if (data.building) {
-                    buildSettlementSetup(i,j);
+                if (data.error){
+                    return
+                }
+                if (data.building && inSetup) {
+                    buildSettlementSetup(i,j,data.roads,x,y);
                 }
                 else{
                     showOptions(false, false, data.roads, x, y)
@@ -246,17 +265,17 @@ $(document).ready(function(){
         for (road in roads){
             coordStr= roads[road]['py/tuple'];
             // console.log('coordStr', coordStr);
-            coordStr='('+coordStr[0]+', '+coordStr[1]+')';
+            coordStr=parseCoords(coordStr);
             var coords = calculateVertex(coordStr);
             // console.log('coords',coords);
             // console.log(x,y)
-            currentOptions.push(roadOption(coords.x,coords.y,x,y));
+            currentOptions.push(drawRoad(coords.x,coords.y,x,y,true,currentPlayer));
         };
         // console.log('options', currentOptions);
         // console.log(stage);
     }
 
-    function buildSettlementSetup(i,j){
+    function buildSettlementSetup(i,j,roads,x,y){
         $.post('/buildStartSettlement/'+i+'/'+j,{},function(data){
             clearGame();
             var data=JSON.parse(data);
@@ -265,18 +284,35 @@ $(document).ready(function(){
             console.log(game);
             console.log(error);
             drawGame(game);
+            showOptions(false, false, roads, x, y)
         });
     }
 
-    function roadOption(x1,y1,x2,y2){
+    function buildRoadSetup(i1,j1,i2,j2){
+        $.post('/startRoad/'+i1+'/'+j1+'/'+i2+'/'+j2,{},function(data){
+            data=JSON.parse(data);
+            console.log(data);
+            var game=data.game;
+            var error=data.error;
+            drawGame(game);
+            endTurn();
+        });
+    }
+
+    function drawRoad(x1,y1,x2,y2,option,player){
         var graphics = new PIXI.Graphics();
+        graphics.x1=x1;
+        graphics.y1=y1;
+        graphics.x2=x2;
+        graphics.y2=y2;
+        console.log(graphics);
         var x = x2-x1;
         var y = y2-y1;
         console.log(x1,y1,x2,y2,x,y);
         graphics.position.x=x1;
         graphics.position.y=y1;
-        graphics.lineStyle(1, PLAYER_MAP[currentPlayer]);
-        graphics.beginFill(PLAYER_MAP[currentPlayer]);
+        graphics.lineStyle(1, PLAYER_MAP[player]);
+        graphics.beginFill(PLAYER_MAP[player]);
         graphics.moveTo(x*.2-y*ROAD_WIDTH, y*.2+x*ROAD_WIDTH);
         graphics.lineTo(x*.2+y*ROAD_WIDTH, y*.2-x*ROAD_WIDTH);
         graphics.lineTo(x*.8+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH);
@@ -291,22 +327,25 @@ $(document).ready(function(){
 
         graphics.interactive = true;
         graphics.hitArea = road;
-        graphics.alpha = .5;
 
-        graphics.mouseover = function (data) {
-            this.alpha=1;
-        }
+        if (option){
+            graphics.alpha = .5;
 
-        graphics.mouseout = function (data) {
-            this.alpha=.5;
+            graphics.mouseover = function (data) {
+                this.alpha=1;
+            }
+
+            graphics.mouseout = function (data) {
+                this.alpha=.5;
+            }
         }
 
         graphics.click = function(data){
-            coords1 = pixelsToIndices(x1,y1);
-            coords2 = pixelsToIndices(x2,y2);
-            $.post('/road/'+coords1.x+'/'+coords1.y+'/'+coords2.x+'/'+coords2.y,{},function(data){
-                
-            });
+            console.log(this);
+            console.log(this.x1);
+            coords1 = pixelsToIndices(this.x1,this.y1);
+            coords2 = pixelsToIndices(this.x2,this.y2);
+            buildRoadSetup(coords1.i,coords1.j,coords2.i,coords2.j);
         };
 
         stage.addChild(graphics);
