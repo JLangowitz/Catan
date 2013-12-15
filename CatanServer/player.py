@@ -35,7 +35,13 @@ Largest Army? %s
 %d soldiers
 """ % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
-    def createHist(self):      
+    def createHist(self): 
+    """ Creates a historgram that maps dice rolls to resources recieved. 
+        Stored in self.hist
+
+    inputs: self player object
+
+    """
         for building in self.buildings:     
             buildHist = building.provideResources()
             for roll in buildHist:
@@ -121,10 +127,9 @@ Largest Army? %s
         """Checks to see if you can build and builds a settlement 
         at the location
 
-        input: player object and vertex object
+        input: player object and vertex object, Optional Boolean
 
-        return:string
-
+        Output: False or Error Message
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
@@ -170,8 +175,7 @@ Largest Army? %s
 
         input: player object and vertex object and building object
 
-        return:string
-
+        Output: False or Error Message
         """
 
         cityResources = {"ore":3,"grain":2}     
@@ -188,21 +192,31 @@ Largest Army? %s
         else:
             return "You must construct additional pylons"
     
-    def checkRoad(player1, playerList, vertex1, vertex2, start):
-        if player1.roadNumber >= 14:
-            return "Cannot Build Road" 
+    def checkRoad(self, vertex1, vertex2, start):
+        """Checks if you can build a road
+
+        Input: Player object, two vertex objects, Boolean
+
+        Output: Boolean
+        """
+
+        if self.roadNumber >= 14:
+            return False 
         if start == False:                
             for resource in roadResources:
                 if self.hand[resource] < roadResources[resource]:
                     return False  
+        return True
 
 
 
     def buildRoad(player1, vertex1, vertex2,start=False):
         """Builds a road for a player
 
-        input: a player object, a list of players, vertex1 and vertex2 objects
-          """
+        input: a player object, vertex1 and vertex2 objects, Optional Boolean
+
+        Output: False or Error Message
+        """
         
         roadResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
 
@@ -215,6 +229,14 @@ Largest Army? %s
             return 'Invalid road placement'
     
     def checkPorts(self,d,n):
+        """ Checks what type of port trades you can do
+
+        input: player object, dictionary of resources your trading, and 
+                number of objects your trading
+
+        output: Boolean or string
+        """
+
         a = keys(d)
         if len(a) != 1:
             return False
@@ -229,6 +251,14 @@ Largest Army? %s
 
 
     def fourToOne(self,d,resource):
+        """ Executes a four to one trade
+
+        input: player object, dictionary of resources your trading, and 
+               the resource you want
+
+        output: Boolean or string
+        """
+
         if checkPorts(self,d,4) :
             payCards(self,d)
             takeCards(self,resource)
@@ -238,6 +268,14 @@ Largest Army? %s
 
 
     def threeToOne(self,d,resource):
+        """ Executes a three to one trade
+
+        input: player object, dictionary of resources your trading, and 
+               the resource you want
+               
+        output: Boolean or string
+        """
+
         if checkPorts(self,d,3):
             payCards(self,d)
             takeCards(self,resource)
@@ -246,6 +284,14 @@ Largest Army? %s
             return "You cannont complete this trade"
 
     def twoToOne(self,d,resource2):
+        """ Executes a two to one trade
+
+        input: player object, dictionary of resources your trading, and 
+               the resource you want
+               
+        output: Boolean or string
+        """
+
         if checkPorts(self,d,2):
             payCards(self,d)
             takeCards(self,resource2)
@@ -283,6 +329,12 @@ Largest Army? %s
         return a
 
     def playYearOfPlenty(self,resource1,resource2):
+        """ Plays Year of Plenty
+
+        input: player object, Two resource Strings
+               
+        output: Boolean or string
+        """
         if canPlay(player,"Year of Plenty"):
             takeCard(player,resource1)
             takeCard(player,resource2)
@@ -292,6 +344,12 @@ Largest Army? %s
             print "You don't have a Year of Plenty card"
 
     def playMonopoly(self,playerList,resource):
+        """ Plays Monopoly
+
+        input: player object, playerList, resource string
+               
+        output: Boolean or string
+        """
         if canPlay(player, "Monopoly"):
             for player in playerList:
                 n = player.hand[resource]
@@ -303,6 +361,12 @@ Largest Army? %s
             print "You don't have a Monopoly card"
 
     def playSoldier(self):
+        """ Plays Soldier
+
+        input: player object
+               
+        output: Boolean or string
+        """
         if canPlay(player, "Soldier"):
             moveRobber(player)
             player.soldiers += 1
@@ -312,20 +376,33 @@ Largest Army? %s
             print "You don't have a Soldier card"
 
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
+        """ Plays Road Building
+
+        input: player object, 4 vertex objects
+               
+        output: Boolean or string
+        """
         if canPlay(player, "Boad Building"):
-            buildRoad(player,vertex1,vertex2)
-            buildRoad(player,vertex3,vertex4)
+            buildRoad(player,vertex1,vertex2,True)
+            buildRoad(player,vertex3,vertex4,True)
             player.devcards["Road Building"] -= 1
             return False
         else:
             print "You don't have a Road Building card"
 
     def canPlay(self, card): #Add more failure modes
-        """Determines if given devcard can be played"""
+        """Determines if given devcard can be played
+
+        Input: player object and card string
+
+        Output: Boolean
+
+        """
         return card in player.devcards and player.devcards[card] > 0
 
 
     def getRoads(self):
+        """Returns list of Roads"""
         return self.roads
 
 def trade(player1,resources1, player2, resources2):
