@@ -24,7 +24,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
-d=shelve.open('game')
+d=shelve.open('catanGame')
 
 @app.route('/')
 def homepage():
@@ -37,6 +37,7 @@ def playerTable():
 
 @app.route('/start', methods=['POST'])
 def start():
+    print d
     playerNames = request.form['players'].split(', ')
     game = g.Game(playerNames)
     d['game']=game

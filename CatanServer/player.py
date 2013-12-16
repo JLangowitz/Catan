@@ -115,7 +115,7 @@ Largest Army? %s
             for resource in settlementResources:
                 if self.hand[resource] < settlementResources[resource]:
                     return False
-        if self.settlementNumber >= 4:
+        if self.settlementNumber > 4:
             return False
         if start:
             return True
@@ -166,11 +166,11 @@ Largest Army? %s
         for resource in cityResources:
             if player.hand[resource] < cityResources[resource]:
                 return False
-        if vertex.built:
+        if not vertex.built:
             return False
         if building.player != self:
             return False
-        if self.cityNumber >= 3:
+        if self.cityNumber > 3:
             return False
         return True
 

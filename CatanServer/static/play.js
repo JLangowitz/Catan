@@ -143,6 +143,7 @@ $(document).ready(function(){
             console.log(roll);
             console.log(game);
             drawGame(game);
+            $('#roll').text(roll);
         });
     }
 
@@ -258,9 +259,9 @@ $(document).ready(function(){
         else{
             $.post('/buildables/'+i+'/'+j,{},function(data){
                 data=JSON.parse(data);
-                // console.log(data);
-                // console.log(data.roads);
-                // console.log(data.building);
+                console.log(data);
+                console.log(data.roads);
+                console.log(data.building);
                 
             });
         }
