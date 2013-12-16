@@ -1,6 +1,8 @@
 import math
 import random
 import jsonpickle
+import copy
+from collections import Counter
 from random import randint
 from random import choice
 from player import *
@@ -169,7 +171,7 @@ class Game(object):
         """Returns the result of rolling two rolled dice and
         gives resources appropriately to each player
 
-        input: All of the player objects
+        input: Game object
 
         return: int
         """ 
@@ -181,6 +183,26 @@ class Game(object):
             player.takeCards(player.hist[d])
         return d
 
+    
+    def longestRoad(self):
+        """Check to see which, if any, player has longest road
+
+        input: Game object
+        
+        return: player object or None
+
+        """
+        vertMap = self.board.vertexMap()
+        players = self.players
+        maxRoad = 4 #Min road length to qualify is 5
+        winner = None
+        for player in players:
+            playerMaxRoad = roadLength(vertMap, player)
+            if playerMaxRoad == maxRoad:
+                winner == None
+            elif playerMaxRoad > maxRoad:
+                winner = player
+        return winner
 
 class Board(object):
     """Contains Board and all tile and vertex position
@@ -308,6 +330,80 @@ class Building(object):
                 else:
                     buildHist[roll][resource] = n
         return buildHist
+
+def roadLength(vertMap, player):
+    """Finds the longest road owned by a given player (Called by game.longestRoad)
+
+    input: input: a dict of {vertex:[neighbors]} and a player object
+
+    returns: int
+
+    """
+    verticies = []
+    roads = player.getRoads()
+    
+    for road in roads:
+        verticies.append(road[0])
+        verticies.append(road[1]) 
+    vertHist = Counter(verticies)
+
+    maxRoadLength = 0
+
+    for vertex in vertHist:
+        roadPath = findLongest(vertMap, vertHist, [[vertex]])
+        roadLength = len(roadPath[0]) - 1
+        print 'longest path for', vertex, 'is', roadPath, 'and is of length', len(roadPath[0]) - 1
+        if roadLength > maxRoadLength:
+            maxRoadLength = roadLength
+
+    return maxRoadLength
+
+
+def findLongest(vertMap, vertHist, oldPaths):
+    """Finds longest available path from starting path
+
+    input(vertMap): a dict of {(vertex coords):[neighbor verticies]}
+    input(vertHist): histogram off all verticies where the player has roads and how many roads are on that vertex
+    input(oldPaths): list of lists of vertex coordinates along given path(s)
+
+    return: list of lists of vertex coordinates along given path(s)
+    """
+    newPaths = []
+    for path in oldPaths:
+        #print 'path', path
+        newPaths += extend(vertMap, vertHist, path) #Path is list of coord tuples
+    if newPaths == []:
+        return oldPaths
+    else: 
+        return findLongest(vertMap, vertHist, newPaths)
+
+
+def extend(vertMap, vertHist, path):
+    """Finds available continuations of given path
+
+
+    input(vertMap): a dict of {(vertex coords):[neighbor verticies]}
+    input(vertHist): histogram off all verticies where the player has roads and how many roads are on that vertex
+    input(path): list of vertex coordinates along given path 
+
+    return: list of lists of vertex coordinates along given path(s)
+    """
+    newPaths = []
+    #print path
+
+    neighbors = vertMap[path[-1]]
+    #print 'path end', path[-1]
+    #print 'neighbors', neighbors
+    for neighbor in neighbors:
+        #print 'neigh', neighbor
+        temp = copy.deepcopy(path)
+        if neighbor in vertHist and neighbor not in path:
+            temp.append(neighbor)
+            newPaths += [temp]
+            
+    #print 'newpaths', newPaths
+    return newPaths
+
 
 def setup(board, game, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
