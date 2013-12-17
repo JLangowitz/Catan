@@ -384,8 +384,8 @@ def moverobber(hex1):
     d['game']=game
     return jsonpickle.encode({"settlements":settlements}, make_refs=False)
 
-@app.route('/fourtoone/<d>/<resources>', methods=['POST'])
-def fourToOne(d,resources):
+@app.route('/banktrade/<d>/<resources>', methods=['POST'])
+def bankTrade(d,resources):
     """trade four to one 
 
     input: dictionary d of {string resources:int 4} and string resource 
@@ -393,34 +393,9 @@ def fourToOne(d,resources):
     outputs:dict of {error}
     """
     game=d['game']
-    error = game.fourToOne(d,resources)
+    error = game.bankTrade(d,resources)
     d['game']=game
     return jsonpickle.encode({"error":error}, make_refs=False)
 
-@app.route('/threetoone/<d>/<resources>', methods=['POST'])
-def threeToOne(d,resources):
-    """trade three to one 
-
-    input: dictionary d of {string resources:int 3} and string resource 
-
-    outputs:dict of {error}
-    """
-    game=d['game']
-    error = game.fourToOne(d,resources)
-    d['game']=game
-    return jsonpickle.encode({"error":error}, make_refs=False)    
-
-@app.route('/twotoone/<d>/<resources>', methods=['POST'])
-def twoToOne(d,resources):
-    """trade two to one 
-
-    input: dictionary d of {string resources:int 2} and string resource 
-
-    outputs:dict of {error}
-    """
-    game=d['game']
-    error = game.fourToOne(d,resources)
-    d['game']=game
-    return jsonpickle.encode({"error":error}, make_refs=False)    
 if __name__ == '__main__':
     app.run()

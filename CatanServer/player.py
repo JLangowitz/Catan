@@ -158,7 +158,7 @@ Largest Army? %s
                     self.ports[port] = 3
         else:
             self.ports[vertex.port] = 2
-        print self.ports
+        #print self.ports
 
         # self.ports[isPort(vertex)] = True
         return False
@@ -455,6 +455,18 @@ Largest Army? %s
         player2.payCards(resources2)
         self.takeCards(resources2)
         return False
+
+    def bankTrade(self,resources1,resources2):
+        numRes = 0
+        for res, num in resources2:
+            numRes += num
+        for res, num in resources1:
+            numRes -= num/player.ports[res]
+        if numRes == 0:
+            player.payCards(resources1)
+            player.takeCards(resources2)
+        else:
+            return "Resource Mismatch"
 
 
 

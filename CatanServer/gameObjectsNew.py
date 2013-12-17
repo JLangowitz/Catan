@@ -53,13 +53,6 @@ class Game(object):
                 return building
         return False
 
-    def findStealableAt(self, coordinates):
-        """Returns a list players you can steal from
-
-        Input: game object and hex tuple coordinates
-        """
-        buildings=self.allBuildings()
-        return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
     def findBuildableAt(self, coordinates1):
         """Finds all the things you can build a coordinate
@@ -222,6 +215,14 @@ class Game(object):
         vertex4 = self.getVertex(coordinates4)
         return player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4,self)
 
+    def findStealableAt(self, coordinates):
+        """Returns a list players you can steal from
+
+        Input: game object and hex tuple coordinates
+        """
+        buildings=self.allBuildings()
+        return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
+
     def moveRobber(hex1):
         """Moves the robber to a tile chosen by player1
 
@@ -304,30 +305,14 @@ class Game(object):
                 winner = player
         return winner
 
-    def fourToOne(self,d,resource):
+    def bankTrade(self,d,resource):
         """Do a four to one trade. 
 
         input: game object, dictionary of resources {"string":int number}, 
         string resource recieved in return
         """
-        return player.fourToOne(d,resource)
+        return player.bankTrade(d,resource)
 
-
-    def threeToOne(self,d,resource):
-        """Do a three to one trade. 
-
-        input: game object, dictionary of resources {"string":int number},
-        string resource recieved in return
-        """        
-        return player.threeToOne(d,resource)
-
-    def twoToOne(self,d,resource):
-        """Do a four to one trade. 
-
-        input: game object, dictionary of resources {"string":int number},
-        string resource recieved in return
-        """ 
-        return player.twoToOne(d,resource)
 
 class Board(object):
     """Contains Board and all tile and vertex position
@@ -372,7 +357,7 @@ class Vertex(object):
         self.hexes=h
         self.built=False
         self.neighbors=neighbors
-        self.port = "none"
+        self.port = 'none'
 
     def __repr__(self):
         """Changes representation of vertex to make json conversion easier"""
@@ -564,7 +549,7 @@ def makePorts(game):
                 portResources.remove(randomPort)
                 game.getVertex(vertex).addPort(randomPort)
                 game.getVertex(portTuple[1]).addPort(randomPort)
-                ports.append((vertex,randomPort))
+                ports.append((vertex,portTuple[1],randomPort))
     return ports
 
 
