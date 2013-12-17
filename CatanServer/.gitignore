@@ -1,0 +1,4 @@
+catanGame
+/static
+!/static/*.js
+!/static/*.css

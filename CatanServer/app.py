@@ -24,7 +24,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
-d=shelve.open('catanGame')
+d=shelve.open('game')
 
 @app.route('/')
 def homepage():
