@@ -126,6 +126,7 @@ $(document).ready(function(){
                     if (tradePlayer==currentPlayer){
                         $.get('/portModal/'+currentPlayer,function(data){
                             $('#tradeBody').html(data);
+                            $('alert').alert('close');
                             $('#tradeButton').click(function(){
                                 var tradeData={};
                                 var selects = $('select');
@@ -138,7 +139,7 @@ $(document).ready(function(){
                                     tradeData[id[0]][id[1]]=$(selects[i]).val();
                                 }
                                 console.log(tradeData);
-                                $.post('/trade',JSON.stringify({'data':tradeData}),function(data){
+                                $.post('/bankTrade',JSON.stringify({'data':tradeData}),function(data){
                                     data=JSON.parse(data);
                                     console.log(data);
                                     var game = data.game;

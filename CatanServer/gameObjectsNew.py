@@ -311,7 +311,7 @@ class Game(object):
         input: game object, dictionary of resources {"string":int number}, 
         string resource recieved in return
         """
-        return player.bankTrade(d,resource)
+        return self.players[self.turn].bankTrade(d,resource)
 
 
 class Board(object):

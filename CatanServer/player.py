@@ -458,13 +458,14 @@ Largest Army? %s
 
     def bankTrade(self,resources1,resources2):
         numRes = 0
-        for res, num in resources2:
+        print 'resources', resources1, resources2
+        for res, num in resources2.items():
             numRes += num
-        for res, num in resources1:
-            numRes -= num/player.ports[res]
+        for res, num in resources1.items():
+            numRes -= num/self.ports[res]
         if numRes == 0:
-            player.payCards(resources1)
-            player.takeCards(resources2)
+            self.payCards(resources1)
+            self.takeCards(resources2)
         else:
             return "Resource Mismatch"
 

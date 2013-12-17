@@ -316,7 +316,7 @@ def trade():
     return jsonpickle.encode({'error':error,'game':game}, make_refs=False)
 
 @app.route('/bankTrade', methods=['POST'])
-def trade():
+def bankTrade():
     """trade resources
 
     input: 2 dictionaries {string resources: int numbers}
@@ -383,19 +383,6 @@ def moverobber(hex1):
     settlements = game.robberSteal(hex1)
     d['game']=game
     return jsonpickle.encode({"settlements":settlements}, make_refs=False)
-
-@app.route('/banktrade/<d>/<resources>', methods=['POST'])
-def bankTrade(d,resources):
-    """trade four to one 
-
-    input: dictionary d of {string resources:int 4} and string resource 
-
-    outputs:dict of {error}
-    """
-    game=d['game']
-    error = game.bankTrade(d,resources)
-    d['game']=game
-    return jsonpickle.encode({"error":error}, make_refs=False)
 
 if __name__ == '__main__':
     app.run()
