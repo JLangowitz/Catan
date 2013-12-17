@@ -126,7 +126,7 @@ class Game(object):
     
     def playSoldier(self):
         player = self.players[self.turn]
-        return player.playSoldier()
+        return player.playSoldier(players)
 
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         player = self.players[self.turn]
