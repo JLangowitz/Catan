@@ -411,6 +411,7 @@ class Player:
         return False
 
     def bankTrade(self,resources1,resources2):
+        print 'bank trading'
         numRes = 0
         print 'resources', resources1, resources2
         for res, num in resources2.items():

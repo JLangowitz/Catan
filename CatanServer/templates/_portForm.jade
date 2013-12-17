@@ -3,7 +3,7 @@ form(role='form')
         label(for='trader') #{trader.name}:
         for resource in trader.hand
             label #{resource}
-                select(class='form-control',id=trader.name+'-'+resource)
+                select(class='form-control trade-bank',id=trader.name+'-'+resource)
                     for i in resourcesTrader[resource]
                         option(class='tradeResource') #{i}
     hr
@@ -11,7 +11,7 @@ form(role='form')
         label(for='bank') Bank:
         for resource in trader.hand
             label #{resource}
-                select(class='form-control',id='bank-'+resource)
+                select(class='form-control trade-bank',id='bank-'+resource)
                     for i in resourcesBank[resource]
                         option(class='tradeResource') #{i}
 div(class='alert alert-danger fade out')

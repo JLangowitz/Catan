@@ -82,6 +82,10 @@ $(document).ready(function(){
         $('#activePlayer').text(window.players[currentPlayer]+'\'s turn');
     }
 
+    $('#buyDev').click(function(){
+
+    });
+
     function drawGame(game){
         clearGame();
         var hexes=game.board.hexes;
@@ -124,23 +128,28 @@ $(document).ready(function(){
             var portType = port[2];
             drawPort(coords1.x,coords1.y,coords2.x,coords2.y,portType);
         }
-        playerTable();
+        playerTable(game);
         console.log(game);
     }
 
-    function playerTable(){
+    function playerTable(game){
         $.get('/playerTable',{},function(data){
             $('#gameTable').html(data);
+            var hand = game.players[currentPlayer].hand;
+            if (!hand['grain'] || !hand['sheep'] || !hand['ore']) {
+                $('#buyDev').hide();
+            };
             $('.btn-trade').each(function(){
                 $(this).click(function(data){
                     var tradePlayer=this.id;
                     if (tradePlayer==currentPlayer){
                         $.get('/portModal/'+currentPlayer,function(data){
+                            $('#tradeButton').unbind('click');
                             $('#tradeBody').html(data);
-                            $('alert').alert('close');
+                            // $('.alert').alert('hide');
                             $('#tradeButton').click(function(){
                                 var tradeData={};
-                                var selects = $('select');
+                                var selects = $('.trade-bank');
                                 for (var i=0; i<selects.length;i++){
                                     var id=$(selects[i]).attr('id');
                                     id=id.split('-');
@@ -156,7 +165,7 @@ $(document).ready(function(){
                                     var game = data.game;
                                     var error = data.error;
                                     if (error){
-                                        $('alert').alert();
+                                        $('.alert').alert();
                                     }
                                     else{
                                         $('#trade').modal('hide');
@@ -168,10 +177,11 @@ $(document).ready(function(){
                     }
                     else{
                         $.get('/tradeModal/'+currentPlayer+'/'+tradePlayer,function(data){
+                            $('#tradeButton').unbind('click');
                             $('#tradeBody').html(data);
                             $('#tradeButton').click(function(){
                                 var tradeData={};
-                                var selects = $('select');
+                                var selects = $('.trade-players');
                                 for (var i=0; i<selects.length;i++){
                                     var id=$(selects[i]).attr('id');
                                     id=id.split('-');
@@ -191,6 +201,34 @@ $(document).ready(function(){
                             });
                         });
                     }
+                });
+            });
+        });
+    }
+
+    function discard(){
+        $.get('/discardModal',function(data){
+            $('#discardButton').unbind('click');
+            $('#discardBody').html(data);
+            $('#discard').modal();
+            $('#discardButton').click(function(){
+                var discardData={}
+                var selects = $('.select-discard');
+                for (var i=0; i<selects.length;i++){
+                    var id=$(selects[i]).attr('id');
+                    id=id.split('-');
+                    if (!discardData[id[0]]){
+                        discardData[id[0]]={};
+                    }
+                    discardData[id[0]][id[1]]=$(selects[i]).val();
+                }
+                console.log(discardData);
+                $.post('/discard',JSON.stringify({'data':discardData}),function(data){
+                    data=JSON.parse(data);
+                    console.log(data);
+                    var game = data.game;
+                    $('#discard').modal('hide');
+                    drawGame(game);
                 });
             });
         });
@@ -220,6 +258,7 @@ $(document).ready(function(){
             $('#roll').text(roll);
             if (roll==7){
                 steal=true;
+                discard();
             }
         });
     }

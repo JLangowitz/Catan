@@ -66,6 +66,16 @@ def portModal(player):
     print resourceLists
     return render_template('_portForm.jade',game=game, trader=trader, resourcesTrader=resourceLists, resourcesBank=resourcesBank)
 
+@app.route('/discardModal')
+def discardModal():
+    game=d['game']
+    resourceLists={}
+    for player in game.players:
+        resourceLists[player.name]={}
+        for resource, number in player.hand.items():
+            resourceLists[player.name][resource]=range(number+1)
+    return render_template('_discardForm.jade',game=game, players=game.players, resources=resourceLists)
+
 @app.route('/start', methods=['POST'])
 def start():
     print d
@@ -97,7 +107,7 @@ def rollDice():
     return jsonpickle.encode({'game':game,"roll":roll, "tooManyCardsPlayer":tooManyCardsPlayer}, make_refs=False)
 
 @app.route('/looseHalfCards/<player>/<loseResD>', methods=['POST'])
-def looseHalfCards(loseResD):
+def looseHalfCards(player, looseResD):
     """Makes player lose half of resources for robber
 
     Input: Dictionary loseResD {string resources: int number}
@@ -105,7 +115,7 @@ def looseHalfCards(loseResD):
     returns: dict of {game object}
     """
     game=d['game']
-    game.loseHalfCards(loseResD)
+    game.looseHalfCards(player, looseResD)
     d['game']=game
     return jsonpickle.encode(game, make_refs=False)
 
@@ -229,7 +239,7 @@ def drawDev():
     game=d['game']
     dev, error = game.drawDev1()   #dev contains (player,dev)
     d['game']=game
-    return jsonpickle.encode({'dev':dev,'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'dev':dev,'error':error}, make_refs=False)
 
 @app.route('/playyearofplenty/<resource1>/<resource2>', methods=['POST'])
 def playYearOfPlenty(resource1,resource2):
@@ -270,16 +280,29 @@ def playSoldier():
     d['game']=game
     return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
-@app.route('/playRoadBuilding/<x1>/<y1>/<x2>/<y2>/<x3>/<y3>/<x4>/<y4>', methods=['POST'])
-def playRoadBuilding(x1,y1,x2,y2,x3,y3,x4,y4):
+@app.route('/playRoadBuilding1/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
+def playRoadBuilding1(x1,y1,x2,y2):
     """play road building 
 
-    input: int x1,x2,x3,x4 and int y1,y2,y3,y4
+    input: int x1,x2 and int y1,y2
     
     returns: dict of {game object, error message}
     """
     game=d['game']
-    error = game.playRoadBuilding((float(x1),float(y1)),(float(x2),float(y2)),(float(x3),float(y3)),(float(x4),float(y4)))
+    error = game.playRoadBuilding((float(x1),float(y1)),(float(x2),float(y2)))
+    d['game']=game
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
+
+@app.route('/playRoadBuilding2/<x3>/<y3>/<x4>/<y4>', methods=['POST'])
+def playRoadBuilding2(x3,y3,x4,y4):
+    """play road building 
+
+    input: int x3,x4 and int y3,y4
+    
+    returns: dict of {game object, error message}
+    """
+    game=d['game']
+    error = game.playRoadBuilding((float(x3),float(y3)),(float(x4),float(y4)))
     d['game']=game
     return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
@@ -314,6 +337,28 @@ def trade():
     error = game.trade(dresource1,game.players[player2],dresource2)
     d['game']=game
     return jsonpickle.encode({'error':error,'game':game}, make_refs=False)
+
+@app.route('/discard', methods=['POST'])
+def discard():
+    """trade resources
+
+    input: 4 dictionaries {string resources: int numbers} and 1 player object
+    
+    returns: dict of {game object, error message}
+    """
+    game=d['game']
+    print 'form',request.form
+    # print 'json',request.json
+    form=request.form
+    for thing in form:
+        form=jsonpickle.decode(thing)
+    print form
+    for player in game.players:
+        dresources=form['data'][player.name]
+        print dresources
+        game.loseHalfCards(player,dresources)
+    d['game']=game
+    return jsonpickle.encode({'game':game}, make_refs=False)
 
 @app.route('/bankTrade', methods=['POST'])
 def bankTrade():
