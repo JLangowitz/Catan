@@ -26,7 +26,7 @@ class Player:
         self.cityNumber = 0
         self.settlementNumber = 0
         self.roadNumber = 0
-        self.ports = {"three":False,'ore':False,'lumber':False,'brick':False,'sheep':False,'grain':False,'none':False}
+        self.ports = {'ore':4,'lumber':4,'brick':4,'sheep':4,'grain':4}
 
     def __str__(self):
         if len(self.buildings) == 0:
@@ -148,7 +148,17 @@ Largest Army? %s
             for hex1 in hexes:
                 if hex1.rollNumber:
                     self.takeCards({hex1.resource:1})
-        self.ports[vertex.port] = True
+        if vertex.ports == 'none':
+            return False
+        if vertex.ports == 'three':
+            for port in self.ports:
+                if  self.ports[port] == 2:
+                    pass
+                else:
+                    self.ports[port] = 3
+        else:
+            self.ports[vertex.ports] = 2
+
 
         # self.ports[isPort(vertex)] = True
         return False
@@ -430,8 +440,7 @@ Largest Army? %s
         Input: 2 player objects and two {resource strings:int number} saying what
         each player is offering
         """
-        print self.name, self.hand, resources1
-        print player2.name, player2.hand, resources2
+
 
         for resources in resources1:
             if self.hand[resources] < resources1[resources]:
@@ -445,8 +454,6 @@ Largest Army? %s
         player2.takeCards(resources1)
         player2.payCards(resources2)
         self.takeCards(resources2)
-        print self.name, self.hand
-        print player2.name, player2.hand
         return False
 
 
