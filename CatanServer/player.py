@@ -235,7 +235,7 @@ Largest Army? %s
         if start == False:
             self.payCards(roadResources) 
         self.roads.append((vertex1,vertex2))
-        if self == game.longestRoad()
+        if self == game.longestRoad():
             self.bonuses[longestRoad]=True
         return False
         
