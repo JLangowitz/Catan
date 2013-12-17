@@ -286,6 +286,18 @@ class Vertex(object):
 
         #return resources, roll
 
+    def makePorts(self):
+        portList = []
+        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
+        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
+        for vertex in vertices:
+            for port in portNum:
+                if vertex == port[0]:
+                    portList.append(random.choice(portResources)
+                    
+
+
+
 class Hex(object):
     """Represents each Hexes on the board
 
