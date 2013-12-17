@@ -72,7 +72,7 @@ class Game(object):
     def buildCity(self, coordinates):
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
-        building = findBuildingAt(self,coordinates)
+        building = self.buildingAt(coordinates)
         return player.buildCity(vertex,building)
 
 

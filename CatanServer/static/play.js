@@ -272,6 +272,7 @@ $(document).ready(function(){
     }
 
     function vertexMenu(i,j,x,y){
+        console.log(i,j);
         if (inSetup){
             $.post('/setupBuildables/'+i+'/'+j,{},function(data){
                 data=JSON.parse(data);
