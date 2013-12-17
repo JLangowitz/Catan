@@ -80,7 +80,7 @@ class Game(object):
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
-        return player.buildRoad(vertex1,vertex2)
+        return player.buildRoad(vertex1,vertex2,self)
 
     def getNeighbors(self,coordinates):
         vertex = self.getVertex(coordinates)

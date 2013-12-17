@@ -173,7 +173,7 @@ Largest Army? %s
             if vertex == building.vertex:
                 return True
 
-    def buildCity(self,vertex,building):
+    def buildCity(self,vertex,building1):
         """Checks to see if you can build a city and changes 
         settlement to city
 
@@ -221,7 +221,7 @@ Largest Army? %s
         return False
 
 
-    def buildRoad(self, vertex1, vertex2,start=False):
+    def buildRoad(self, vertex1, vertex2, game, start=False):
         """Builds a road for a player
 
         input: a player object, vertex1 and vertex2 objects, Optional Boolean
@@ -235,6 +235,8 @@ Largest Army? %s
         if start == False:
             self.payCards(roadResources) 
         self.roads.append((vertex1,vertex2))
+        if self == game.longestRoad()
+            self.bonuses[longestRoad]=True
         return False
         
     
