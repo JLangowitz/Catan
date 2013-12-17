@@ -10,9 +10,10 @@ class Player:
     Attributes: name, points, bonuses, hand, buildings, soldiers, devcards,hist
     """
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, number=0):
         # self.name = raw_input("Player Name? ")  #Takes in Players name
         self.name = name
+        self.number = number
         self.points = 0   
         self.bonuses = {'longestRoad':False, 'largestArmy': False}
         self.hand = {'ore':0,'lumber':0,'brick':0,'sheep':0,'grain':0}  #dictionary mapping Resource card strings to number of cards

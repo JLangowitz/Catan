@@ -16,7 +16,7 @@ class Game(object):
     def __init__(self, playerList):
         self.players=[]
         for playerName in playerList:
-            self.players.append(Player(name=playerName))
+            self.players.append(Player(name=playerName,number=len(self.players)))
         self.board=Board(self, len(self.players))
         self.turn=0
 
