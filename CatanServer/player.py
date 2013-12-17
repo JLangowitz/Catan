@@ -167,14 +167,13 @@ Largest Army? %s
                 return False
         if not vertex.built:
             return False
-        if building.player != game.players[game.turn]:
-            return False
         if self.cityNumber > 3:
             return False
-        return True
+        for building in self.buildings:
+            if vertex == building.vertex
+                return True
 
-
-    def buildCity(self,vertex,building1):
+    def buildCity(self,vertex,building):
         """Checks to see if you can build a city and changes 
         settlement to city
 
@@ -186,14 +185,12 @@ Largest Army? %s
         cityResources = {"ore":3,"grain":2}     
      
         self.payCards(cityResources)        #pay resources    
-        for building in self.buildings:     
-            if building == building1:
-                buiding1.isCity = True      #make settlement a city
-                self.buildHist()              #remake historgram
-                self.calcPoints()             #calculate points 
-                self.settlementNumber -= 1
-                self.cityNumber += 1
-                return False
+            buiding1.isCity = True      #make settlement a city
+            self.buildHist()              #remake historgram
+            self.calcPoints()             #calculate points 
+            self.settlementNumber -= 1
+            self.cityNumber += 1
+            return False
 
     
     def checkRoad(self, vertex1, vertex2, game, start=False):
