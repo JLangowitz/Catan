@@ -228,14 +228,12 @@ class Game(object):
 
         input: Hexes object hex1
         """
-        for h in self.hexes:
-            self.hexes[h].robber = False
-        hex1 = self.getHex(coordinates)
-        robberHex.robber = False
-        robberHex = hex1
+        for h in self.board.hexes:
+            self.getHex(h).robber = False
+        robberHex = self.getHex(coordinates)
         robberHex.robber = True
-        for player in players:
-            player.createHist
+        for player in self.players:
+            player.createHist()
 
     def robberSteal(self, player2):
         """Steals a random resource from player2

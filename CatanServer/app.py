@@ -372,18 +372,18 @@ def robberSteal(settlement):
     return jsonpickle.encode({"card":card,"settlement":settlment}, make_refs=False)
 
 @app.route('/moveRobber/<x>/<y>/<player>', methods=['POST'])
-def moveRobber(x,y):
+def moveRobber(x,y,player):
     """move robber and steal from player
 
     input: coordinates 
 
-    outputs:dict of {settlements}
+    outputs:game back to client
     """
     game=d['game']
-    game.robberSteal(player)
-    game.moveRobber(x,y)
+    game.robberSteal(game.players[int(player)])
+    game.moveRobber((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode({"settlements":settlements}, make_refs=False)
+    return jsonpickle.encode({"game":game}, make_refs=False)
 
 if __name__ == '__main__':
     app.run()

@@ -90,7 +90,7 @@ $(document).ready(function(){
         var players=game.players;
         for (h in hexes){
             var coords = splitCoords(h);
-            drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber);
+            drawHexagon(coords.x,coords.y,HEX_RADIUS,RESOURCE_MAP[hexes[h].resource],hexes[h].rollNumber,hexes[h].robber);
         }
         for (player in players){
             for (building in players[player].buildings){
@@ -522,7 +522,7 @@ $(document).ready(function(){
 
     function hexMenu(i,j,x,y){
         if (steal) {
-            $.post('/stealables/'+i+'/'+i,{},function(data){
+            $.post('/stealables/'+i+'/'+j,{},function(data){
                 $('#steal').html(data);
                 $('#stealModal').modal();
                 $('.btn-steal').click(function(){
@@ -532,6 +532,7 @@ $(document).ready(function(){
                         var game=data.game;
                         steal=false;
                         drawGame(game);
+                        $('#stealModal').modal('hide');
                     })
                 })
             });
