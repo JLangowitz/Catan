@@ -202,6 +202,7 @@ Largest Army? %s
 
         Output: Boolean
         """
+        roadResources = {"lumber":1,"brick":1}
 
         if self.roadNumber >= 14:
             return False 
@@ -223,7 +224,7 @@ Largest Army? %s
         Output: False or Error Message
         """
         
-        roadResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
+        roadResources = {"lumber":1,"brick":1}
 
 
         if start == False:
