@@ -273,7 +273,7 @@ Largest Army? %s
         output: Boolean or string
         """
 
-        if self.checkPorts(d,4) :
+        if self.checkPorts(d,4):
             self.payCards(d)
             self.takeCards(resource)
             return False

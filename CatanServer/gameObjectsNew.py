@@ -287,10 +287,6 @@ class Vertex(object):
                 resources[h.rollNumber] = [h.resource]
         return resources
 
-<<<<<<< HEAD
-        #return resources, roll                    
-=======
-        #return resources, roll
 
     def makePorts(self):
         portList = []
