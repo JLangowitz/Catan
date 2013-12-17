@@ -24,7 +24,7 @@ class Player:
         player object
         name- a string with the player's name, default value of none
         number integer with player number for reference when names are the same
-        """"
+        """
         self.name = name
         self.number = number
         self.points = 0   
