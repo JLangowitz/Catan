@@ -520,11 +520,20 @@ $(document).ready(function(){
         return graphics;
     }
 
-    function hexMenu(x,y){
+    function hexMenu(i,j,x,y){
         if (steal) {
-            $.post('/stealables/'+x+'/'+y,{},function(data){
+            $.post('/stealables/'+i+'/'+i,{},function(data){
                 $('#steal').html(data);
                 $('#stealModal').modal();
+                $('.btn-steal').click(function(){
+                    var player=$(this).attr('target');
+                    $.post('/moveRobber/'+i+'/'+j+'/'+player,{},function(data){
+                        data=JSON.parse(data);
+                        var game=data.game;
+                        steal=false;
+                        drawGame(game);
+                    })
+                })
             });
         };
     }
