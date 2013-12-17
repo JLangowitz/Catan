@@ -275,12 +275,12 @@ class Game(object):
             player.takeCards(player.hist[d])
         return d, tooManyCardsPlayers
 
-    def loseHalfCards(self,player,loseResD):
+    def looseHalfCards(self,player,looseResD):
         """Lose half of cards due to robber
 
         input: Game object, player object, and dictionary of resources to lose
         """
-        player.payCards(loseResD)
+        player.payCards(looseResD)
     
     def longestRoad(self):
         """Check to see which, if any, player has longest road
@@ -299,6 +299,7 @@ class Game(object):
             if playerMaxRoad == maxRoad:
                 winner == None
             elif playerMaxRoad > maxRoad:
+                maxRoad = playerMaxRoad
                 winner = player
         return winner
 
@@ -308,7 +309,10 @@ class Game(object):
         input: game object, dictionary of resources {"string":int number}, 
         string resource recieved in return
         """
-        return self.players[self.turn].bankTrade(d,resource)
+        player = self.players[self.turn]
+        print d
+        print resource
+        return player.bankTrade(d,resource)
 
 
 class Board(object):

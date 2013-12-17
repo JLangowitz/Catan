@@ -29,13 +29,14 @@ class Player:
         self.ports = {'ore':4,'lumber':4,'brick':4,'sheep':4,'grain':4}
 
     def __str__(self):
-        if len(self.buildings) == 0:
-            buildings = "No Buildings"
-        return """%s has: \n %d points
-Longest Road? %s 
-Largest Army? %s 
-%d soldiers
-""" % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
+        pass
+        #if len(self.buildings) == 0:
+            #buildings = "No Buildings"
+        #return """%s has: \n %d points
+#Longest Road? %s 
+#Largest Army? %s 
+#%d soldiers
+#""" % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
 
     def createHist(self): 
         """ Creates a historgram that maps dice rolls to resources recieved. 
@@ -249,10 +250,14 @@ Largest Army? %s
             self.payCards(roadResources) 
         self.roads.append((vertex1,vertex2))
         if self == (game.longestRoad()):
+            print "yes"
             self.bonuses['longestRoad']=True
         else:
+            print "no"
             self.bonuses['longestRoad']=False
         self.calcPoints()
+        for player in game.players:
+            player.calcPoints
         return False      
 
 
@@ -335,10 +340,13 @@ Largest Army? %s
                     else:
                         self.bonuses['largestArmy']=False
                         self.calcPoints
+                        for player in game.players:
+                            player.calcPoints    
                 if n == len(players):
                     self.bonuses['largestArmy']=True
                     self.calcPoints()
-
+                    for player in game.players:
+                        player.calcPoints
 
 
             return False
