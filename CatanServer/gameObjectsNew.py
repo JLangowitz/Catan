@@ -293,7 +293,7 @@ class Vertex(object):
         for vertex in vertices:
             for port in portNum:
                 if vertex == port[0]:
-                    portList.append(random.choice(portResources)
+                    portList.append(random.choice(portResources))
                     
 
 

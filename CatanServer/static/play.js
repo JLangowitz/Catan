@@ -136,6 +136,7 @@ $(document).ready(function(){
         while (stage.children.length){
             stage.removeChild(stage.getChildAt(0));
         }
+        currentOptions=[];
     }
 
     function rollDice(){
@@ -291,14 +292,16 @@ $(document).ready(function(){
             $.post('/buildables/'+i+'/'+j,{},function(data){
                 data=JSON.parse(data);
                 console.log(data);
-                console.log(data.roads);
-                console.log(data.building);
                 showOptions(data.settlement, data.city, data.roads,x,y);
             });
         }
     }
 
     function showOptions(settlement, city, roads, x, y){
+        for (graphics in currentOptions){
+            stage.removeChild(graphics);
+        }
+        currentOptions=[];
         for (road in roads){
             coordStr= roads[road]['py/tuple'];
             console.log('coordStr', coordStr);
@@ -309,10 +312,10 @@ $(document).ready(function(){
             currentOptions.push(drawRoad(coords.x,coords.y,x,y,true,currentPlayer));
         };
         if (settlement){
-            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, false, true, building.playerNumber));
+            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, false, true, currentPlayer));
         }
         if (city){
-            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, true, true, building.playerNumber));
+            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, true, true, currentPlayer));
         }
         // console.log('options', currentOptions);
         // console.log(stage);
@@ -342,21 +345,23 @@ $(document).ready(function(){
     }
 
     function buildCity(i,j){
-        $.post('/buildCity/'+i+'/'+j),{},function(data){
+        $.post('/buildCity/'+i+'/'+j,{},function(data){
             data=JSON.parse(data);
+            console.log(data);
             var game=data.game;
             var error=data.error;
             drawGame(game);
-        };
+        });
     }
 
     function buildSettlement(i,j){
-        $.post('/buildSettlement/'+i+'/'+j),{},function(data){
+        $.post('/buildSettlement/'+i+'/'+j,{},function(data){
             data=JSON.parse(data);
+            console.log(data);
             var game=data.game;
             var error=data.error;
             drawGame(game);
-        };
+        });
     }
 
     function buildRoad(i1,j1,i2,j2){
