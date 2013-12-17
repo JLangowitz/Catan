@@ -196,7 +196,7 @@ Largest Army? %s
                 return False
 
     
-    def checkRoad(self, vertex1, vertex2, start=False):
+    def checkRoad(self, vertex1, vertex2, game, start=False):
         """Checks if you can build a road
 
         Input: Player object, two vertex objects, Boolean
@@ -211,10 +211,17 @@ Largest Army? %s
             for resource in roadResources:
                 if self.hand[resource] < roadResources[resource]:
                     return False
-            for vertex in self.roads:
-                if vertex1 == vertex[0] or vertex1 == vertex[1] or vertex2 == vertex[0] or vertex2 == vertex[1]:  
+            for player in game.players:
+                for road in player.roads:
+                    if ((vertex1,vertex2) == road) or ((vertex2,vertex1) == road):
+                        return False
+            for road in self.roads:
+                if (vertex1 == road[0]) or (vertex1 == road[1]) or (vertex2 == road[0]) or (vertex2 == road[1]):  
                     return True
-        return True
+        else:
+            return True
+            
+        return False
 
 
     def buildRoad(self, vertex1, vertex2,start=False):
