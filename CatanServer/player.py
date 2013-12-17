@@ -185,12 +185,12 @@ Largest Army? %s
         cityResources = {"ore":3,"grain":2}     
      
         self.payCards(cityResources)        #pay resources    
-            buiding1.isCity = True      #make settlement a city
-            self.buildHist()              #remake historgram
-            self.calcPoints()             #calculate points 
-            self.settlementNumber -= 1
-            self.cityNumber += 1
-            return False
+        buiding1.isCity = True      #make settlement a city
+        self.buildHist()              #remake historgram
+        self.calcPoints()             #calculate points 
+        self.settlementNumber -= 1
+        self.cityNumber += 1
+        return False
 
     
     def checkRoad(self, vertex1, vertex2, game, start=False):
