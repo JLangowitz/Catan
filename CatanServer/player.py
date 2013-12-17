@@ -434,18 +434,23 @@ Largest Army? %s
         Input: 2 player objects and two dictionary of resources saying what
         each player is offering
         """
+        print self.name, self.hand, resources1
+        print player2.name, player2.hand, resources2
+
         for resources in resources1:
             if self.hand[resources] < resources1[resources]:
                 print "Player 1 has insufficient resources"
                 return None
         for resources in resources2:
-            if player2.hand[resources2] < resources2[resources]:
+            if player2.hand[resources] < resources2[resources]:
                 print "Player 2 has insufficient resources"
                 return None
         self.payCards(resources1)
         player2.takeCards(resources1)
         player2.payCards(resources2)
         self.takeCards(resources2)
+        print self.name, self.hand
+        print player2.name, player2.hand
         return False
 
 

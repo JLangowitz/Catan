@@ -7,6 +7,16 @@ a {
   color: #00B7FF;
 }
 
+.trader{
+    height: 125px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.modal-footer{
+    margin-top: 0px;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -19,7 +29,7 @@ a {
 
 .modal-body {
     min-height: 250px;
-    padding: 50px;
+    padding: 20px;
 }
 
 .form-horizontal {

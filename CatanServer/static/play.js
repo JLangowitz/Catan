@@ -120,10 +120,31 @@ $(document).ready(function(){
     function playerTable(){
         $.get('/playerTable',{},function(data){
             $('#gameTable').html(data);
-            $('.btn-trade').each(function(index){
+            $('.btn-trade').each(function(){
                 $(this).click(function(data){
-                    $.get('/tradeModal/'+currentPlayer+'/'+this.id,function(data){
+                    var tradePlayer=this.id;
+                    $.get('/tradeModal/'+currentPlayer+'/'+tradePlayer,function(data){
                         $('#tradeBody').html(data);
+                        $('#tradeButton').click(function(){
+                            var tradeData={};
+                            var selects = $('select');
+                            for (var i=0; i<selects.length;i++){
+                                var id=$(selects[i]).attr('id');
+                                id=id.split('-');
+                                if (!tradeData[id[0]]){
+                                    tradeData[id[0]]={};
+                                }
+                                tradeData[id[0]][id[1]]=$(selects[i]).val();
+                            }
+                            console.log(tradeData);
+                            $.post('/trade',JSON.stringify({'data':tradeData,'player':tradePlayer}),function(data){
+                                data=JSON.parse(data);
+                                console.log(data);
+                                var game = data.game;
+                                $('#trade').modal('hide');
+                                drawGame(game);
+                            })
+                        });
                     });
                 });
             });

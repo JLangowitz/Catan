@@ -107,7 +107,7 @@ class Game(object):
             self.turn=(self.turn+1)%len(self.players)
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
-    def trade(self,resource1,player2,resource2):
+    def trade(self,resources1,player2,resources2):
         player = self.players[self.turn]        
         return player.trade(resources1, player2, resources2)
 

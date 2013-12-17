@@ -12,6 +12,7 @@ from werkzeug import secure_filename
 import gameObjectsNew as g
 import jsonpickle
 import shelve
+import pprint
 
 # config
 DEBUG = True
@@ -38,7 +39,17 @@ def playerTable():
 @app.route('/tradeModal/<p1>/<p2>')
 def tradeModal(p1,p2):
     game=d['game']
-    return render_template('_tradeForm.jade',game=game, trader1=game.players[int(p1)], trader2=game.players[int(p2)])
+    trader1=game.players[int(p1)]
+    trader2=game.players[int(p2)]
+    resourceLists1={}
+    for resource in trader1.hand:
+        resourceLists1[resource]=range(trader1.hand[resource]+1)
+    resourceLists2={}
+    for resource in trader2.hand:
+        resourceLists2[resource]=range(trader2.hand[resource]+1)
+    print resourceLists1
+    print resourceLists2
+    return render_template('_tradeForm.jade',game=game, trader1=trader1, trader2=trader2, resources1=resourceLists1, resources2=resourceLists2)
 
 @app.route('/start', methods=['POST'])
 def start():
@@ -171,12 +182,31 @@ def playRoadBuilding(x1,y1,x2,y2,x3,y3,x4,y4):
     d['game']=game
     return jsonpickle.encode({'error':error}, make_refs=False)
 
-@app.route('/trade/<dresource1>/<player2>/<dresource2>', methods=['POST'])
-def trade(dresource1,player2,dresource2):
-    game=d['game'] 
-    error = game.trade(dresource1,player2,dresource2)
+@app.route('/trade', methods=['POST'])
+def trade():
+    game=d['game']
+    print 'form',request.form
+    # print 'json',request.json
+    form=request.form
+    for thing in form:
+        form=jsonpickle.decode(thing)
+    print form
+    player2=int(form['player'])
+    dresource1=form['data'][game.players[game.turn].name]
+    dresource2=form['data'][game.players[player2].name]
+    for res1 in dresource1:
+        dresource1[res1] = int(dresource1[res1])
+    for res2 in dresource2:
+        dresource2[res2] = int(dresource2[res2])
+    print player2
+    print dresource1
+    print dresource2
+    # print 'data',request.form['data']
+    # print 'p1',request.form['p1']
+    # print 'p2',request.form['p2']
+    error = game.trade(dresource1,game.players[player2],dresource2)
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'error':error,'game':game}, make_refs=False)
 
 @app.route('/getneighbors/<x>/<y>', methods=['POST'])
 def getNeigbhors(x,y):
