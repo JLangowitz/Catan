@@ -185,7 +185,7 @@ Largest Army? %s
         cityResources = {"ore":3,"grain":2}     
      
         self.payCards(cityResources)        #pay resources    
-        buiding1.isCity = True      #make settlement a city
+        buiding.isCity = True      #make settlement a city
         self.buildHist()              #remake historgram
         self.calcPoints()             #calculate points 
         self.settlementNumber -= 1

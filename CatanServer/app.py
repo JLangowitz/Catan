@@ -98,12 +98,13 @@ def buildSettlement(x,y):
     game=d['game']
     error = game.buildSettlement((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
 @app.route('/buildStartSettlement/<x>/<y>/<second>', methods=['POST'])
 def buildStartSettlement(x,y,second):
     game=d['game']
     error = game.buildStartSettlement((float(x),float(y)),second=='true')
+    print error
     d['game']=game
     return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
@@ -113,7 +114,7 @@ def buildCity(x,y):
     game=d['game']
     error = game.buildCity((float(x),float(y)))
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
 @app.route('/road/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
 def buildRoad(x1,y1,x2,y2):
