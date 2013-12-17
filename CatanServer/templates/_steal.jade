@@ -6,4 +6,4 @@ div(id='stealModal', class='modal fade', tabindex=-1, role='dialog', aria-labell
                 h4(class='modal-title', id='tradeLabel') Steal
             div(class='modal-body',id='stealBody')
                 for player in players
-                    button(type='button', class='btn btn-default', id='steal-'+player.name) #{player.name}
+                    button(type='button', class='btn btn-default btn-steal', target=player.number, id='steal-'+player.name) #{player.name}

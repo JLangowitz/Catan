@@ -228,21 +228,20 @@ class Game(object):
 
         input: Hexes object hex1
         """
-        hex1 = self.getHex(coordinates)
-        robberHex.robber = False
-        robberHex = hex1
+        for h in self.board.hexes:
+            self.getHex(h).robber = False
+        robberHex = self.getHex(coordinates)
         robberHex.robber = True
-        for player in players:
-            player.createHist
+        for player in self.players:
+            player.createHist()
 
-    def robberSteal(settlement):
-        """Steals a random resource the player controlling the given settlement 
-        and gives it to player1
+    def robberSteal(self, player2):
+        """Steals a random resource from player2
+        and gives it to player1, whose turn it is
 
         settlement: Building object
         """
         player1 = self.players[self.turn]
-        player2 = settlement.player
         cards = []
         for resource in player2.hand.keys():
             for i in range(player2.hand[resource]):
