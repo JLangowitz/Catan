@@ -288,16 +288,6 @@ class Vertex(object):
         return resources
 
 
-    def makePorts(self):
-        portList = []
-        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
-        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
-        for vertex in vertices:
-            for port in portNum:
-                if vertex == port[0]:
-                    portList.append(random.choice(portResources))
-                    
->>>>>>> abcfbaddf1187fbff60fa3a45bb3cf4ea8c6e2fa
 
 
 
@@ -428,16 +418,16 @@ def extend(vertMap, vertHist, path):
 def makePorts(game):
     """Makes the ports for the setup function
         game is a game object"""
-        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
-        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
-        for vertex in game.board.vertices:
-            for portTuple in portNum:
-                if vertex.coordinates == portTuple[0]:
-                    randomPort=random.choice(portResources)
-                    portList.append(randomPort)
-                    portResources.remove(randomPort)
-                    vertex.addPort(randomPort)
-                    game.getVertex(portTuple[1]).addPort(randomPort)
+    portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
+    portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
+    for vertex in game.board.vertices:
+        for portTuple in portNum:
+            if vertex.coordinates == portTuple[0]:
+                randomPort=random.choice(portResources)
+                portList.append(randomPort)
+                portResources.remove(randomPort)
+                vertex.addPort(randomPort)
+                game.getVertex(portTuple[1]).addPort(randomPort)
 
 def setup(board, game, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
