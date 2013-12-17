@@ -18,12 +18,13 @@ class Game(object):
 
         Input: game object and a list of the player objects
         """
-
+        self.ports = []
         self.players=[]
         for playerName in playerList:
             self.players.append(Player(name=playerName,number=len(self.players)))
         self.board=Board(self, len(self.players))
-        makePorts(self)
+        self.ports = makePorts(self)
+        print self.ports
         self.turn=0
 
 
@@ -340,6 +341,7 @@ class Board(object):
         Input: Board object, game object and the number of players
         """
         setup(self, game, numPlayers)
+        self.ports = []
 
     def printHexes(self):
         """prints a hexes coordinates, resources, roll number, and robber status"""
@@ -353,6 +355,8 @@ class Board(object):
     def vertexMap(self):
         """returns a Vertex map used for longest road calculations."""
         return self.vertMap
+    
+
     
 
 class Vertex(object):
@@ -481,7 +485,7 @@ def roadLength(vertMap, player):
     """
     verticies = []
     roads = player.getRoads()
-    print 'roads',roads
+#    print 'roads',roads
     
     for road in roads:
         verticies.append(road[0].coordinates)
@@ -493,7 +497,7 @@ def roadLength(vertMap, player):
     for vertex in vertHist:
         roadPath = findLongest(vertMap, vertHist, [[vertex]])
         roadLength = len(roadPath[0]) - 1
-        print 'longest path for', vertex, 'is', roadPath, 'and is of length', len(roadPath[0]) - 1
+#        print 'longest path for', vertex, 'is', roadPath, 'and is of length', len(roadPath[0]) - 1
         if roadLength > maxRoadLength:
             maxRoadLength = roadLength
 
@@ -530,7 +534,7 @@ def extend(vertMap, vertHist, path):
     return: list of lists of vertex coordinates along given path(s)
     """
     newPaths = []
-    print 'path:',path
+#    print 'path:',path
 
     neighbors = vertMap[path[-1]]
     #print 'path end', path[-1]
@@ -548,7 +552,7 @@ def extend(vertMap, vertHist, path):
 def makePorts(game):
     """Makes the ports for the setup function
     game is a game object"""
-
+    ports = []
     portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
     #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
     portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
@@ -560,6 +564,8 @@ def makePorts(game):
                 portResources.remove(randomPort)
                 game.getVertex(vertex).addPort(randomPort)
                 game.getVertex(portTuple[1]).addPort(randomPort)
+                ports.append((vertex,randomPort))
+    return ports
 
 
 def setup(board, game, numPlayers):
