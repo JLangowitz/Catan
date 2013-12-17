@@ -231,11 +231,8 @@ class Game(object):
         robberHex = False
         robberHex = hex1
         robberHex.robber = True
-        settlements = []
-        for vertex in robberHex.vertices:
-            if vertex.building != None:
-                settlements.append[vertex.building]
-        return settlements
+        for player in players:
+            player.createHist
 
     def robberSteal(settlement):
         """Steals a random resource the player controlling the given settlement 
@@ -402,11 +399,13 @@ class Vertex(object):
         resources = {}
         
         for h in self.hexes:
-            if h.rollNumber in resources:
-                resources[h.rollNumber].append(h.resource)
-            else:
-                resources[h.rollNumber] = [h.resource]
-        return resources
+            if h.robber == False:
+                if h.rollNumber in resources:
+                    resources[h.rollNumber].append(h.resource)
+                    return resources
+                else:
+                    resources[h.rollNumber] = [h.resource]
+                    return resources
 
 
 
