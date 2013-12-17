@@ -14,3 +14,6 @@ form(role='form')
                 select(class='form-control',id='bank-'+resource)
                     for i in resourcesBank[resource]
                         option(class='tradeResource') #{i}
+div(class='alert alert-danger fade in')
+    button(type='button', class='close', data-dismiss='alert', aria-hidden='true')&times;
+        h4 You tried to trade the wrong number of resources!

@@ -315,6 +315,36 @@ def trade():
     d['game']=game
     return jsonpickle.encode({'error':error,'game':game}, make_refs=False)
 
+@app.route('/bankTrade', methods=['POST'])
+def trade():
+    """trade resources
+
+    input: 2 dictionaries {string resources: int numbers}
+    
+    returns: dict of {game object, error message}
+    """
+    game=d['game']
+    print 'form',request.form
+    # print 'json',request.json
+    form=request.form
+    for thing in form:
+        form=jsonpickle.decode(thing)
+    print form
+    giveResources=form['data'][game.players[game.turn].name]
+    takeResources=form['data']['bank']
+    for res1 in giveResources:
+        giveResources[res1] = int(giveResources[res1])
+    for res2 in takeResources:
+        takeResources[res2] = int(takeResources[res2])
+    print giveResources
+    print takeResources
+    # print 'data',request.form['data']
+    # print 'p1',request.form['p1']
+    # print 'p2',request.form['p2']
+    error = game.bankTrade(giveResources,takeResources)
+    d['game']=game
+    return jsonpickle.encode({'error':error,'game':game}, make_refs=False)
+
 @app.route('/getneighbors/<x>/<y>', methods=['POST'])
 def getNeigbhors(x,y):
     """gets neighbors coordinates
