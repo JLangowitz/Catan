@@ -372,7 +372,7 @@ class Vertex(object):
         self.hexes=h
         self.built=False
         self.neighbors=neighbors
-        self.port = "none"
+        self.port = 'none'
 
     def __repr__(self):
         """Changes representation of vertex to make json conversion easier"""
@@ -564,7 +564,7 @@ def makePorts(game):
                 portResources.remove(randomPort)
                 game.getVertex(vertex).addPort(randomPort)
                 game.getVertex(portTuple[1]).addPort(randomPort)
-                ports.append((vertex,randomPort))
+                ports.append((vertex,portTuple[1],randomPort))
     return ports
 
 
