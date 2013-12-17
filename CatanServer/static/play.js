@@ -82,6 +82,10 @@ $(document).ready(function(){
         $('#activePlayer').text(window.players[currentPlayer]+'\'s turn');
     }
 
+    $('#buyDev').click(function(){
+
+    });
+
     function drawGame(game){
         clearGame();
         var hexes=game.board.hexes;
@@ -177,7 +181,7 @@ $(document).ready(function(){
                             $('#tradeBody').html(data);
                             $('#tradeButton').click(function(){
                                 var tradeData={};
-                                var selects = $('.trade-player');
+                                var selects = $('.trade-players');
                                 for (var i=0; i<selects.length;i++){
                                     var id=$(selects[i]).attr('id');
                                     id=id.split('-');
