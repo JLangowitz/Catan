@@ -287,23 +287,6 @@ class Vertex(object):
                 resources[h.rollNumber] = [h.resource]
         return resources
 
-<<<<<<< HEAD
-        #return resources, roll                    
-=======
-        #return resources, roll
-
-    def makePorts(self):
-        portList = []
-        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
-        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
-        for vertex in vertices:
-            for port in portNum:
-                if vertex == port[0]:
-                    portList.append(random.choice(portResources))
-                    
->>>>>>> abcfbaddf1187fbff60fa3a45bb3cf4ea8c6e2fa
-
-
 
 class Hex(object):
     """Represents each Hexes on the board
@@ -433,6 +416,7 @@ def makePorts(game):
     """Makes the ports for the setup function
         game is a game object"""
         portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
+        #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
         portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
         for vertex in game.board.vertices:
             for portTuple in portNum:
@@ -442,6 +426,7 @@ def makePorts(game):
                     portResources.remove(randomPort)
                     vertex.addPort(randomPort)
                     game.getVertex(portTuple[1]).addPort(randomPort)
+
 
 def setup(board, game, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
@@ -492,9 +477,10 @@ def setup(board, game, numPlayers):
                         vertices[vi/2.0,vj/2.0]=vertex
                         # h.addVertex(vertex.coordinates)
             hexes[i/2.0,j/2.0]=h
-    makePorts(game)
+
     board.hexes=hexes
     board.vertices=vertices
+    makePorts(game)
     for vertex in board.vertices.values():
         vertex.addNeighbors(game, board)
     placeDots(board, numPlayers, rollNumbers)
