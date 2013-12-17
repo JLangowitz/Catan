@@ -16,7 +16,7 @@ class Game(object):
     def __init__(self, playerList):
         """Initiates the Game class
 
-        Input: game object and a list of the player objects
+        Input: game object and a list of the player objects and a list of ports 
         """
         self.ports = []
         self.players=[]
