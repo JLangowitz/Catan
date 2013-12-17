@@ -100,7 +100,7 @@ Largest Army? %s
     def checkSettlement(self,vertex,game,start=False):
         """Checks if you can build a settlement at that location
 
-        input: player object and vertex object
+        input: player object and vertex object, game object, optional boolean 
 
         Return: Boolean 
 
@@ -129,9 +129,9 @@ Largest Army? %s
         """Checks to see if you can build and builds a settlement 
         at the location
 
-        input: player object and vertex object, Optional Boolean
+        input: player object and vertex object, game object, 2 Optional Booleans
 
-        Output: False or Error Message
+        Output: False or String Error Message
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
@@ -158,7 +158,7 @@ Largest Army? %s
     def checkCity(self,vertex,game):
         """Checks if you can build a City at that location
 
-        input: player object and vertex object
+        input: player object, vertex object, game object
 
         Return: Boolean 
 
@@ -181,7 +181,7 @@ Largest Army? %s
 
         input: player object and vertex object and building object
 
-        Output: False or Error Message
+        Output: False or String Error Message
         """
 
         cityResources = {"ore":3,"grain":2}     
@@ -198,7 +198,7 @@ Largest Army? %s
     def checkRoad(self, vertex1, vertex2, game, start=False):
         """Checks if you can build a road
 
-        Input: Player object, two vertex objects, Boolean
+        Input: Player object, two vertex objects, game object, Boolean
 
         Output: Boolean
         """
@@ -226,9 +226,9 @@ Largest Army? %s
     def buildRoad(self, vertex1, vertex2, game, start=False):
         """Builds a road for a player
 
-        input: a player object, vertex1 and vertex2 objects, Optional Boolean
+        input: a player object, vertex1 and vertex2 objects, game objects Optional Boolean
 
-        Output: False or Error Message
+        Output: False or Error Message String 
         """
         
         roadResources = {"lumber":1,"brick":1}
@@ -245,8 +245,7 @@ Largest Army? %s
     def checkPorts(self,d,n):
         """ Checks what type of port trades you can do
 
-        input: player object, dictionary of resources your trading, and 
-                number of objects your trading
+        input: player object, dictionary d {string resource: int number}, int n
 
         output: Boolean or string
         """
@@ -267,8 +266,7 @@ Largest Army? %s
     def fourToOne(self,d,resource):
         """ Executes a four to one trade
 
-        input: player object, dictionary of resources your trading, and 
-               the resource you want
+        input: player object, dictionary d {string resource: int number}, string resource
 
         output: Boolean or string
         """
@@ -284,8 +282,7 @@ Largest Army? %s
     def threeToOne(self,d,resource):
         """ Executes a three to one trade
 
-        input: player object, dictionary of resources your trading, and 
-               the resource you want
+        input: player object, dictionary d {string resource: int number}, string resource
                
         output: Boolean or string
         """
@@ -300,8 +297,7 @@ Largest Army? %s
     def twoToOne(self,d,resource2):
         """ Executes a two to one trade
 
-        input: player object, dictionary of resources your trading, and 
-               the resource you want
+        input: player object, dictionary d {string resource: int number}, string resource
                
         output: Boolean or string
         """
@@ -377,7 +373,7 @@ Largest Army? %s
     def playSoldier(self,players):
         """ Plays Soldier
 
-        input: player object
+        input: player object, and list of player objects players
                
         output: Boolean or string
         """
@@ -400,7 +396,7 @@ Largest Army? %s
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4, game):
         """ Plays Road Building
 
-        input: player object, 4 vertex objects
+        input: player object, 4 vertex objects, and game object
                
         output: Boolean or string
         """
@@ -431,7 +427,7 @@ Largest Army? %s
         """ Commits a trade between two players. May be able to 
         trade something for nothing 
 
-        Input: 2 player objects and two dictionary of resources saying what
+        Input: 2 player objects and two {resource strings:int number} saying what
         each player is offering
         """
         for resources in resources1:
