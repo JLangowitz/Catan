@@ -220,7 +220,7 @@ Largest Army? %s
                     return True
         else:
             return True
-            
+
         return False
 
 
