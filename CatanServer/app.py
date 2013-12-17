@@ -61,27 +61,49 @@ def setTurn(turn):
 
 @app.route('/rollDice', methods=['POST'])
 def rollDice():
+    """rolls dice
+
+    returns: dict of {game object, int roll, and (player object, int card number)}
+    """
     game=d['game']
     roll, tooManyCardsPlayer = game.rollDice()
     d['game']=game
     return jsonpickle.encode({'game':game,"roll":roll, "tooManyCardsPlayer":tooManyCardsPlayer}, make_refs=False)
 
 @app.route('/looseHalfCards/<player>/<loseResD>', methods=['POST'])
-def looseHalfCards():
+def looseHalfCards(loseResD):
+    """Makes player lose half of resources for robber
+
+    Input: Dictionary loseResD {string resources: int number}
+
+    returns: dict of {game object}
+    """
     game=d['game']
-    game.loseHalfCards()
+    game.loseHalfCards(loseResD)
     d['game']=game
     return jsonpickle.encode(game, make_refs=False)
 
 
 @app.route('/buildables/<x>/<y>', methods=['POST'])
 def findBuildable(x,y):
+    """finds whats buildable at coordinates
+
+    input: int x and int y
+
+    returns: dict of {game object, list of vertex objects, two booleans}
+    """
     game=d['game']
     roads, settlement, city = game.findBuildableAt((float(x),float(y)))
     return jsonpickle.encode({'roads':roads,'settlement':settlement,'city':city})
 
 @app.route('/setupBuildables/<x>/<y>', methods=['POST'])
 def findSetupBuildable(x,y):
+    """finds whats buildable at coordinates at beginning
+
+    input: int x and int y
+    
+    returns: dict of {game object, list of vertex objects, booleans}
+    """
     game=d['game']
     roads=game.getNeighbors((float(x),float(y)))
     for road in roads:
@@ -93,6 +115,12 @@ def findSetupBuildable(x,y):
 
 @app.route('/stealables/<x>/<y>', methods=['POST'])
 def findStealable(x,y):
+    """finds who you can steal from
+
+    input: int x and int y
+    
+    returns: dict of {players}
+    """
     game=d['game']
     players = game.findStealableAt((float(x),float(y)))
     return jsonpickle.encode({'players':players}, make_refs=False)
@@ -100,6 +128,12 @@ def findStealable(x,y):
 #TODO Josh can you fix the next 7 functions?
 @app.route('/buildSettlement/<x>/<y>', methods=['POST'])
 def buildSettlement(x,y):
+    """builds a settlement
+
+    input: int x and int y
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     error = game.buildSettlement((float(x),float(y)))
     print error
@@ -108,6 +142,12 @@ def buildSettlement(x,y):
 
 @app.route('/buildStartSettlement/<x>/<y>/<second>', methods=['POST'])
 def buildStartSettlement(x,y,second):
+    """builds a second settlement
+
+    input: int x and int y and boolean second
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     error = game.buildStartSettlement((float(x),float(y)),second=='true')
     d['game']=game
@@ -116,6 +156,12 @@ def buildStartSettlement(x,y,second):
 
 @app.route('/buildCity/<x>/<y>', methods=['POST'])
 def buildCity(x,y):
+    """builds a city
+
+    input: int x and int y
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     error = game.buildCity((float(x),float(y)))
     print error
@@ -124,6 +170,12 @@ def buildCity(x,y):
 
 @app.route('/road/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
 def buildRoad(x1,y1,x2,y2):
+    """builds a road
+
+    input: int x1,x2 and int y1,y2
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     error = game.buildRoad((float(x1),float(y1)),(float(x2),float(y2)))
     d['game']=game
@@ -131,6 +183,12 @@ def buildRoad(x1,y1,x2,y2):
 
 @app.route('/startRoad/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
 def buildStartRoad(x1,y1,x2,y2):
+    """builds a starting road
+
+    input: int x1,x2 and int y1,y2
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     error = game.buildStartRoad((float(x1),float(y1)),(float(x2),float(y2)))
     d['game']=game
@@ -138,6 +196,10 @@ def buildStartRoad(x1,y1,x2,y2):
 
 @app.route('/drawdev', methods=['POST'])
 def drawDev():
+    """draw a dev card
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     dev, error = game.drawDev1()   #dev contains (player,dev)
     d['game']=game
@@ -145,41 +207,77 @@ def drawDev():
 
 @app.route('/playyearofplenty/<resource1>/<resource2>', methods=['POST'])
 def playYearOfPlenty(resource1,resource2):
+    """play year of plenty 
+
+    input: 2 resource strings 
+    
+    returns: dict of {error message}
+    """
     game=d['game']
     error = game.playYearOfPlenty((resource1,resource2))
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
 @app.route('/playMonopoly/resource', methods=['POST'])
 def playMonopoly(resource):
+    """play a monopoly 
+
+    input: string resource
+    
+    returns: dict of {error message}
+    """
     game=d['game']
     error = game.playMonopoly(resource)
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
 @app.route('/playSoldier', methods=['POST'])
 def playSoldier():
+    """play Soldier 
+
+    input: 
+    
+    returns: dict of {error message}
+    """
     game=d['game']
     error = game.playSoldier()
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
 @app.route('/playRoadBuilding/<x1>/<y1>/<x2>/<y2>/<x3>/<y3>/<x4>/<y4>', methods=['POST'])
 def playRoadBuilding(x1,y1,x2,y2,x3,y3,x4,y4):
+    """play road building 
+
+    input: int x1,x2,x3,x4 and int y1,y2,y3,y4
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game']
     error = game.playRoadBuilding((float(x1),float(y1)),(float(x2),float(y2)),(float(x3),float(y3)),(float(x4),float(y4)))
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
 @app.route('/trade/<dresource1>/<player2>/<dresource2>', methods=['POST'])
 def trade(dresource1,player2,dresource2):
+    """trade resources
+
+    input: 2 dictionaries {string resources: int numbers} and 1 player object
+    
+    returns: dict of {game object, error message}
+    """
     game=d['game'] 
     error = game.trade(dresource1,player2,dresource2)
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
 @app.route('/getneighbors/<x>/<y>', methods=['POST'])
 def getNeigbhors(x,y):
+    """gets neighbors coordinates
+
+    input: int x,y
+
+    outputs:dict of {neighbors}
+    """
     game=d['game']
     neighbors = game.getNeighbors()
     d['game']=game
@@ -187,6 +285,12 @@ def getNeigbhors(x,y):
 
 @app.route('/robbersteal/<settlement>', methods=['POST'])
 def robberSteal(settlement):
+    """gets card stolen
+
+    input: settlement object 
+
+    outputs:dict of {card,settlement}
+    """
     game=d['game']
     card,settlements = game.robberSteal(settlement)
     d['game']=game
@@ -194,6 +298,12 @@ def robberSteal(settlement):
 
 @app.route('/moverobber/<hex1>', methods=['POST'])
 def moverobber(hex1):
+    """move robber
+
+    input: hexes object 
+
+    outputs:dict of {settlements}
+    """
     game=d['game']
     settlements = game.robberSteal(hex1)
     d['game']=game
@@ -201,6 +311,12 @@ def moverobber(hex1):
 
 @app.route('/fourtoone/<d>/<resources>', methods=['POST'])
 def fourToOne(d,resources):
+    """trade four to one 
+
+    input: dictionary d of {string resources:int 4} and string resource 
+
+    outputs:dict of {error}
+    """
     game=d['game']
     error = game.fourToOne(d,resources)
     d['game']=game
@@ -208,6 +324,12 @@ def fourToOne(d,resources):
 
 @app.route('/threetoone/<d>/<resources>', methods=['POST'])
 def threeToOne(d,resources):
+    """trade three to one 
+
+    input: dictionary d of {string resources:int 3} and string resource 
+
+    outputs:dict of {error}
+    """
     game=d['game']
     error = game.fourToOne(d,resources)
     d['game']=game
@@ -215,6 +337,12 @@ def threeToOne(d,resources):
 
 @app.route('/twotoone/<d>/<resources>', methods=['POST'])
 def twoToOne(d,resources):
+    """trade two to one 
+
+    input: dictionary d of {string resources:int 2} and string resource 
+
+    outputs:dict of {error}
+    """
     game=d['game']
     error = game.fourToOne(d,resources)
     d['game']=game
