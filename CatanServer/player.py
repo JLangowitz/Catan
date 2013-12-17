@@ -332,6 +332,9 @@ Largest Army? %s
                         n += 1
                 if n == len(players):
                     self.bonuses['largestArmy']=True
+                    self.calcPoints()
+
+
 
             return False
         else:
