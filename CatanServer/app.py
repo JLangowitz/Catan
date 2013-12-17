@@ -194,5 +194,25 @@ def moverobber(hex1):
     d['game']=game
     return jsonpickle.encode({"settlements":settlements}, make_refs=False)
 
+@app.route('/fourtoone/<d>/<resources>', methods=['POST'])
+def fourToOne(d,resources):
+    game=d['game']
+    error = game.fourToOne(d,resources)
+    d['game']=game
+    return jsonpickle.encode({"error":error}, make_refs=False)
+
+@app.route('/threetoone/<d>/<resources>', methods=['POST'])
+def threeToOne(d,resources):
+    game=d['game']
+    error = game.fourToOne(d,resources)
+    d['game']=game
+    return jsonpickle.encode({"error":error}, make_refs=False)    
+
+@app.route('/twotoone/<d>/<resources>', methods=['POST'])
+def twoToOne(d,resources):
+    game=d['game']
+    error = game.fourToOne(d,resources)
+    d['game']=game
+    return jsonpickle.encode({"error":error}, make_refs=False)    
 if __name__ == '__main__':
     app.run()
