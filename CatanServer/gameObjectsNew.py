@@ -231,7 +231,7 @@ class Game(object):
         for h in self.hexes:
             self.hexes[h].robber = False
         hex1 = self.getHex(coordinates)
-        robberHex = False
+        robberHex.robber = False
         robberHex = hex1
         robberHex.robber = True
         for player in players:
@@ -404,10 +404,9 @@ class Vertex(object):
             if h.robber == False:
                 if h.rollNumber in resources:
                     resources[h.rollNumber].append(h.resource)
-                    return resources
                 else:
                     resources[h.rollNumber] = [h.resource]
-                    return resources
+        return resources
 
 
 
