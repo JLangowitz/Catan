@@ -210,6 +210,15 @@ class Game(object):
                 winner = player
         return winner
 
+    def fourToOne(self,d,resource):
+        return player.fourToOne(d,resource):
+
+    def threeToOne(self,d,resource):
+        return player.threeToOne(d,resource):
+
+    def twoToOne(self,d,resource):
+        return player.twoToOne(d,resource):
+
 class Board(object):
     """Contains Board and all tile and vertex position
 
