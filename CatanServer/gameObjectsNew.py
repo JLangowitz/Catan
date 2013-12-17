@@ -223,11 +223,12 @@ class Game(object):
         buildings=self.allBuildings()
         return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
-    def moveRobber(hex1):
+    def moveRobber(self, coordinates):
         """Moves the robber to a tile chosen by player1
 
         input: Hexes object hex1
         """
+        hex1 = self.getHex(coordinates)
         robberHex = False
         robberHex = hex1
         robberHex.robber = True

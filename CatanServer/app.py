@@ -326,16 +326,16 @@ def robberSteal(settlement):
     d['game']=game
     return jsonpickle.encode({"card":card,"settlement":settlment}, make_refs=False)
 
-@app.route('/moverobber/<hex1>', methods=['POST'])
-def moverobber(hex1):
+@app.route('/moverobber/<x>/<y>', methods=['POST'])
+def moverobber(x,y):
     """move robber
 
-    input: hexes object 
+    input: coordinates 
 
     outputs:dict of {settlements}
     """
     game=d['game']
-    settlements = game.robberSteal(hex1)
+    settlements = game.robberSteal(x,y)
     d['game']=game
     return jsonpickle.encode({"settlements":settlements}, make_refs=False)
 
@@ -348,7 +348,7 @@ def bankTrade(d,resources):
     outputs:dict of {error}
     """
     game=d['game']
-    error = game.bankTrade(d,resources)
+    error = game.bankTrade((float(x),float(y)))
     d['game']=game
     return jsonpickle.encode({"error":error}, make_refs=False)
 
