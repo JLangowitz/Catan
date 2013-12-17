@@ -43,24 +43,20 @@ class Game(object):
         return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
     def findBuildableAt(self, coordinates):
-        vertex = self.getVertex(coordinates)
+        vertex1 = self.getVertex(coordinates1)
         player = self.players[self.turn]
-        builtRoads=[road for road in player.roads for player in self.players if vertex.coordinates in road]
-        if all([road not in player.roads for road in builtRoads]):
-            return [],None
-        vertexBuilding=[building for building in player.buildings for player in self.players if building.vertex is vertex]
-        if vertexBuilding:
-            vertexBuilding = vertexBuilding[0]
-            if vertexBuilding not in player.buildings:
-                return [],None
-            else:
-                if vertexBuilding.isCity:
-                    buildableBuilding = None
-                else:
-                    buildableBuilding = 'city'
-        else:
-            buildableBuilding = 'settlement'
-        buildableRoads=[(vertex.coordinates, coords) for coords in vertex.neighbors if coords not in [coord in road for road in bultRoads]]
+        neighbors = []
+        buildableRoads = []
+        buildableSettlement = False
+        buildableCity = False
+        for coordinates in vertex1.getNeighbors:
+            neighbors.append(self.getVertex(coordinates))
+        for vertex in neighbors:
+            if player.checkRoad(vertex, vertex1):
+                buildableRoads.append((vertex,vertex1))
+        buildableSettlement = player.checkSettlement(vertex1,self)
+        buildableCity = player.checkCity(vertex1,self)
+        
         return buildableRoads, buildableBuilding
 
     def buildSettlement(self, coordinates):

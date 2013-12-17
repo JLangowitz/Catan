@@ -135,27 +135,25 @@ Largest Army? %s
         """
 
         settlementResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
-        if self.checkSettlement(vertex,game,start):
-            if start == False:
-                self.payCards(settlementResources)  #pay cards to build
-            building = gO.Building(vertex,game.turn)  #creates a building object
-            vertex.build()                      #build building on vertex
-            self.buildings.append(building)    #add buildings to list of buildings
-            self.createHist()                    #rebuild the dice histogram
-            self.calcPoints()                     #calc points
-            self.settlementNumber += 1
-            if second == True:
-                hexes = vertex.hexes
-                for hex1 in hexes:
-                    if hex1.rollNumber:
-                        self.takeCards({hex1.resource:1})
-            # self.ports[isPort(vertex)] = True
-            return False
-        else:
-            return "You must construct additional pylons"
+        if start == False:
+            self.payCards(settlementResources)  #pay cards to build
+        building = gO.Building(vertex,game.turn)  #creates a building object
+        vertex.build()                      #build building on vertex
+        self.buildings.append(building)    #add buildings to list of buildings
+        self.createHist()                    #rebuild the dice histogram
+        self.calcPoints()                     #calc points
+        self.settlementNumber += 1
+        if second == True:
+            hexes = vertex.hexes
+            for hex1 in hexes:
+                if hex1.rollNumber:
+                    self.takeCards({hex1.resource:1})
+        # self.ports[isPort(vertex)] = True
+        return False
 
 
-    def checkCity(self,vertex):
+
+    def checkCity(self,vertex,game):
         """Checks if you can build a City at that location
 
         input: player object and vertex object
@@ -169,7 +167,7 @@ Largest Army? %s
                 return False
         if not vertex.built:
             return False
-        if building.player != self:
+        if building.player != game.players[game.turn]:
             return False
         if self.cityNumber > 3:
             return False
@@ -186,20 +184,19 @@ Largest Army? %s
         """
 
         cityResources = {"ore":3,"grain":2}     
-        if self.checkCity(vertex)==True:        
-            self.payCards(cityResources)        #pay resources    
-            for building in self.buildings:     
-                if building == building1:
-                    buiding1.isCity = True      #make settlement a city
-                    self.buildHist()              #remake historgram
-                    self.calcPoints()             #calculate points 
-                    self.settlementNumber -= 1
-                    self.cityNumber += 1
-                    return False
-        else:
-            return "You must construct additional pylons"
+     
+        self.payCards(cityResources)        #pay resources    
+        for building in self.buildings:     
+            if building == building1:
+                buiding1.isCity = True      #make settlement a city
+                self.buildHist()              #remake historgram
+                self.calcPoints()             #calculate points 
+                self.settlementNumber -= 1
+                self.cityNumber += 1
+                return False
+
     
-    def checkRoad(self, vertex1, vertex2, start):
+    def checkRoad(self, vertex1, vertex2, start=False):
         """Checks if you can build a road
 
         Input: Player object, two vertex objects, Boolean
@@ -212,9 +209,11 @@ Largest Army? %s
         if start == False:                
             for resource in roadResources:
                 if self.hand[resource] < roadResources[resource]:
-                    return False  
+                    return False
+            for vertex in self.roads:
+                if vertex1 == vertex(0) or vertex1 == vertex(1) or vertex2 == vertex(0) or vertex2 == vertex(1):  
+                    return True
         return True
-
 
 
     def buildRoad(self, vertex1, vertex2,start=False):
@@ -227,13 +226,12 @@ Largest Army? %s
         
         roadResources = {"sheep":1,"lumber":1,"brick":1,"grain":1}
 
-        if self.checkRoad(vertex1, vertex2, start):
-            if start == False:
-                self.payCards(roadResources) 
-            self.roads.append((vertex1,vertex2))
-            return False
-        else:
-            return 'Invalid road placement'
+
+        if start == False:
+            self.payCards(roadResources) 
+        self.roads.append((vertex1,vertex2))
+        return False
+        
     
     def checkPorts(self,d,n):
         """ Checks what type of port trades you can do
