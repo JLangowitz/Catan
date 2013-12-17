@@ -53,7 +53,7 @@ class Game(object):
             neighbors.append(self.getVertex(coordinates))
         for vertex in neighbors:
             if player.checkRoad(vertex, vertex1, self):
-                buildableRoads.append((vertex,vertex1))
+                buildableRoads.append(vertex)
         buildableSettlement = player.checkSettlement(vertex1,self)
         buildableCity = player.checkCity(vertex1,self)
         

@@ -170,7 +170,7 @@ Largest Army? %s
         if self.cityNumber > 3:
             return False
         for building in self.buildings:
-            if vertex == building.vertex
+            if vertex == building.vertex:
                 return True
 
     def buildCity(self,vertex,building):
