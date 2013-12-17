@@ -462,6 +462,8 @@ class Building(object):
         buildHist = {}
         vertRes = self.vertex.getResources()
         n = 1
+        if self.isCity:
+            n = 2
         for roll in vertRes:
             if roll not in buildHist:
                 buildHist[roll] = {}
