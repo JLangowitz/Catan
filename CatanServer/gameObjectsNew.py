@@ -288,6 +288,7 @@ class Vertex(object):
         return resources
 
 
+
 class Hex(object):
     """Represents each Hexes on the board
 
@@ -415,6 +416,7 @@ def extend(vertMap, vertHist, path):
 def makePorts(game):
     """Makes the ports for the setup function
         game is a game object"""
+
         portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
         #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
         portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
