@@ -80,7 +80,7 @@ class Game(object):
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
-        return player.buildRoad(vertex1,vertex2)
+        return player.buildRoad(vertex1,vertex2,self)
 
     def getNeighbors(self,coordinates):
         vertex = self.getVertex(coordinates)
@@ -287,7 +287,21 @@ class Vertex(object):
                 resources[h.rollNumber] = [h.resource]
         return resources
 
+<<<<<<< HEAD
         #return resources, roll                    
+=======
+        #return resources, roll
+
+    def makePorts(self):
+        portList = []
+        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
+        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
+        for vertex in vertices:
+            for port in portNum:
+                if vertex == port[0]:
+                    portList.append(random.choice(portResources))
+                    
+>>>>>>> abcfbaddf1187fbff60fa3a45bb3cf4ea8c6e2fa
 
 
 
