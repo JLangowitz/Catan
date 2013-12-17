@@ -187,8 +187,8 @@ class Game(object):
             player.takeCards(player.hist[d])
         return d, tooManyCardsPlayers
 
-    def loseHalfCards(self,tooManyCardsPlayers):
-        pass
+    def loseHalfCards(self,player,loseResD):
+        player.payCards(loseResD)
     
     def longestRoad(self):
         """Check to see which, if any, player has longest road

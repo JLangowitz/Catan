@@ -59,7 +59,14 @@ def rollDice():
     game=d['game']
     roll, tooManyCardsPlayer = game.rollDice()
     d['game']=game
-    return jsonpickle.encode({'game':game,"roll":roll, "tooManyCardsPlayer":tooManyCardsPlayer}, omake_refs=False)
+    return jsonpickle.encode({'game':game,"roll":roll, "tooManyCardsPlayer":tooManyCardsPlayer}, make_refs=False)
+
+@app.route('/looseHalfCards/<player>/<loseResD>', methods=['POST'])
+def looseHalfCards():
+    game=d['game']
+    game.loseHalfCards()
+    d['game']=game
+    return jsonpickle.encode(game, make_refs=False)
 
 
 @app.route('/buildables/<x>/<y>', methods=['POST'])
