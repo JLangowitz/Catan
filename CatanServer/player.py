@@ -250,6 +250,8 @@ Largest Army? %s
         self.roads.append((vertex1,vertex2))
         if self == (game.longestRoad()):
             self.bonuses['longestRoad']=True
+        else:
+            self.bonuses['longestRoad']=False
         self.calcPoints()
         return False      
 
@@ -330,6 +332,9 @@ Largest Army? %s
                 for player in players:
                     if self.soldiers > player.soldiers:
                         n += 1
+                    else:
+                        self.bonuses['largestArmy']=False
+                        self.calcPoints
                 if n == len(players):
                     self.bonuses['largestArmy']=True
                     self.calcPoints()
