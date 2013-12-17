@@ -96,7 +96,7 @@ $(document).ready(function(){
                 var coordStr = vert.coordinates['py/tuple'];
                 coordStr=parseCoords(coordStr);
                 var coords = calculateVertex(coordStr);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.isCity, building.playerNumber)
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, true, building.isCity, false, building.playerNumber)
             }
             for (road in players[player].roads){
                 road=players[player].roads[road];
@@ -110,7 +110,7 @@ $(document).ready(function(){
         for (v in vertices){
             if (!vertices[v].built) {
                 var coords = calculateVertex(v);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10, false, false, false)
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, false, false, false, false)
             };
         }
         playerTable();
@@ -120,11 +120,11 @@ $(document).ready(function(){
     function playerTable(){
         $.get('/playerTable',{},function(data){
             $('#gameTable').html(data);
-            // $('.btn-trade').each(function(index){
-            //     console.log($(this).attr('data-target'));
-            //     console.log($(this).attr('id'));
-            //     $(this).attr('data-target',$(this).attr('data-target')+$(this).attr('id').toString())
-            // });
+            $('.btn-trade').each(function(index){
+                $(this).click(function(data){
+                    
+                });
+            });
         });
     }
 
@@ -185,15 +185,26 @@ $(document).ready(function(){
             x-=HEX_RADIUS/4;
         }
         return {'x':x,'y':y}
-        drawVertex(x,y,HEX_RADIUS/10);
     }
 
-    function drawVertex(x,y,radius,building,city,player){
+    function drawVertex(x,y,radius,building,city,option,player){
         var graphics = new PIXI.Graphics();
         graphics.lineStyle(1, 0x000000);
         graphics.beginFill(0x000000);
         graphics.position.x=x;
         graphics.position.y=y;
+        
+        if (option){
+            graphics.alpha = .5;
+
+            graphics.mouseover = function (data) {
+                this.alpha=1;
+            }
+
+            graphics.mouseout = function (data) {
+                this.alpha=.5;
+            }
+        }
 
         var hit;
         if (building){
@@ -267,7 +278,7 @@ $(document).ready(function(){
                 console.log(data);
                 console.log(data.roads);
                 console.log(data.building);
-                
+                showOptions(data.settlement, data.city, data.roads,x,y);
             });
         }
     }
@@ -282,6 +293,12 @@ $(document).ready(function(){
             // console.log(x,y)
             currentOptions.push(drawRoad(coords.x,coords.y,x,y,true,currentPlayer));
         };
+        if (settlement){
+            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, false, true, building.playerNumber));
+        }
+        if (settlement){
+            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, false, true, building.playerNumber));
+        }
         // console.log('options', currentOptions);
         // console.log(stage);
     }
