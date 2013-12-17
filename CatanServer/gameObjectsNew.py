@@ -18,6 +18,7 @@ class Game(object):
         for playerName in playerList:
             self.players.append(Player(name=playerName,number=len(self.players)))
         self.board=Board(self, len(self.players))
+        makePorts(self)
         self.turn=0
 
 
@@ -211,13 +212,13 @@ class Game(object):
         return winner
 
     def fourToOne(self,d,resource):
-        return player.fourToOne(d,resource):
+        return player.fourToOne(d,resource)
 
     def threeToOne(self,d,resource):
-        return player.threeToOne(d,resource):
+        return player.threeToOne(d,resource)
 
     def twoToOne(self,d,resource):
-        return player.twoToOne(d,resource):
+        return player.twoToOne(d,resource)
 
 class Board(object):
     """Contains Board and all tile and vertex position
@@ -424,19 +425,19 @@ def extend(vertMap, vertHist, path):
 
 def makePorts(game):
     """Makes the ports for the setup function
-        game is a game object"""
+    game is a game object"""
 
-        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
-        #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
-        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
-        for vertex in game.board.vertices:
-            for portTuple in portNum:
-                if vertex.coordinates == portTuple[0]:
-                    randomPort=random.choice(portResources)
-                    portList.append(randomPort)
-                    portResources.remove(randomPort)
-                    vertex.addPort(randomPort)
-                    game.getVertex(portTuple[1]).addPort(randomPort)
+    portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
+    #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
+    portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
+    for vertex in game.board.vertices:
+        for portTuple in portNum:
+            if vertex == portTuple[0]:
+                randomPort=choice(portResources)
+                # portList.append(randomPort)
+                portResources.remove(randomPort)
+                game.getVertex(vertex).addPort(randomPort)
+                game.getVertex(portTuple[1]).addPort(randomPort)
 
 
 def setup(board, game, numPlayers):
@@ -491,7 +492,6 @@ def setup(board, game, numPlayers):
 
     board.hexes=hexes
     board.vertices=vertices
-    makePorts(game)
     for vertex in board.vertices.values():
         vertex.addNeighbors(game, board)
     placeDots(board, numPlayers, rollNumbers)

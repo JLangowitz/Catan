@@ -386,8 +386,9 @@ Largest Army? %s
             self.soldiers += 1
             self.devcards["Soldier"] -= 1
             if soldiers > 2:
-                for player in players
-                    if self.soldiers > player.soldiers
+                for player in players:
+                    if self.soldiers > player.soldiers:
+                        pass
             return False
         else:
             print "You don't have a Soldier card"
