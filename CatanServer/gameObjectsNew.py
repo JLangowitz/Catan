@@ -16,7 +16,7 @@ class Game(object):
     def __init__(self, playerList):
         self.players=[]
         for playerName in playerList:
-            self.players.append(Player(name=playerName))
+            self.players.append(Player(name=playerName,number=len(self.players)))
         self.board=Board(self, len(self.players))
         self.turn=0
 
@@ -49,7 +49,7 @@ class Game(object):
         buildableRoads = []
         buildableSettlement = False
         buildableCity = False
-        for coordinates in vertex1.getNeighbors:
+        for coordinates in vertex1.getNeighbors():
             neighbors.append(self.getVertex(coordinates))
         for vertex in neighbors:
             if player.checkRoad(vertex, vertex1):

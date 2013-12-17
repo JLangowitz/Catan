@@ -1,4 +1,4 @@
-table(class='table')
+table(class='table table-striped')
     tr
         th Player
         th Ore
@@ -13,6 +13,7 @@ table(class='table')
         th VP Cards
         th Army Size
         th Points
+        th Trade With:
     for player in players
         tr
             td #{player.name}
@@ -28,3 +29,25 @@ table(class='table')
             td #{player.devcards['Victory Point']}
             td #{player.soldiers}
             td #{player.points}
+            td
+                button(class='btn btn-trade',id=player.number, data-toggle='modal', data-target='#trade') Trade
+    tr
+        td
+        td
+        td
+        td
+        td
+        td
+        td
+            button(class='btn btn-play',id='playSoldier') Play
+        td
+            button(class='btn btn-play',id='playMonopoly') Play
+        td
+            button(class='btn btn-play',id='playYearOfPlenty') Play
+        td
+            button(class='btn btn-play',id='playRoadBuilding') Play
+        td
+            button(class='btn btn-play',id='playVictoryPoint') Play
+        td
+        td
+        td

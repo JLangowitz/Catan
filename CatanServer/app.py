@@ -72,10 +72,12 @@ def findBuildable(x,y):
 def findSetupBuildable(x,y):
     game=d['game']
     roads=game.getNeighbors((float(x),float(y)))
-    if not game.buildingAt((float(x),float(y))):
-        return jsonpickle.encode({'roads':roads,'building':True}, make_refs=False)
-    else:
-        return jsonpickle.encode({'roads':roads,'building':False,'error':'Cannot build here'}, make_refs=False)
+    for road in roads:
+        if game.buildingAt(road):
+            return jsonpickle.encode({'roads':False,'building':False,'error':'Cannot build here'}, make_refs=False)
+    if game.buildingAt((float(x),float(y))):
+        return jsonpickle.encode({'roads':False,'building':False,'error':'Cannot build here'}, make_refs=False)
+    return jsonpickle.encode({'roads':roads,'building':True}, make_refs=False)
 
 @app.route('/stealables/<x>/<y>', methods=['POST'])
 def findStealable(x,y):
