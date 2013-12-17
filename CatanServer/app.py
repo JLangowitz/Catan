@@ -355,8 +355,10 @@ def discard():
     print form
     for player in game.players:
         dresources=form['data'][player.name]
-        print dresources
-        game.loseHalfCards(player,dresources)
+        for res in dresources:
+            dresources[res] = int(dresources[res])
+        print 'resources', dresources
+        print 'lose cards', game.loseHalfCards(player,dresources)
     d['game']=game
     return jsonpickle.encode({'game':game}, make_refs=False)
 

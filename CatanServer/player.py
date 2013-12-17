@@ -71,6 +71,8 @@ class Player:
 
         Input: Player object and a Resource Card String
         """
+        print 'player', self.name
+        print 'dict', d
         for resource in d:
             if self.hand[resource] < d[resource]: 
                 return False           

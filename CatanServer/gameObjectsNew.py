@@ -282,7 +282,8 @@ class Game(object):
 
         input: Game object, player object, and dictionary of resources to lose
         """
-
+        print 'loseResD', loseResD
+        print 'name', player.name
         player.payCards(loseResD)
     
     def longestRoad(self):
