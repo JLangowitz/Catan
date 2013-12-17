@@ -97,6 +97,7 @@ def findStealable(x,y):
 def buildSettlement(x,y):
     game=d['game']
     error = game.buildSettlement((float(x),float(y)))
+    print error
     d['game']=game
     return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
@@ -104,7 +105,6 @@ def buildSettlement(x,y):
 def buildStartSettlement(x,y,second):
     game=d['game']
     error = game.buildStartSettlement((float(x),float(y)),second=='true')
-    print error
     d['game']=game
     return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
@@ -113,6 +113,7 @@ def buildStartSettlement(x,y,second):
 def buildCity(x,y):
     game=d['game']
     error = game.buildCity((float(x),float(y)))
+    print error
     d['game']=game
     return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 

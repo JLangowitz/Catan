@@ -345,23 +345,23 @@ $(document).ready(function(){
     }
 
     function buildCity(i,j){
-        $.post('/buildCity/'+i+'/'+j),{},function(data){
+        $.post('/buildCity/'+i+'/'+j,{},function(data){
             data=JSON.parse(data);
             console.log(data);
             var game=data.game;
             var error=data.error;
             drawGame(game);
-        };
+        });
     }
 
     function buildSettlement(i,j){
-        $.post('/buildSettlement/'+i+'/'+j),{},function(data){
+        $.post('/buildSettlement/'+i+'/'+j,{},function(data){
             data=JSON.parse(data);
             console.log(data);
             var game=data.game;
             var error=data.error;
             drawGame(game);
-        };
+        });
     }
 
     function buildRoad(i1,j1,i2,j2){
