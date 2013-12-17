@@ -223,19 +223,17 @@ class Game(object):
         buildings=self.allBuildings()
         return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
-    def moveRobber(hex1):
+    def moveRobber(self, coordinates):
         """Moves the robber to a tile chosen by player1
 
         input: Hexes object hex1
         """
+        hex1 = self.getHex(coordinates)
         robberHex = False
         robberHex = hex1
         robberHex.robber = True
-        settlements = []
-        for vertex in robberHex.vertices:
-            if vertex.building != None:
-                settlements.append[vertex.building]
-        return settlements
+        for player in players:
+            player.createHist
 
     def robberSteal(settlement):
         """Steals a random resource the player controlling the given settlement 
@@ -402,11 +400,13 @@ class Vertex(object):
         resources = {}
         
         for h in self.hexes:
-            if h.rollNumber in resources:
-                resources[h.rollNumber].append(h.resource)
-            else:
-                resources[h.rollNumber] = [h.resource]
-        return resources
+            if h.robber == False:
+                if h.rollNumber in resources:
+                    resources[h.rollNumber].append(h.resource)
+                    return resources
+                else:
+                    resources[h.rollNumber] = [h.resource]
+                    return resources
 
 
 
