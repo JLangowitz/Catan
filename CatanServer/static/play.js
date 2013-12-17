@@ -120,11 +120,11 @@ $(document).ready(function(){
     function playerTable(){
         $.get('/playerTable',{},function(data){
             $('#gameTable').html(data);
-            $('.btn-trade').each(function(index){
-                console.log($(this).attr('data-target'));
-                console.log($(this).attr('id'));
-                $(this).attr('data-target',$(this).attr('data-target')+$(this).attr('id').toString())
-            });
+            // $('.btn-trade').each(function(index){
+            //     console.log($(this).attr('data-target'));
+            //     console.log($(this).attr('id'));
+            //     $(this).attr('data-target',$(this).attr('data-target')+$(this).attr('id').toString())
+            // });
         });
     }
 
