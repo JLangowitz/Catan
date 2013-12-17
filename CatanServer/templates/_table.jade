@@ -14,7 +14,7 @@ table(class='table table-striped')
         th Army Size
         th Points
         th Trade With:
-    for player in players
+    for player in game.players
         tr
             td #{player.name}
             td #{player.hand.ore}

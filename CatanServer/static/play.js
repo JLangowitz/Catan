@@ -122,7 +122,9 @@ $(document).ready(function(){
             $('#gameTable').html(data);
             $('.btn-trade').each(function(index){
                 $(this).click(function(data){
-
+                    $.get('/tradeModal/'+currentPlayer+'/'+this.id,function(data){
+                        $('#tradeBody').html(data);
+                    });
                 });
             });
         });

@@ -30,10 +30,15 @@ d=shelve.open('game')
 def homepage():
     return render_template('index.jade', title='Catan')
 
-@app.route('/playerTable')
+@app.route('/playerTable/')
 def playerTable():
     game=d['game']
-    return render_template('_table.jade', players=game.players)
+    return render_template('_table.jade', game=game)
+
+@app.route('/tradeModal/<p1>/<p2>')
+def tradeModal(p1,p2):
+    game=d['game']
+    return render_template('_tradeForm.jade',game=game, trader1=game.players[int(p1)], trader2=game.players[int(p2)])
 
 @app.route('/start', methods=['POST'])
 def start():

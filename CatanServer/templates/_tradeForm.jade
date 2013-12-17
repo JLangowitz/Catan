@@ -1,0 +1,6 @@
+form(role='form')
+    div(class='form-group row') #{trader1.name}
+        for resource in trader1.hand
+            select(class='form-control, col-xs-2')
+                for (var i = 0; i<trader1.hand.resource; i++)
+                    option(class='tradeResource') #{i}
