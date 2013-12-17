@@ -1,3 +1,8 @@
+"""Settlers of Catan- game object file containing wrapper functions and
+game functionality
+Software Design
+Fall 2013 Josh Langowitz, Emily Guthrie, Ankeet Mutha, Brooks Willis
+Professor Allen Downey"""
 import math
 import random
 import jsonpickle
@@ -14,9 +19,10 @@ class Game(object):
     """
 
     def __init__(self, playerList):
-        """Initiates the Game class
+        """Initializes the Game class
 
-        Input: game object and a list of the player objects and a list of ports 
+        self=game object
+        playerList= list of the player objects and a list of ports 
         """
         self.ports = []
         self.players=[]
@@ -551,7 +557,6 @@ def makePorts(game):
         for portTuple in portNum:
             if vertex == portTuple[0]:
                 randomPort=choice(portResources)
-                # portList.append(randomPort)
                 portResources.remove(randomPort)
                 game.getVertex(vertex).addPort(randomPort)
                 game.getVertex(portTuple[1]).addPort(randomPort)
@@ -561,23 +566,25 @@ def makePorts(game):
 
 def setup(board, game, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
+    
+    """Evaluates the number of players and defines how many hexes and what resource types
+    should be used for them based on the game"""
     if numPlayers<3 or numPlayers>6:
         return 'Too many or too few players specified'
     if 2<numPlayers<5:
         resources={'lumber':4,'grain':4,'sheep':4,'brick':3,'ore':3,'desert':1}
         numHexesInCenter=5
         rollNumbers=[5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11]
-        ports=[]
     if 4<numPlayers<7:
         resources={'lumber':6,'grain':6,'sheep':6,'brick':5,'ore':5,'desert':2}
         numHexesInCenter=6
         rollNumbers=[2,5,4,6,3,9,8,11,11,10,6,3,8,4,8,10,11,12,10,5,4,9,5,9,12,3,2,6]
-        ports=[]
+    #local variables
     hexes={}
     vertices={}
-    # rollNumberCounter=0
-    boardRadius = (numHexesInCenter-numHexesInCenter%2)/2;
-    #number of tiles from center tile
+    boardRadius = (numHexesInCenter-numHexesInCenter%2)/2; #number of tiles from center tile
+    
+    #Iteration through possible coordinates of hexes and assigns resources and vertices
     for i in range(-2*boardRadius,2*(boardRadius+1),2):
         hexesInColumn=int(numHexesInCenter - math.fabs(i/2.0))
         #calculates the indices for the rows in the column changing from even to odd
@@ -592,23 +599,19 @@ def setup(board, game, numPlayers):
             if hexResource=='desert':
                 rollNumber=0
                 robberStatus=True
-
-            # else:
-            #     rollNumber=rollNumbers[rollNumberCounter]
-            #     rollNumberCounter=rollNumberCounter+1
             h=Hex((i/2.0,j/2.0),hexResource,rollNumber,robberStatus)
+            #vertex assignment for all the vertices on the hex
             for vi in range(i-1,i+2,2):
                 #these are all the x coordinates possible for vertices around a hex
                 for vj in range(j-1,j+2):
                     if (vi/2.0,vj/2.0) in vertices:
                         vertices[(vi/2.0,vj/2.0)].addHex(h)
-                        # h.addVertex((vi/2.0,vj/2.0))
                     else:
                         vertex=Vertex((vi/2.0,vj/2.0),[h])
                         vertices[vi/2.0,vj/2.0]=vertex
-                        # h.addVertex(vertex.coordinates)
             hexes[i/2.0,j/2.0]=h
 
+    #Assignment of local variables to their respective game objects
     board.hexes=hexes
     board.vertices=vertices
     for vertex in board.vertices.values():

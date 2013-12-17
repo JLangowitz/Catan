@@ -1,8 +1,16 @@
+"""Settlers of Catan- Player class and functions
+Emily Guthrie, Josh Langowitz, Ankeet Mutha, and Brooks Willis
+2013 Software Design
+Professor Allen Downey"""
+
+
 from gameObjectsNew import *
 import gameObjectsNew as gO
 from random import *
 
+
 devCards = {"Soldier":19,"Victory Point":5,"Year Of Plenty":2,"Monopoly":2,"Road Building":2}
+#hard corded histogram of development cards and their quantity in the deck
 
 class Player:
     """Represents a player in catan
@@ -11,7 +19,12 @@ class Player:
     """
 
     def __init__(self, name=None, number=0):
-        # self.name = raw_input("Player Name? ")  #Takes in Players name
+        """Sets initial attributes for a player. All state variables are set to their default
+        values
+        player object
+        name- a string with the player's name, default value of none
+        number integer with player number for reference when names are the same
+        """"
         self.name = name
         self.number = number
         self.points = 0   
@@ -20,24 +33,15 @@ class Player:
         self.buildings = []
         self.soldiers = 0
         self.devcards = {"Soldier":0,"Victory Point":0,"Year Of Plenty":0,"Monopoly":0,"Road Building":0}  #dictionary mapping Development card strings to number of dev Cards
-        self.roads = []
-        #self.hist is a dic mapping dice roll to cards a person goes        
+        self.roads = []        
         self.hist = {0:{},2:{},3:{},4:{},5:{},6:{},8:{},9:{},10:{},11:{},12:{}}
+        #self.hist is a dic mapping dice roll to cards a person goes
         self.cityNumber = 0
         self.settlementNumber = 0
         self.roadNumber = 0
         self.ports = {'ore':4,'lumber':4,'brick':4,'sheep':4,'grain':4}
-
     def __str__(self):
         pass
-        #if len(self.buildings) == 0:
-            #buildings = "No Buildings"
-        #return """%s has: \n %d points
-#Longest Road? %s 
-#Largest Army? %s 
-#%d soldiers
-#""" % (self.name,self.points,'{longestRoad} {largestArmy}'.format(**self.bonuses),buildings,self.soldiers)
-
     def createHist(self): 
         """ Creates a historgram that maps dice rolls to resources recieved. 
             Stored in self.hist
@@ -423,11 +427,8 @@ class Player:
             return "Resource Mismatch"
 
 
-
-#    def build(self,)
-
-
 def main():
+    """Scaffolding function to test the player class"""
     pass
 #    player1 = Player()
 #    hex1 = Hex((0,0),'ore',6)
