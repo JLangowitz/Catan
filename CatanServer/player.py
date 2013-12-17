@@ -148,6 +148,8 @@ Largest Army? %s
             for hex1 in hexes:
                 if hex1.rollNumber:
                     self.takeCards({hex1.resource:1})
+        self.ports[vertex.port] = True
+
         # self.ports[isPort(vertex)] = True
         return False
 
@@ -271,7 +273,7 @@ Largest Army? %s
         output: Boolean or string
         """
 
-        if self.checkPorts(d,4) :
+        if self.checkPorts(d,4):
             self.payCards(d)
             self.takeCards(resource)
             return False
@@ -372,7 +374,7 @@ Largest Army? %s
         else:
             print "You don't have a Monopoly card"
 
-    def playSoldier(self):
+    def playSoldier(self,players):
         """ Plays Soldier
 
         input: player object
@@ -383,6 +385,9 @@ Largest Army? %s
             moveRobber(player)
             self.soldiers += 1
             self.devcards["Soldier"] -= 1
+            if soldiers > 2:
+                for player in players
+                    if self.soldiers > player.soldiers
             return False
         else:
             print "You don't have a Soldier card"

@@ -126,7 +126,7 @@ class Game(object):
     
     def playSoldier(self):
         player = self.players[self.turn]
-        return player.playSoldier()
+        return player.playSoldier(players)
 
     def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
         player = self.players[self.turn]
@@ -210,6 +210,15 @@ class Game(object):
                 winner = player
         return winner
 
+    def fourToOne(self,d,resource):
+        return player.fourToOne(d,resource):
+
+    def threeToOne(self,d,resource):
+        return player.threeToOne(d,resource):
+
+    def twoToOne(self,d,resource):
+        return player.twoToOne(d,resource):
+
 class Board(object):
     """Contains Board and all tile and vertex position
 
@@ -243,7 +252,7 @@ class Vertex(object):
         self.hexes=h
         self.built=False
         self.neighbors=neighbors
-        self.ports = "none"
+        self.port = "none"
 
     def __repr__(self):
         return jsonpickle.encode(self)
@@ -273,6 +282,9 @@ class Vertex(object):
 
     def getNeighbors(self):
         return self.neighbors
+
+    def addPort(self,resource):
+        self.port=resource
     
     def getResources(self):
         resources = {}
@@ -283,18 +295,6 @@ class Vertex(object):
             else:
                 resources[h.rollNumber] = [h.resource]
         return resources
-
-        #return resources, roll
-
-    def makePorts(self):
-        portList = []
-        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
-        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
-        for vertex in vertices:
-            for port in portNum:
-                if vertex == port[0]:
-                    portList.append(random.choice(portResources))
-                    
 
 
 
@@ -422,6 +422,22 @@ def extend(vertMap, vertHist, path):
     #print 'newpaths', newPaths
     return newPaths
 
+def makePorts(game):
+    """Makes the ports for the setup function
+        game is a game object"""
+
+        portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
+        #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
+        portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
+        for vertex in game.board.vertices:
+            for portTuple in portNum:
+                if vertex.coordinates == portTuple[0]:
+                    randomPort=random.choice(portResources)
+                    portList.append(randomPort)
+                    portResources.remove(randomPort)
+                    vertex.addPort(randomPort)
+                    game.getVertex(portTuple[1]).addPort(randomPort)
+
 
 def setup(board, game, numPlayers):
     """Setsup all the board objects and establishes relationships and values"""
@@ -475,6 +491,7 @@ def setup(board, game, numPlayers):
 
     board.hexes=hexes
     board.vertices=vertices
+    makePorts(game)
     for vertex in board.vertices.values():
         vertex.addNeighbors(game, board)
     placeDots(board, numPlayers, rollNumbers)
