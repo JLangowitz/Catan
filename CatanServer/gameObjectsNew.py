@@ -57,7 +57,7 @@ class Game(object):
         buildableSettlement = player.checkSettlement(vertex1,self)
         buildableCity = player.checkCity(vertex1,self)
         
-        return buildableRoads, buildableBuilding
+        return (buildableRoads, buildableSettlement, buildableCity)
 
     def buildSettlement(self, coordinates):
         player = self.players[self.turn]
@@ -170,15 +170,25 @@ class Game(object):
         input: Game object
 
         return: int
-        """ 
-        player = self.players[self.turn]
+        """
+        player1 = self.players[self.turn]
         d = randint(1,6)+randint(1,6)
+        tooManyCardsPlayers=[]
         if d == 7:
-            return d
+            for player in self.players:
+                cards = []
+                for resource in player.hand.keys():
+                    for i in range(player.hand[resource]):
+                        cards.append(resource)
+                        if len(cards)>7:
+                            tooManyCardsPlayers.append((player,len(cards)))
+            return d, tooManyCardsPlayers
         for player in self.players:
             player.takeCards(player.hist[d])
-        return d
+        return d, tooManyCardsPlayers
 
+    def loseHalfCards(self,tooManyCardsPlayers):
+        pass
     
     def longestRoad(self):
         """Check to see which, if any, player has longest road

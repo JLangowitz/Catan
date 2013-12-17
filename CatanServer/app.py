@@ -57,9 +57,9 @@ def setTurn(turn):
 @app.route('/rollDice', methods=['POST'])
 def rollDice():
     game=d['game']
-    roll = game.rollDice()
+    roll, tooManyCardsPlayer = game.rollDice()
     d['game']=game
-    return jsonpickle.encode({'game':game,"roll":roll,'error':False}, make_refs=False)
+    return jsonpickle.encode({'game':game,"roll":roll, "tooManyCardsPlayer":tooManyCardsPlayer}, omake_refs=False)
 
 
 @app.route('/buildables/<x>/<y>', methods=['POST'])
