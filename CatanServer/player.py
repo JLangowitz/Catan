@@ -148,6 +148,8 @@ Largest Army? %s
             for hex1 in hexes:
                 if hex1.rollNumber:
                     self.takeCards({hex1.resource:1})
+        self.ports[vertex.port] = True
+
         # self.ports[isPort(vertex)] = True
         return False
 
