@@ -154,7 +154,7 @@ Largest Army? %s
             return "You must construct additional pylons"
 
 
-    def checkCity(self,vertex):
+    def checkCity(self,vertex,game):
         """Checks if you can build a City at that location
 
         input: player object and vertex object
@@ -168,7 +168,7 @@ Largest Army? %s
                 return False
         if not vertex.built:
             return False
-        if building.player != self:
+        if building.player != game.players[game.turn]:
             return False
         if self.cityNumber > 3:
             return False
@@ -198,7 +198,7 @@ Largest Army? %s
         else:
             return "You must construct additional pylons"
     
-    def checkRoad(self, vertex1, vertex2, start):
+    def checkRoad(self, vertex1, vertex2, start=False):
         """Checks if you can build a road
 
         Input: Player object, two vertex objects, Boolean
@@ -211,9 +211,11 @@ Largest Army? %s
         if start == False:                
             for resource in roadResources:
                 if self.hand[resource] < roadResources[resource]:
-                    return False  
+                    return False
+            for vertex in self.roads
+                if vertex1 == vertex(0) or vertex1 == vertex(1) or vertex2 == vertex(0) or vertex2 == vertex(1)  
+                    return True
         return True
-
 
 
     def buildRoad(self, vertex1, vertex2,start=False):
