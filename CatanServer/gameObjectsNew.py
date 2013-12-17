@@ -91,7 +91,7 @@ class Game(object):
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
-        return player.buildRoad(vertex1,vertex2,True)
+        return player.buildRoad(vertex1,vertex2,self,True)
 
     def getVertex(self, coordinates):
         return self.board.vertices[coordinates]
@@ -360,10 +360,11 @@ def roadLength(vertMap, player):
     """
     verticies = []
     roads = player.getRoads()
+    print 'roads',roads
     
     for road in roads:
-        verticies.append(road[0])
-        verticies.append(road[1]) 
+        verticies.append(road[0].coordinates)
+        verticies.append(road[1].coordinates) 
     vertHist = Counter(verticies)
 
     maxRoadLength = 0
@@ -408,7 +409,7 @@ def extend(vertMap, vertHist, path):
     return: list of lists of vertex coordinates along given path(s)
     """
     newPaths = []
-    #print path
+    print 'path:',path
 
     neighbors = vertMap[path[-1]]
     #print 'path end', path[-1]

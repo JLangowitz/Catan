@@ -237,8 +237,8 @@ Largest Army? %s
         if start == False:
             self.payCards(roadResources) 
         self.roads.append((vertex1,vertex2))
-        if self == game.longestRoad():
-            self.bonuses[longestRoad]=True
+        if self == (game.longestRoad()):
+            self.bonuses['longestRoad']=True
         return False
         
     
@@ -381,6 +381,7 @@ Largest Army? %s
                
         output: Boolean or string
         """
+        n = 0
         if self.canPlay("Soldier"):
             moveRobber(player)
             self.soldiers += 1
@@ -388,7 +389,10 @@ Largest Army? %s
             if soldiers > 2:
                 for player in players:
                     if self.soldiers > player.soldiers:
-                        pass
+                        n += 1
+                if n == len(players):
+                    self.bonuses['largestArmy']=True
+
             return False
         else:
             print "You don't have a Soldier card"
