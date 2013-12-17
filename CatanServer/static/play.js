@@ -123,29 +123,36 @@ $(document).ready(function(){
             $('.btn-trade').each(function(){
                 $(this).click(function(data){
                     var tradePlayer=this.id;
-                    $.get('/tradeModal/'+currentPlayer+'/'+tradePlayer,function(data){
-                        $('#tradeBody').html(data);
-                        $('#tradeButton').click(function(){
-                            var tradeData={};
-                            var selects = $('select');
-                            for (var i=0; i<selects.length;i++){
-                                var id=$(selects[i]).attr('id');
-                                id=id.split('-');
-                                if (!tradeData[id[0]]){
-                                    tradeData[id[0]]={};
-                                }
-                                tradeData[id[0]][id[1]]=$(selects[i]).val();
-                            }
-                            console.log(tradeData);
-                            $.post('/trade',JSON.stringify({'data':tradeData,'player':tradePlayer}),function(data){
-                                data=JSON.parse(data);
-                                console.log(data);
-                                var game = data.game;
-                                $('#trade').modal('hide');
-                                drawGame(game);
-                            })
+                    if (tradePlayer==currentPlayer){
+                        $.get('/portModal/'+currentPlayer,function(data){
+                            $('#tradeBody').html(data);
                         });
-                    });
+                    }
+                    else{
+                        $.get('/tradeModal/'+currentPlayer+'/'+tradePlayer,function(data){
+                            $('#tradeBody').html(data);
+                            $('#tradeButton').click(function(){
+                                var tradeData={};
+                                var selects = $('select');
+                                for (var i=0; i<selects.length;i++){
+                                    var id=$(selects[i]).attr('id');
+                                    id=id.split('-');
+                                    if (!tradeData[id[0]]){
+                                        tradeData[id[0]]={};
+                                    }
+                                    tradeData[id[0]][id[1]]=$(selects[i]).val();
+                                }
+                                console.log(tradeData);
+                                $.post('/trade',JSON.stringify({'data':tradeData,'player':tradePlayer}),function(data){
+                                    data=JSON.parse(data);
+                                    console.log(data);
+                                    var game = data.game;
+                                    $('#trade').modal('hide');
+                                    drawGame(game);
+                                });
+                            });
+                        });
+                    }
                 });
             });
         });

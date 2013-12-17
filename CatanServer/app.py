@@ -51,6 +51,21 @@ def tradeModal(p1,p2):
     print resourceLists2
     return render_template('_tradeForm.jade',game=game, trader1=trader1, trader2=trader2, resources1=resourceLists1, resources2=resourceLists2)
 
+@app.route('/portModal/<player>')
+def portModal(p1,p2):
+    game=d['game']
+    trader=game.players[int(player)]
+    resourceLists={}
+    resourcesBank={}
+    possibleResources=0
+    for resource in trader.hand:
+        resourceLists[resource]=range(0,trader.hand[resource]+1,trader.ports[resource])
+        possibleResources+=resourceLists[resource]-1
+    for resource in trader.hand:
+        resourcesBank[resource]=range(possibleResources+1)
+    print resourceLists
+    return render_template('_tradeForm.jade',game=game, trader=trader, resourcesTrader=resourceLists, resourcesBank=resourcesBank)
+
 @app.route('/start', methods=['POST'])
 def start():
     print d

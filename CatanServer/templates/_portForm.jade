@@ -1,0 +1,16 @@
+form(role='form')
+    div(class='form-group row trader', id='trader') 
+        label(for='trader') #{trader.name}:
+        for resource in trader.hand
+            label #{resource}
+                select(class='form-control',id=trader.name+'-'+resource)
+                    for i in resourcesTrader[resource]
+                        option(class='tradeResource') #{i}
+    hr
+    div(class='form-group row trader', id='bank') 
+        label(for='bank') Bank:
+        for resource in trader.hand
+            label #{resource}
+                select(class='form-control',id='bank-'+resource)
+                    for i in resourcesBank[resource]
+                        option(class='tradeResource') #{i}
