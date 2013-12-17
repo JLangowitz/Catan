@@ -1,0 +1,10 @@
+form(role='form')
+    for player in players
+        div(class='form-group row discard', id='discard-'+player.name)
+            label(for='discard-'+player.name) #{player.name}:
+            for resource in player.hand
+                label #{resource}
+                    select(class='form-control select-discard',id=player.name+'-'+resource)
+                        for i in resources[player.name][resource]
+                            option(class='tradeResource') #{i}
+        hr
