@@ -93,7 +93,7 @@ def findStealable(x,y):
     return jsonpickle.encode({'players':players}, make_refs=False)
 
 #TODO Josh can you fix the next 7 functions?
-@app.route('/buildsettlement/<x>/<y>', methods=['POST'])
+@app.route('/buildSettlement/<x>/<y>', methods=['POST'])
 def buildSettlement(x,y):
     game=d['game']
     error = game.buildSettlement((float(x),float(y)))
@@ -108,7 +108,7 @@ def buildStartSettlement(x,y,second):
     return jsonpickle.encode({'game':game, 'error':error}, make_refs=False)
 
 
-@app.route('/buildcity/<x>/<y>', methods=['POST'])
+@app.route('/buildCity/<x>/<y>', methods=['POST'])
 def buildCity(x,y):
     game=d['game']
     error = game.buildCity((float(x),float(y)))

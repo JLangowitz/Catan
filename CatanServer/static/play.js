@@ -12,7 +12,7 @@ $(document).ready(function(){
         'brick':0xa32900,
         'grain':0xffff00,
         'desert':0xd68533}
-    var PLAYER_MAP=[0x000066,0xFF0000,0xFFFFFF,0xFF9900,0x006600,0x663300];
+    var PLAYER_MAP=[0x000066,0xFF0000,0x999999,0xFF9900,0x006600,0x663300];
     var ROAD_WIDTH=.1;
     var BUILDING_DIM=HEX_RADIUS/10;
     //stage instance
@@ -199,12 +199,30 @@ $(document).ready(function(){
 
             graphics.mouseover = function (data) {
                 this.alpha=1;
-            }
+            };
 
             graphics.mouseout = function (data) {
                 this.alpha=.5;
+            };
+            if (city) {
+                graphics.click = function (data) {
+                    coords=pixelsToIndices(this.position.x,this.position.y);
+                    buildCity(coords.i,coords.j);
+                };
+            }
+            else{
+                graphics.click = function (data) {
+                    coords=pixelsToIndices(this.position.x,this.position.y);
+                    buildSettlement(coords.i,coords.j);
+                };
             }
         }
+        else{        
+            graphics.click = function(data){
+                var indices=pixelsToIndices(this.position.x,this.position.y);
+                vertexMenu(indices.i,indices.j,this.position.x,this.position.y);
+           };
+       }
 
         var hit;
         if (building){
@@ -249,10 +267,6 @@ $(document).ready(function(){
         graphics.interactive=true;
         graphics.hitArea=hit;
 
-        graphics.click = function(data){
-            var indices=pixelsToIndices(this.position.x,this.position.y);
-            vertexMenu(indices.i,indices.j,this.position.x,this.position.y);
-       };
 
        stage.addChild(graphics);
     }
@@ -297,8 +311,8 @@ $(document).ready(function(){
         if (settlement){
             currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, false, true, building.playerNumber));
         }
-        if (settlement){
-            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, false, true, building.playerNumber));
+        if (city){
+            currentOptions.push(drawVertex(x,y,HEX_RADIUS/10, true, true, true, building.playerNumber));
         }
         // console.log('options', currentOptions);
         // console.log(stage);
@@ -325,6 +339,24 @@ $(document).ready(function(){
             drawGame(game);
             endTurn();
         });
+    }
+
+    function buildCity(i,j){
+        $.post('/buildCity/'+i+'/'+j),{},function(data){
+            data=JSON.parse(data);
+            var game=data.game;
+            var error=data.error;
+            drawGame(game);
+        };
+    }
+
+    function buildSettlement(i,j){
+        $.post('/buildSettlement/'+i+'/'+j),{},function(data){
+            data=JSON.parse(data);
+            var game=data.game;
+            var error=data.error;
+            drawGame(game);
+        };
     }
 
     function buildRoad(i1,j1,i2,j2){
@@ -374,20 +406,20 @@ $(document).ready(function(){
             graphics.mouseout = function (data) {
                 this.alpha=.5;
             }
-        }
-        if (inSetup){
-            graphics.click = function(data){
-                coords1 = pixelsToIndices(this.x1,this.y1);
-                coords2 = pixelsToIndices(this.x2,this.y2);
-                buildRoadSetup(coords1.i,coords1.j,coords2.i,coords2.j);
-            };
-        }
-        else {
-            graphics.click = function(data){
-                coords1 = pixelsToIndices(this.x1,this.y1);
-                coords2 = pixelsToIndices(this.x2,this.y2);
-                buildRoad(coords1.i,coords1.j,coords2.i,coords2.j);
-            };
+            if (inSetup){
+                graphics.click = function(data){
+                    coords1 = pixelsToIndices(this.x1,this.y1);
+                    coords2 = pixelsToIndices(this.x2,this.y2);
+                    buildRoadSetup(coords1.i,coords1.j,coords2.i,coords2.j);
+                };
+            }
+            else {
+                graphics.click = function(data){
+                    coords1 = pixelsToIndices(this.x1,this.y1);
+                    coords2 = pixelsToIndices(this.x2,this.y2);
+                    buildRoad(coords1.i,coords1.j,coords2.i,coords2.j);
+                };
+            }
         }
 
         stage.addChild(graphics);
@@ -441,7 +473,7 @@ $(document).ready(function(){
             var circle= new PIXI.Circle(0,0,radius/3);
             graphics.interactive=true;
             graphics.hitArea=circle;
-            // set the mousedown and touchstart callback..
+
             graphics.click = function(data){
                 var indices=pixelsToIndices(this.position.x,this.position.y);
                 hexMenu(indices.i,indices.j,this.position.x,this.position.y);
