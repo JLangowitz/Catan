@@ -251,75 +251,7 @@ Largest Army? %s
         if self == (game.longestRoad()):
             self.bonuses['longestRoad']=True
         self.calcPoints()
-        return False
-        
-    
-    def checkPorts(self,d,n):
-        """ Checks what type of port trades you can do
-
-        input: player object, dictionary d {string resource: int number}, int n
-
-        output: Boolean or string
-        """
-
-        a = keys(d)
-        if len(a) != 1:
-            return False
-        if d[a[0]] != n:
-            return False
-        if n == 4:
-            return True
-        if n == 3:
-            return self.ports["three"]
-        if n == 2:
-            return self.ports[a[0]]
-
-
-    def fourToOne(self,d,resource):
-        """ Executes a four to one trade
-
-        input: player object, dictionary d {string resource: int number}, string resource
-
-        output: Boolean or string
-        """
-
-        if self.checkPorts(d,4):
-            self.payCards(d)
-            self.takeCards(resource)
-            return False
-        else:
-            return "You cannot complete this trade"
-
-
-    def threeToOne(self,d,resource):
-        """ Executes a three to one trade
-
-        input: player object, dictionary d {string resource: int number}, string resource
-               
-        output: Boolean or string
-        """
-
-        if self.checkPorts(d,3):
-            self.payCards(d)
-            self.takeCards(resource)
-            return False
-        else:
-            return "You cannont complete this trade"
-
-    def twoToOne(self,d,resource2):
-        """ Executes a two to one trade
-
-        input: player object, dictionary d {string resource: int number}, string resource
-               
-        output: Boolean or string
-        """
-
-        if self.checkPorts(d,2):
-            self.payCards(d)
-            self.takeCards(resource2)
-            return False
-        else:
-            return "You cannot complete this trade"
+        return False      
 
 
     def drawDev(self):
