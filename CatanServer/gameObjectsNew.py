@@ -185,7 +185,7 @@ class Game(object):
             return d, tooManyCardsPlayers
         for player in self.players:
             player.takeCards(player.hist[d])
-        return d
+        return d, tooManyCardsPlayers
 
     def loseHalfCards(self,tooManyCardsPlayers):
         pass
