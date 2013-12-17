@@ -398,13 +398,13 @@ Largest Army? %s
         self.takeCards(resources2)
         return False
 
-    def bankTrade(self,resources1,resources2):
+    def bankTrade(self,resources2,resources2):
         numRes = 0
         print 'resources', resources1, resources2
         for res, num in resources2.items():
             numRes += num
         for res, num in resources1.items():
-            numRes -= num/self.ports[res]
+            numRes -= (num/self.ports[res])
         if numRes == 0:
             self.payCards(resources1)
             self.takeCards(resources2)
