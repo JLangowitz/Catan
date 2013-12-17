@@ -275,11 +275,19 @@ class Game(object):
             player.takeCards(player.hist[d])
         return d, tooManyCardsPlayers
 
+<<<<<<< HEAD
     def loseHalfCards(self,player,loseResD):
+=======
+    def looseHalfCards(self,player,loseResD):
+>>>>>>> e45795a40e3a2da5f5049e17ce01449ad0d0d2a4
         """Lose half of cards due to robber
 
         input: Game object, player object, and dictionary of resources to lose
         """
+<<<<<<< HEAD
+=======
+        print "gameObjects"
+>>>>>>> e45795a40e3a2da5f5049e17ce01449ad0d0d2a4
         player.payCards(loseResD)
     
     def longestRoad(self):

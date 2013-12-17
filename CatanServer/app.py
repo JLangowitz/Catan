@@ -66,6 +66,16 @@ def portModal(player):
     print resourceLists
     return render_template('_portForm.jade',game=game, trader=trader, resourcesTrader=resourceLists, resourcesBank=resourcesBank)
 
+@app.route('/discardModal')
+def discardModal():
+    game=d['game']
+    resourceLists={}
+    for player in game.players:
+        resourceLists[player.name]={}
+        for resource, number in player.hand.items():
+            resourceLists[player.name][resource]=range(number+1)
+    return render_template('_discardForm.jade',game=game, players=game.players, resources=resourceLists)
+
 @app.route('/start', methods=['POST'])
 def start():
     print d
@@ -327,6 +337,28 @@ def trade():
     error = game.trade(dresource1,game.players[player2],dresource2)
     d['game']=game
     return jsonpickle.encode({'error':error,'game':game}, make_refs=False)
+
+@app.route('/discard', methods=['POST'])
+def discard():
+    """trade resources
+
+    input: 4 dictionaries {string resources: int numbers} and 1 player object
+    
+    returns: dict of {game object, error message}
+    """
+    game=d['game']
+    print 'form',request.form
+    # print 'json',request.json
+    form=request.form
+    for thing in form:
+        form=jsonpickle.decode(thing)
+    print form
+    for player in game.players:
+        dresources=form['data'][player.name]
+        print dresources
+        game.loseHalfCards(player,dresources)
+    d['game']=game
+    return jsonpickle.encode({'game':game}, make_refs=False)
 
 @app.route('/bankTrade', methods=['POST'])
 def bankTrade():
