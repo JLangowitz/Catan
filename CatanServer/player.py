@@ -85,6 +85,7 @@ Largest Army? %s
         Returns: int points
         """
         self.points=0
+
         for i in range(0,len(self.buildings)):
             if (self.buildings[i]).isCity:
                 self.points += 2
@@ -197,7 +198,7 @@ Largest Army? %s
         cityResources = {"ore":3,"grain":2}     
      
         self.payCards(cityResources)        #pay resources    
-        building.isCity = True      #make settlement a city
+        building1.isCity = True      #make settlement a city
         self.createHist()              #remake historgram
         self.calcPoints()             #calculate points 
         self.settlementNumber -= 1
@@ -249,6 +250,7 @@ Largest Army? %s
         self.roads.append((vertex1,vertex2))
         if self == (game.longestRoad()):
             self.bonuses['longestRoad']=True
+        self.calcPoints()
         return False
         
     
