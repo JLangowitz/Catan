@@ -122,7 +122,7 @@ $(document).ready(function(){
             $('#gameTable').html(data);
             $('.btn-trade').each(function(index){
                 $(this).click(function(data){
-                    
+
                 });
             });
         });
@@ -286,7 +286,7 @@ $(document).ready(function(){
     function showOptions(settlement, city, roads, x, y){
         for (road in roads){
             coordStr= roads[road]['py/tuple'];
-            // console.log('coordStr', coordStr);
+            console.log('coordStr', coordStr);
             coordStr=parseCoords(coordStr);
             var coords = calculateVertex(coordStr);
             // console.log('coords',coords);
@@ -323,6 +323,16 @@ $(document).ready(function(){
             var error=data.error;
             drawGame(game);
             endTurn();
+        });
+    }
+
+    function buildRoad(i1,j1,i2,j2){
+        $.post('/road/'+i1+'/'+j1+'/'+i2+'/'+j2,{},function(data){
+            data=JSON.parse(data);
+            // console.log(data);
+            var game=data.game;
+            var error=data.error;
+            drawGame(game);
         });
     }
 
@@ -364,12 +374,20 @@ $(document).ready(function(){
                 this.alpha=.5;
             }
         }
-
-        graphics.click = function(data){
-            coords1 = pixelsToIndices(this.x1,this.y1);
-            coords2 = pixelsToIndices(this.x2,this.y2);
-            buildRoadSetup(coords1.i,coords1.j,coords2.i,coords2.j);
-        };
+        if (inSetup){
+            graphics.click = function(data){
+                coords1 = pixelsToIndices(this.x1,this.y1);
+                coords2 = pixelsToIndices(this.x2,this.y2);
+                buildRoadSetup(coords1.i,coords1.j,coords2.i,coords2.j);
+            };
+        }
+        else {
+            graphics.click = function(data){
+                coords1 = pixelsToIndices(this.x1,this.y1);
+                coords2 = pixelsToIndices(this.x2,this.y2);
+                buildRoad(coords1.i,coords1.j,coords2.i,coords2.j);
+            };
+        }
 
         stage.addChild(graphics);
         return graphics;

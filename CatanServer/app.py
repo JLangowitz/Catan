@@ -120,7 +120,7 @@ def buildRoad(x1,y1,x2,y2):
     game=d['game']
     error = game.buildRoad((float(x1),float(y1)),(float(x2),float(y2)))
     d['game']=game
-    return jsonpickle.encode({'error':error}, make_refs=False)
+    return jsonpickle.encode({'game':game,'error':error}, make_refs=False)
 
 @app.route('/startRoad/<x1>/<y1>/<x2>/<y2>', methods=['POST'])
 def buildStartRoad(x1,y1,x2,y2):
