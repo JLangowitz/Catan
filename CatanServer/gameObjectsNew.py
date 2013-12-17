@@ -221,7 +221,7 @@ class Game(object):
         Input: game object and hex tuple coordinates
         """
         buildings=self.allBuildings()
-        return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
+        return [self.players[building.playerNumber] for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
     def moveRobber(self, coordinates):
         """Moves the robber to a tile chosen by player1
@@ -540,7 +540,7 @@ def makePorts(game):
     ports = []
     portNum = [((-.5,-2.5),(.5,-2.5)), ((1.5,-2),(1.5,-1.5)), ((2.5,-.5),(2.5,0)), ((2.5,1),(2.5,1.5)), ((1.5,2),(.5,2)), ((-.5,2),(-1.5,2)), ((-2.5,1.5),(-2.5,1)), ((-2.5,0),(-2.5,-.5)), ((-1.5,-1.5),(-1.5,-2))]
     #portNum is a hardcoded list of tuples containing the pairs of coordinates (also tuples) that get the same port
-    portResources = ["three","three","three","three","three","sheep","lumber","brick","ore","grain"]
+    portResources = ["three","three","three","three","sheep","lumber","brick","ore","grain"]
     for vertex in game.board.vertices:
         for portTuple in portNum:
             if vertex == portTuple[0]:

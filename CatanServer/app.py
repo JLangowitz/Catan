@@ -149,7 +149,7 @@ def findStealable(x,y):
     """
     game=d['game']
     players = game.findStealableAt((float(x),float(y)))
-    return jsonpickle.encode({'players':players}, make_refs=False)
+    return render_template('_steal.jade', players=players)
 
 #TODO Josh can you fix the next 7 functions?
 @app.route('/buildSettlement/<x>/<y>', methods=['POST'])

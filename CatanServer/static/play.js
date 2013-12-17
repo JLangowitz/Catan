@@ -6,12 +6,13 @@ $(document).ready(function(){
     var HEIGHT=HEX_RADIUS*12;
     var HEX_VERT=HEX_RADIUS*Math.sqrt(3)/2;
     var NUM_HEXES_IN_CENTER=5;
-    var RESOURCE_MAP={'lumber':0x003300,
+    var RESOURCE_MAP={'lumber':0x006600,
         'sheep':0x00ff00,
         'ore':0x2e2e1f,
         'brick':0xa32900,
-        'grain':0xffff00,
-        'desert':0xd68533}
+        'grain':0xe6e600,
+        'desert':0xd68533,
+        'three':0x0000ff}
     var PLAYER_MAP=[0x000066,0xFF0000,0x999999,0xFF9900,0x006600,0x663300];
     var ROAD_WIDTH=.1;
     var BUILDING_DIM=HEX_RADIUS/10;
@@ -30,6 +31,7 @@ $(document).ready(function(){
     var inSetup = true;
     var setupForward = true;
     window.players = [];
+    var steal = false;
 
     //graphics object
     //var graphics = new PIXI.Graphics();
@@ -84,6 +86,7 @@ $(document).ready(function(){
         clearGame();
         var hexes=game.board.hexes;
         var vertices=game.board.vertices;
+        var ports=game.ports;
         var players=game.players;
         for (h in hexes){
             var coords = splitCoords(h);
@@ -110,8 +113,16 @@ $(document).ready(function(){
         for (v in vertices){
             if (!vertices[v].built) {
                 var coords = calculateVertex(v);
-                drawVertex(coords.x,coords.y,HEX_RADIUS/10, false, false, false, false)
+                drawVertex(coords.x,coords.y,HEX_RADIUS/10, false, false, false, false);
             };
+        }
+        for (port in ports){
+            port=ports[port]['py/tuple'];
+            console.log(port);
+            var coords1 = calculateVertex(parseCoords(port[0]['py/tuple']));
+            var coords2 = calculateVertex(parseCoords(port[1]['py/tuple']));
+            var portType = port[2];
+            drawPort(coords1.x,coords1.y,coords2.x,coords2.y,portType);
         }
         playerTable();
         console.log(game);
@@ -207,6 +218,9 @@ $(document).ready(function(){
             console.log(game);
             drawGame(game);
             $('#roll').text(roll);
+            if (roll==7){
+                steal=true;
+            }
         });
     }
 
@@ -245,13 +259,31 @@ $(document).ready(function(){
         return {'x':x,'y':y}
     }
 
+    function drawPort(x1,y1,x2,y2,portType){
+        var graphics = new PIXI.Graphics();
+        graphics.lineStyle(1, RESOURCE_MAP[portType]);
+        graphics.beginFill(RESOURCE_MAP[portType]);
+        graphics.position.x=x1;
+        graphics.position.y=y1;
+        var x=x2-x1;
+        var y=y2-y1;
+        graphics.moveTo(0+y/10,0-x/10);
+        graphics.lineTo(x+y/10,y-x/10);
+        graphics.lineTo(x/2+y,y/2-x);
+        graphics.lineTo(0+y/10,0-x/10);
+        graphics.lineTo(x+y/10,y-x/10);
+        console.log(graphics);
+
+        stage.addChild(graphics);
+    }
+
     function drawVertex(x,y,radius,building,city,option,player){
         var graphics = new PIXI.Graphics();
         graphics.lineStyle(1, 0x000000);
         graphics.beginFill(0x000000);
         graphics.position.x=x;
         graphics.position.y=y;
-        
+
         if (option){
             graphics.alpha = .5;
 
@@ -489,14 +521,15 @@ $(document).ready(function(){
     }
 
     function hexMenu(x,y){
-        $.post('/stealables/'+x+'/'+y,{},function(data){
-            data=JSON.parse(data);
-            // console.log(data);
-            // console.log(data.players);
-        });
+        if (steal) {
+            $.post('/stealables/'+x+'/'+y,{},function(data){
+                $('#steal').html(data);
+                $('#stealModal').modal();
+            });
+        };
     }
 
-    function drawHexagon(x,y,radius,color,number){
+    function drawHexagon(x,y,radius,color,number,robber){
         var graphics = new PIXI.Graphics();
         // draws regular hexagon centered on x,y
         // x,y: coordinates of center
@@ -529,6 +562,9 @@ $(document).ready(function(){
             graphics.endFill();
             
             var dot= new PIXI.Text(number,{font: "36px Arial", fill: "black", align: "center"});
+            if (robber){
+                dot.alpha=.3;
+            }
             dot.position.x=x-dot.width/2;
             dot.position.y=y-dot.height/2;
 
