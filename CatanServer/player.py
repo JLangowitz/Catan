@@ -148,17 +148,17 @@ Largest Army? %s
             for hex1 in hexes:
                 if hex1.rollNumber:
                     self.takeCards({hex1.resource:1})
-        if vertex.ports == 'none':
+        if vertex.port == 'none':
             return False
-        if vertex.ports == 'three':
+        if vertex.port == 'three':
             for port in self.ports:
                 if  self.ports[port] == 2:
                     pass
                 else:
                     self.ports[port] = 3
         else:
-            self.ports[vertex.ports] = 2
-
+            self.ports[vertex.port] = 2
+        print self.ports
 
         # self.ports[isPort(vertex)] = True
         return False
