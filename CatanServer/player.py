@@ -97,7 +97,7 @@ Largest Army? %s
             self.points +=2
 
 
-    def checkSettlement(self,vertex,game,start):
+    def checkSettlement(self,vertex,game,start=False):
         """Checks if you can build a settlement at that location
 
         input: player object and vertex object
@@ -163,7 +163,7 @@ Largest Army? %s
         """
         cityResources = {"ore":3,"grain":2}
         for resource in cityResources:
-            if player.hand[resource] < cityResources[resource]:
+            if self.hand[resource] < cityResources[resource]:
                 return False
         if not vertex.built:
             return False
@@ -212,7 +212,7 @@ Largest Army? %s
                 if self.hand[resource] < roadResources[resource]:
                     return False
             for vertex in self.roads:
-                if vertex1 == vertex(0) or vertex1 == vertex(1) or vertex2 == vertex(0) or vertex2 == vertex(1):  
+                if vertex1 == vertex[0] or vertex1 == vertex[1] or vertex2 == vertex[0] or vertex2 == vertex[1]:  
                     return True
         return True
 

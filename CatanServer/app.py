@@ -65,8 +65,8 @@ def rollDice():
 @app.route('/buildables/<x>/<y>', methods=['POST'])
 def findBuildable(x,y):
     game=d['game']
-    roads, building = game.findBuildableAt((float(x),float(y)))
-    return jsonpickle.encode({'roads':roads,'building':building})
+    roads, settlement, city = game.findBuildableAt((float(x),float(y)))
+    return jsonpickle.encode({'roads':roads,'settlement':settlement,'city':city})
 
 @app.route('/setupBuildables/<x>/<y>', methods=['POST'])
 def findSetupBuildable(x,y):
