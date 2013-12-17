@@ -42,14 +42,14 @@ class Game(object):
         buildings=self.allBuildings()
         return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
-    def findBuildableAt(self, coordinates):
+    def findBuildableAt(self, coordinates1):
         vertex1 = self.getVertex(coordinates1)
         player = self.players[self.turn]
         neighbors = []
         buildableRoads = []
         buildableSettlement = False
         buildableCity = False
-        for coordinates in vertex1.getNeighbors:
+        for coordinates in vertex1.getNeighbors():
             neighbors.append(self.getVertex(coordinates))
         for vertex in neighbors:
             if player.checkRoad(vertex, vertex1):
