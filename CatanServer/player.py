@@ -398,7 +398,7 @@ Largest Army? %s
         self.takeCards(resources2)
         return False
 
-    def bankTrade(self,resources2,resources2):
+    def bankTrade(self,resources1,resources2):
         numRes = 0
         print 'resources', resources1, resources2
         for res, num in resources2.items():
