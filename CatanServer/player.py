@@ -397,7 +397,7 @@ Largest Army? %s
         else:
             print "You don't have a Soldier card"
 
-    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
+    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4, game):
         """ Plays Road Building
 
         input: player object, 4 vertex objects
@@ -405,8 +405,8 @@ Largest Army? %s
         output: Boolean or string
         """
         if self.canPlay("Boad Building"):
-            self.buildRoad(vertex1,vertex2,True)
-            self.buildRoad(vertex3,vertex4,True)
+            self.buildRoad(vertex1,vertex2, game, True)
+            self.buildRoad(vertex3,vertex4, game, True)
             self.devcards["Road Building"] -= 1
             return False
         else:

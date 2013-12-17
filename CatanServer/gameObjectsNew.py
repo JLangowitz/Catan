@@ -14,6 +14,11 @@ class Game(object):
     """
 
     def __init__(self, playerList):
+        """Initiates the Game class
+
+        Input: game object and a list of the player objects
+        """
+
         self.players=[]
         for playerName in playerList:
             self.players.append(Player(name=playerName,number=len(self.players)))
@@ -26,6 +31,10 @@ class Game(object):
         return ''
 
     def allBuildings(self):
+        """Returns the list of all building objects
+
+        Input: game object
+        """
         playerBuildings = [player.buildings for player in self.players]
         buildings = []
         for t in playerBuildings:
@@ -34,16 +43,31 @@ class Game(object):
         return buildings
 
     def buildingAt(self,coordinates):
+        """Returns the building object at a coordinate 
+
+        Input: game object and coordinate
+        """
         for building in self.allBuildings():
             if building.vertex.coordinates==coordinates:
                 return building
         return False
 
     def findStealableAt(self, coordinates):
+        """Returns a list players you can steal from
+
+        Input: game object and hex tuple coordinates
+        """
         buildings=self.allBuildings()
         return [building.playerNumber for building in buildings if self.getHex(coordinates) in building.vertex.hexes]
 
     def findBuildableAt(self, coordinates1):
+        """Finds all the things you can build a coordinate
+
+        Input: game Object and tuple coordinates1
+
+        Output: tuple containing a list of vertex objects a road can be built to
+        and two booleans which say if a settlement or city can be built at the coordinate 
+        """
         vertex1 = self.getVertex(coordinates1)
         player = self.players[self.turn]
         neighbors = []
@@ -61,16 +85,28 @@ class Game(object):
         return (buildableRoads, buildableSettlement, buildableCity)
 
     def buildSettlement(self, coordinates):
+        """Builds a settlement
+
+        Input: game object and tuple coordinates
+        """
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         return player.buildSettlement(vertex,self)
 
     def buildStartSettlement(self, coordinates,second=False):
+        """Builds a starting settlement. It can optionally be a second settlement.
+
+        Input: game object and tuple coordinates and an optional boolean second 
+        """
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         return player.buildSettlement(vertex,self,True,second)
 
     def buildCity(self, coordinates):
+        """Builds a city
+
+        Input: game object and tuple coordinates
+        """
         player = self.players[self.turn]
         vertex = self.getVertex(coordinates)
         building = self.buildingAt(coordinates)
@@ -78,28 +114,53 @@ class Game(object):
 
 
     def buildRoad(self,coordinates1,coordinates2):
+        """Builds a road
+
+        Input: game object and two tuple coordinates
+        """
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
         return player.buildRoad(vertex1,vertex2,self)
 
-    def getNeighbors(self,coordinates):
-        vertex = self.getVertex(coordinates)
-        return vertex.getNeighbors()
-
     def buildStartRoad(self,coordinates1,coordinates2):
+        """Builds a starting road
+
+        Input: game object and two tuple coordinates
+        """
         player = self.players[self.turn]
         vertex1 = self.getVertex(coordinates1)
         vertex2 = self.getVertex(coordinates2)
         return player.buildRoad(vertex1,vertex2,self,True)
 
+    def getNeighbors(self,coordinates):
+        """Returns the coordinates of all the neighboring vertices
+
+        Input: game object and tuple coordinates
+        """
+        vertex = self.getVertex(coordinates)
+        return vertex.getNeighbors()
+
+
     def getVertex(self, coordinates):
+        """Returns the vertex object of the input coordinates
+
+        Input: game object and tuple coordinates
+        """
         return self.board.vertices[coordinates]
 
     def getHex(self, coordinates):
+        """Returns the hex object of the hex coordinates
+
+        Input: game object and hex tuple coordinates
+        """
         return self.board.hexes[coordinates]
 
     def endTurn(self):
+        """Ends the turn and calculates points. Tells you if you win.
+
+        Input: game object
+        """
         player = self.players[self.turn]
         if player.calcPoints() == 10:
             return "You Win Game Over"
@@ -108,35 +169,62 @@ class Game(object):
         # Any other end of turn cleanup logic should go here, like check points and longest road
 
     def trade(self,resource1,player2,resource2):
+        """Trades resource1 for resource2 with player2
+
+        Input: game object, two dictionaries of resources {"string":int number}, and a player object
+        """
         player = self.players[self.turn]        
         return player.trade(resources1, player2, resources2)
 
     def drawDev(self):
+        """Draws a random development card
+
+        Input: game object
+        """
         player = self.players[self.turn]
         dev = player.drawDev()
         return (player,dev)
 
 
-    def playYearOfPlenty(self,resource1,resource2): 
+    def playYearOfPlenty(self,resource1,resource2):
+        """Plays a year of plenty. Gives the player two chosen resources 
+
+        Input: game object and two resource strings
+        """ 
         player = self.players[self.turn]
         return player.playYearOfPlenty(resource1,resource2)
 
     def playMonopoly(self,resource):
+        """Plays a Monopoly. Gives player all the resources of a single type
+
+        Input: game object and resource string
+        """
         player = self.players[self.turn]
         return player.playMonopoly(self.players,resource)
     
     def playSoldier(self):
+        """Plays a Soldier. Recalculates Largest Army. Moves robber.
+
+        Input: game object
+        """
         player = self.players[self.turn]
         return player.playSoldier(players)
 
-    def playRoadBuilding(self,vertex1,vertex2,vertex3,vertex4):
-        player = self.players[self.turn]
-        return player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4)
+    def playRoadBuilding(self,coordinates1,coordinates2,coordinates3,coordinates4):
+        """Plays road building. Builds two free roads.
+
+        Input: game object and 4 tuple coordinates 
+        """
+        vertex1 = self.getVertex(coordinates1)
+        vertex2 = self.getVertex(coordinates2)
+        vertex3 = self.getVertex(coordinates3)
+        vertex4 = self.getVertex(coordinates4)
+        return player.playRoadBuilding(vertex1,vertex2,vertex3,vertex4,self)
 
     def moveRobber(hex1):
         """Moves the robber to a tile chosen by player1
 
-        hex1: Hex object
+        input: Hexes object hex1
         """
         robberHex = False
         robberHex = hex1
@@ -170,7 +258,7 @@ class Game(object):
 
         input: Game object
 
-        return: int
+        return: int and [(player objects,int card number)]
         """
         player1 = self.players[self.turn]
         d = randint(1,6)+randint(1,6)
@@ -189,6 +277,10 @@ class Game(object):
         return d, tooManyCardsPlayers
 
     def loseHalfCards(self,player,loseResD):
+        """Lose half of cards due to robber
+
+        input: Game object, player object, and dictionary of resources to lose
+        """
         player.payCards(loseResD)
     
     def longestRoad(self):
@@ -212,12 +304,28 @@ class Game(object):
         return winner
 
     def fourToOne(self,d,resource):
+        """Do a four to one trade. 
+
+        input: game object, dictionary of resources {"string":int number}, 
+        string resource recieved in return
+        """
         return player.fourToOne(d,resource)
 
+
     def threeToOne(self,d,resource):
+        """Do a three to one trade. 
+
+        input: game object, dictionary of resources {"string":int number},
+        string resource recieved in return
+        """        
         return player.threeToOne(d,resource)
 
     def twoToOne(self,d,resource):
+        """Do a four to one trade. 
+
+        input: game object, dictionary of resources {"string":int number},
+        string resource recieved in return
+        """ 
         return player.twoToOne(d,resource)
 
 class Board(object):
@@ -227,16 +335,23 @@ class Board(object):
     attributes: subclass hexes, subclass verticies, vertex map 
     """
     def __init__(self, game, numPlayers):
+        """Runs Setup of Entire Board
+
+        Input: Board object, game object and the number of players
+        """
         setup(self, game, numPlayers)
 
     def printHexes(self):
+        """prints a hexes coordinates, resources, roll number, and robber status"""
         for coords in self.hexes:
             h=self.hexes[coords]
             print h.coordinates, h.resource, h.rollNumber,h.robber
     def printVertices(self):
+        """prints vertices coordinates and resources on board"""
         for key in self.vertices:
             print self.vertices[key].coordinates, self.vertices[key].getResources(self)
     def vertexMap(self):
+        """returns a Vertex map used for longest road calculations."""
         return self.vertMap
     
 
@@ -245,7 +360,7 @@ class Vertex(object):
 
 
 
-    attributes: structures, str port status, list Buildable(who can build here) 
+    attributes: tuple coordinates, str port status, Boolean Built, list of neighboring vertices 
     adj hexes(list of hex objects)
     """
     def __init__(self,coordinates=(0,0),h=None,neighbors=None):
@@ -256,15 +371,19 @@ class Vertex(object):
         self.port = "none"
 
     def __repr__(self):
+        """Changes representation of vertex to make json conversion easier"""
         return jsonpickle.encode(self)
 
     def build(self):
+        """changes boolean status of whether there is a building on the vertex"""
         self.built = True
 
     def addHex(self,h):
+        """Adds a hex object to self.hexes"""
         self.hexes.append(h)
     
     def addNeighbors(self,game,board):
+        """Adds neighboring tuple coordinates to self.neighbors"""
         vertices=board.vertices
         x,y=self.coordinates
         # silly math to figure out whether 3rd vertex is left or right
@@ -282,12 +401,15 @@ class Vertex(object):
                     self.neighbors=[point]
 
     def getNeighbors(self):
+        """gets Neighbor tuple coordinates"""
         return self.neighbors
 
     def addPort(self,resource):
+        """Changes port status to that of string resource"""
         self.port=resource
     
     def getResources(self):
+        """returns a dictionary mapping int roll number to string resources for adjacent hexes"""
         resources = {}
         
         for h in self.hexes:
@@ -303,7 +425,7 @@ class Hex(object):
     """Represents each Hexes on the board
 
 
-    attributes: str resource type, int roll number, boolean robber status
+    attributes: tuple coordinates, str resource type, int roll number, boolean robber status
     """
 
     def __init__(self,coordinates=(0,0),resource='',rollNumber=0,robber=False):
@@ -321,7 +443,7 @@ class Building(object):
     """Represents every structure on the board
 
 
-    attributes: player class, boolean, isCity, vertex, resources provided
+    attributes: player number, boolean isCity, vertex, 
     """
 
     def __init__(self, vertex, playerNumber):
@@ -333,12 +455,11 @@ class Building(object):
         return jsonpickle.encode(self)
 
     def provideResources(self): 
+        """builds a histogram for the building object mapping each 
+        roll number to the string resources it recieves"""
+
         buildHist = {}
         vertRes = self.vertex.getResources()
-
-        #if self.isCity:
-        #    n = 2
-        #else: 
         n = 1
         for roll in vertRes:
             if roll not in buildHist:
@@ -503,6 +624,11 @@ def setup(board, game, numPlayers):
     return board
 
 def placeDots(board, numPlayers, dots):
+    """Places Dots on the Board
+
+    Inputs: game object, int numPlayers, list of dots
+
+    """
     visited=set()
     if 2<numPlayers<5:
         x,y=0.0,2.0
@@ -542,6 +668,11 @@ def placeDots(board, numPlayers, dots):
 
 
 def nextInSpiral(x,y,direc):
+    """Figures out next hexes in nextInSpiral
+
+    input: int x, int y, string direc
+    """
+
     next=((x+1,y-.5),(x,y-1),(x-1,y-.5),(x-1,y+.5),(x,y+1),(x+1,y+.5))
     return next[direc]
 
