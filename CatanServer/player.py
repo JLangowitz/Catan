@@ -255,6 +255,7 @@ class Player:
         if start == False:
             self.payCards(roadResources) 
         self.roads.append((vertex1,vertex2))
+        self.roadNumber += 1
         if self == (game.longestRoad()):
             print "yes"
             self.bonuses['longestRoad']=True
