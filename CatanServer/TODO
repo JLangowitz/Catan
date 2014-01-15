@@ -1,0 +1,16 @@
+Error Handling:
+	enforced bank trading ratios in UI
+	enforced discard amounts- disable exiting until correct discards
+	steal from nobody on empty hex
+Functionality:
+	development cards
+	longest road blocking
+	winning
+	MULTIPLE COMPUTERS:
+		networking
+		rework UI:
+			only see own hand
+Aesthetics:
+	rules
+	ports/hexes
+	homepage

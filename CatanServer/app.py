@@ -78,7 +78,6 @@ def discardModal():
 
 @app.route('/start', methods=['POST'])
 def start():
-    print d
     playerNames = request.form['players'].split(', ')
     game = g.Game(playerNames)
     d['game']=game

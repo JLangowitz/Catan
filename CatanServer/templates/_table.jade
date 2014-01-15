@@ -15,40 +15,35 @@ table(class='table table-striped')
         th Points
         th Trade With:
     for player in game.players
-        tr
+        tr(id=player.number)
             td #{player.name}
             td #{player.hand.ore}
             td #{player.hand.lumber}
             td #{player.hand.brick}
             td #{player.hand.sheep}
             td #{player.hand.grain}
-            td #{player.devcards.Soldier}
-            td #{player.devcards.Monopoly}
-            td #{player.devcards['Year Of Plenty']}
-            td #{player.devcards['Road Building']}
-            td #{player.devcards['Victory Point']}
+            td(class='Soldier') #{player.devcards.Soldier}
+            td(class='Monopoly') #{player.devcards.Monopoly}
+            td(class='YearOfPlenty') #{player.devcards['Year Of Plenty']}
+            td(class='RoadBuilding') #{player.devcards['Road Building']}
+            td(class='VictoryPoint') #{player.devcards['Victory Point']}
             td #{player.soldiers}
             td #{player.points}
             td
                 button(class='btn btn-trade',id=player.number, data-toggle='modal', data-target='#trade') Trade
     tr
-        td
+        td(colspan=6)
             button(class='btn btn-dev', id='buyDev') Buy Development Card
         td
+            button(class='btn btn-play',id='Soldier') Play
         td
+            button(class='btn btn-play',id='Monopoly') Play
         td
+            button(class='btn btn-play',id='YearOfPlenty') Play
         td
+            button(class='btn btn-play',id='RoadBuilding') Play
         td
-        td
-            button(class='btn btn-play',id='playSoldier') Play
-        td
-            button(class='btn btn-play',id='playMonopoly') Play
-        td
-            button(class='btn btn-play',id='playYearOfPlenty') Play
-        td
-            button(class='btn btn-play',id='playRoadBuilding') Play
-        td
-            button(class='btn btn-play',id='playVictoryPoint') Play
+            button(class='btn btn-play',id='VictoryPoint') Play
         td
         td
         td

@@ -1,7 +1,7 @@
-"""
-Interactive Catan GUI using PIXI.js
-Josh Langowitz
-"""
+//
+// Interactive Catan GUI using PIXI.js
+// Josh Langowitz
+//
 
 
 $(document).ready(function(){
@@ -36,7 +36,7 @@ $(document).ready(function(){
     var inSetup = true;
     var setupForward = true;
     window.players = [];
-    var steal = false;
+    var forcedMove = '';
 
     //graphics object
     //var graphics = new PIXI.Graphics();
@@ -157,9 +157,22 @@ $(document).ready(function(){
         $.get('/playerTable',{},function(data){
             $('#gameTable').html(data);
             var hand = game.players[currentPlayer].hand;
-            if (!hand['grain'] || !hand['sheep'] || !hand['ore']) {
-                $('#buyDev').hide();
-            };
+            if (inSetup || forcedMove) {
+                $('.table .btn').prop('disabled',true);
+                $('#endTurn').prop('disabled',true);
+            }
+            else {
+                $('#endTurn').prop('disabled',false);
+                if (!hand['grain'] || !hand['sheep'] || !hand['ore']) {
+                    $('#buyDev').prop('disabled',true);
+                }
+                for (card in {'Soldier':null,'Monopoly':null,'YearOfPlenty':null,'RoadBuilding':null,'VictoryPoint':null}){
+                    var num = $('tr#'+currentPlayer+' .'+card).text();
+                    if (num=='0') {
+                        $('#'+card).prop('disabled',true);
+                    }
+                }
+            }
             // Gives each trade button a click callback that pops up a trade modal for the correct players
             $('.btn-trade').each(function(){
                 $(this).click(function(data){
@@ -294,7 +307,7 @@ $(document).ready(function(){
             drawGame(game);
             $('#roll').text(roll);
             if (roll==7){
-                steal=true;
+                forcedMove='steal'
                 discard();
             }
         });
@@ -464,6 +477,7 @@ $(document).ready(function(){
 
 
        stage.addChild(graphics);
+       return graphics;
     }
 
     function vertexMenu(i,j,x,y){
@@ -472,27 +486,27 @@ $(document).ready(function(){
         // console.log(i,j);
 
         // During the initial settlement placement setup phase, shows the options where people can build
-        if (inSetup){
-            $.post('/setupBuildables/'+i+'/'+j,{},function(data){
-                data=JSON.parse(data);
-                if (data.error){
-                    return
-                }
-                if (data.building && inSetup) {
-                    buildSettlementSetup(i,j,data.roads,x,y,!setupForward);
-                }
-                else{
-                    showOptions(false, false, data.roads, x, y)
-                }
-            });
-        }
-        // After the setup phase, rules for building are different and captured here
-        else{
-            $.post('/buildables/'+i+'/'+j,{},function(data){
-                data=JSON.parse(data);
-                // console.log(data);
-                showOptions(data.settlement, data.city, data.roads,x,y);
-            });
+        
+        if(!forcedMove){ 
+            if (inSetup){
+                $.post('/setupBuildables/'+i+'/'+j,{},function(data){
+                    data=JSON.parse(data);
+                    if (data.error){
+                        return
+                    }
+                    if (data.building) {
+                        buildSettlementSetup(i,j,data.roads,x,y,!setupForward);
+                    }
+                });
+            }
+            // After the setup phase, rules for building are different and captured here
+            else{
+                $.post('/buildables/'+i+'/'+j,{},function(data){
+                    data=JSON.parse(data);
+                    // console.log(data);
+                    showOptions(data.settlement, data.city, data.roads,x,y);
+                });
+            }
         }
     }
 
@@ -503,7 +517,7 @@ $(document).ready(function(){
         // roads: list of string representations of python tuples of the coordinates to which the current player can build roads
         // x,y: numbers, coordinates of the vertex to show options at.
         for (graphics in currentOptions){
-            stage.removeChild(graphics);
+            stage.removeChild(currentOptions[graphics]);
         }
         currentOptions=[];
         for (road in roads){
@@ -538,7 +552,8 @@ $(document).ready(function(){
             // console.log(game);
             // console.log(error);
             drawGame(game);
-            showOptions(false, false, roads, x, y)
+            forcedMove='road';
+            showOptions(false, false, roads, x, y);
         });
     }
 
@@ -552,6 +567,7 @@ $(document).ready(function(){
             var game=data.game;
             var error=data.error;
             drawGame(game);
+            forcedMove='';
             endTurn();
         });
     }
@@ -623,8 +639,8 @@ $(document).ready(function(){
         road = new PIXI.Polygon(
             x*.2-y*ROAD_WIDTH, y*.2+x*ROAD_WIDTH,
             x*.2+y*ROAD_WIDTH, y*.2-x*ROAD_WIDTH,
-            x*.8+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH);
-            x*.8-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH,
+            x*.8+y*ROAD_WIDTH, y*.8-x*ROAD_WIDTH,
+            x*.8-y*ROAD_WIDTH, y*.8+x*ROAD_WIDTH);
 
         graphics.interactive = true;
         graphics.hitArea = road;
@@ -662,7 +678,7 @@ $(document).ready(function(){
 
     // If a player should be able to move the robber, allows that player to move the robber to a hex and steal from somebody.
     function hexMenu(i,j){
-        if (steal) {
+        if (forcedMove=='steal') {
             // Pops up a modal with who to steal from, then steals from that player on click
             $.post('/stealables/'+i+'/'+j,{},function(data){
                 $('#steal').html(data);
@@ -673,7 +689,7 @@ $(document).ready(function(){
                     $.post('/moveRobber/'+i+'/'+j+'/'+player,{},function(data){
                         data=JSON.parse(data);
                         var game=data.game;
-                        steal=false;
+                        forcedMove='';
                         drawGame(game);
                         $('#stealModal').modal('hide');
                     })
